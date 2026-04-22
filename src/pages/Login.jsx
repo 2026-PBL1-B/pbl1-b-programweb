@@ -1,3 +1,4 @@
+// 仮ページ
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css'; // 既存のデザインを一部使い回します

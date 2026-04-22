@@ -1,4 +1,5 @@
 // src/Home.jsx
+// 仮ページ
 import { Link } from 'react-router-dom';
 import reactLogo from '../assets/react.svg';
 import viteLogo from '../assets/vite.svg';
