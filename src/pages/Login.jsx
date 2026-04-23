@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css'; // 既存のデザインを一部使い回します
+import { signInEmailandPassword } from '../api/Signin'; // サインインのAPI関数をインポート
 
 function Login() {
     // 入力されたメールアドレスとパスワードを記憶するための準備
@@ -10,15 +11,25 @@ function Login() {
     const navigate = useNavigate();
 
     // ログインボタンが押された時の処理
-    const handleLogin = (e) => {
+    const handleLogin = async(e) => {
         e.preventDefault(); // 画面がリロードされるのを防ぐおまじないです
-    
-        // ここで入力されたデータを確認します（後々、ここでサーバーにデータを送ります）
-        console.log('入力されたメールアドレス:', email);
-        console.log('入力されたパスワード:', password);
-        alert(`「${email}」でログインを試みました！`);
 
-        navigate('/home');  // ログインの処理が終わった後、'/home'へ遷移
+        // spabaseにサインインリクエスト
+        const user = await signInEmailandPassword(email, password);
+
+        if (user){
+            console.log('ログイン成功:', user);
+            navigate('/home');  // ログイン成功したら'/home'へ遷移
+        } else {
+            alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
+            return; // ログイン失敗ならここで処理を終わらせる
+        }
+
+        // ここで入力されたデータを確認します（後々、ここでサーバーにデータを送ります）
+        // console.log('入力されたメールアドレス:', email);
+        // console.log('入力されたパスワード:', password);
+        // alert(`「${email}」でログインを試みました！`);
+
     };
 
     return (
