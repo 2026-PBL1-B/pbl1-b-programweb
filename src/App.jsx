@@ -2,9 +2,11 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom' // 画面遷移のための追加ライブラリ
 import './App.css'
+
 import Login from './pages/Login' // Login をインポート
 import Home from './pages/Home'   // Home をインポート
-import ProductList from './pages/ProductList'   // Home をインポート
+import ProductPost from './pages/ProductPost'   // ProductPost をインポート
+import ProductList from './pages/ProductList'   // ProductList をインポート
 
 function App() {
   const [count, setCount] = useState(0)
@@ -15,7 +17,7 @@ function App() {
         {/* URL管理だけに記述 */}
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home count={count} setCount={setCount} />} />
-
+        <Route path="/productpost" element={<ProductPost count={count} setCount={setCount} />} />
         <Route path="/productList" element={<ProductList />} />
 
       </Routes>

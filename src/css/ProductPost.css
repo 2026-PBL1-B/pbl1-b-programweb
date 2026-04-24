@@ -1,0 +1,81 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 40px;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 入力欄 */
+.title,
+.tags {
+  padding: 20px;
+  font-size: 18px;
+  border: none;
+  background: #cfcfcf;
+}
+
+/* ヘッダー */
+.content-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mode-buttons button {
+  margin-left: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+/* 本文エリア */
+.content-area {
+  display: flex;
+  gap: 20px;
+}
+
+/* モード制御 */
+/*プレビュー*/
+.content-area.edit .preview {
+  display: none;
+}
+
+/*編集*/
+.content-area.preview .editor {
+  display: none;
+}
+
+.content-area.split .editor,
+.content-area.split .preview {
+  width: 50%;
+}
+
+/* エディタ */
+.editor {
+  width: 100%;
+  height: 400px;
+  padding: 20px;
+  background: #cfcfcf;
+  border: none;
+  resize: none;
+}
+
+/* プレビュー */
+.preview {
+  width: 100%;
+  height: 400px;
+  padding: 20px;
+  background: #cfcfcf;
+  overflow-y: auto;
+}
+
+/* タグ */
+.tag-list {
+  margin: 10px 0;
+}
+
+.tag {
+  margin-right: 8px;
+  color: blue;
+}
