@@ -15,6 +15,35 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
 
+# Spabase
+
+ユーザー認証、データベースにspabaseを利用する
+
+# 環境構築
+
+
+### nodeとnpmを導入してから進める
+```
+node -v
+```
+```
+npm -v
+```
+
+### このテンプレートでプロジェクトを開始
+```
+npm create vite@latest
+```
+
+### ライブラリを各自インストール
+```
+npm install
+```
+
+### 動作はこのコマンドで確認
+```
+npm run dev
+```
 
 # Git運用
 
