@@ -19,3 +19,24 @@ export async function postProductComment(product_id, user_id, content) {
     console.log('コメントが追加に成功:', data);
   }
 }
+
+/**
+ * ProductCommentテーブルからコメントを取得する関数
+ * product_idに基づいてコメントをフィルタリングして取得
+ * @param {string} product_id - コメントを取得したい制作物id
+ */
+export async function getProductComment(product_id) {
+
+  const { data, error} = await supabase
+    .from('ProductComment')
+    .select('*')
+    .eq('product_id', product_id);
+
+  if (error) {
+    console.error('コメントの取得に失敗:', error.message);
+    return [];
+  } else {
+    console.log('コメントの取得に成功:', data);
+    return data;
+  }
+}
