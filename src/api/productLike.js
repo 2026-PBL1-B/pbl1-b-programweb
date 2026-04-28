@@ -1,6 +1,23 @@
 import { supabase } from '../spabase'; // スペルが'supabase'なら直してください
 
 /**
+ * SpabaseのProductLikeテーブルに新しいいいね情報を追加する関数
+ * @param {string} product_id いいねを追加する制作物のID
+ * @param {string} user_id いいねを追加するユーザーのID
+ */
+export async function postProductLike(product_id, user_id) {
+  const { data, error } = await supabase
+    .from('ProductLike')
+    .insert([ { product_id: product_id, user_id: user_id },]);
+
+  if (error) {
+    console.error('いいねの追加に失敗:', error.message);
+  } else {
+    console.log('いいねが追加に成功:', data);
+  }
+}
+
+/**
  * 特定の商品に対するいいね情報を取得する
  * @param {string} product_id - いいね情報を取得したい商品のID
  * @param {string} [user_id] - オプション: 特定のユーザーのいいね情報を取得したい場合はユーザーIDを指定
@@ -30,22 +47,4 @@ export async function getProductLike(product_id, user_id) {
     console.error('予期せぬエラーが発生しました:', err);
     return { data: [], count: 0 };
   }
-}
-
-/**
- * いいねを追加する
- * @param {string} product_id - いいねを追加したい商品のID
- * @param {string} user_id - いいねを追加するユーザーのID
- */
-export async function postProductLike(product_id, user_id) {
-  const { data, error } = await supabase
-    .from('ProductLike')
-    .insert([{ product_id, user_id }])
-    .select();
-
-  if (error) {
-    console.error('いいねの追加に失敗:', error.message);
-    return null;
-  }
-  return data;
 }
