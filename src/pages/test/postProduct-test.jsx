@@ -1,7 +1,7 @@
 // テスト用のページです。関数の使い方の参考にしてください
 
 import { useState } from 'react';
-import { postProduct } from '../api/product';
+import { postProduct } from '../../api/product';
 
 function PostProductTest() {
   const [title, setTitle] = useState('');
