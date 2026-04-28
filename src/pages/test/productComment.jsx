@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { supabase } from '../../spabase';
-import { postProductComment } from '../../api/productcomment';
+import { postProductComment, getProductComment } from '../../api/productcomment';
 
 function ProductCommentTest() {
   const [productId, setProductId] = useState('7e82f1e1-8184-4076-83fb-b4b0869d6d48');
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const handleComment = async (e) => {
     e.preventDefault();
@@ -28,8 +29,22 @@ function ProductCommentTest() {
       
       alert(`Product ID: ${productId} にコメントを送信しました！`);
       setComment(''); // コメント入力欄をクリア
+      fetchComments(); // コメント送信後に一覧を更新
     } catch (error) {
       alert('エラーが発生しました。');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchComments = async () => {
+    setLoading(true);
+    try {
+      const fetchedComments = await getProductComment(productId);
+      setComments(fetchedComments);
+    } catch (error) {
+      alert('コメントの取得にエラーが発生しました。');
       console.error(error);
     } finally {
       setLoading(false);
@@ -71,6 +86,26 @@ function ProductCommentTest() {
           {loading ? '送信中...' : 'コメントを送信する'}
         </button>
       </form>
+
+      <div style={{ marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '20px' }}>
+        <h2>コメント一覧</h2>
+        <button type="button" onClick={fetchComments} disabled={loading} style={{ padding: '10px', cursor: 'pointer', marginBottom: '15px', width: '100%' }}>
+          {loading ? '取得中...' : 'コメントを取得する'}
+        </button>
+
+        {comments.length > 0 ? (
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            {comments.map((c, index) => (
+              <li key={c.id || index} style={{ borderBottom: '1px solid #ccc', padding: '10px 0' }}>
+                <p style={{ margin: '0 0 5px', fontSize: '12px', color: '#666' }}>ユーザーID: {c.user_id}</p>
+                <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{c.content}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p style={{ color: '#666', fontSize: '14px' }}>コメントはまだありません。</p>
+        )}
+      </div>
     </section>
   );
 }
