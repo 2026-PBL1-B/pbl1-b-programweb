@@ -1,7 +1,7 @@
 // src/pages/ProductList.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { supabase } from '../spabase'; // 既存のパスに合わせています
+import { fetchProducts } from '../api/product';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -11,30 +11,23 @@ function ProductList() {
     const navigate = useNavigate(); // ボタンで画面遷移するための関数
 
     useEffect(() => {
-        const fetchProducts = async () => {
+        const loadProducts = async () => {
             setIsLoading(true);
-            
-            // 【重要】Userテーブルからnameを取得するようにselect文を修正
-            const { data, error } = await supabase
-                .from('Product')
-                .select(`
-                    *,
-                    User:user_id (
-                        name
-                    )
-                `)
-                .eq('is_public', true);
-
-            if (error) {
-                console.error('データの取得に失敗しました:', error.message);
-            } else {
+            try {
+                // product.js の関数を呼び出してデータを受け取る
+                const data = await fetchProducts();
                 console.log('取得データ確認:', data); // デバッグ用
                 setArticles(data || []);
+            } catch (error) {
+                // 例外がスローされた場合のエラーハンドリング
+                console.error('データの読み込み処理中にエラーが発生しました', error);
+            } finally {
+                // 成功しても失敗してもロード状態を解除する
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
 
-        fetchProducts();
+        loadProducts();
     }, []);
 
     const sortedArticles = [...articles].sort((a, b) => {
