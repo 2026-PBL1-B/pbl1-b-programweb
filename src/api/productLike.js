@@ -1,10 +1,10 @@
-import { supabase } from '../spabase'
+import { supabase } from '../spabase'; // スペルが'supabase'なら直してください
+
 /**
  * SpabaseのProductLikeテーブルに新しいいいね情報を追加する関数
  * @param {string} product_id いいねを追加する制作物のID
  * @param {string} user_id いいねを追加するユーザーのID
  */
-
 export async function postProductLike(product_id, user_id) {
   const { data, error } = await supabase
     .from('ProductLike')
@@ -18,29 +18,33 @@ export async function postProductLike(product_id, user_id) {
 }
 
 /**
- * SupabaseのProductLikeテーブルからすべてのいいね情報を取得する関数
+ * 特定の商品に対するいいね情報を取得する
+ * @param {string} product_id - いいね情報を取得したい商品のID
+ * @param {string} [user_id] - オプション: 特定のユーザーのいいね情報を取得したい場合はユーザーIDを指定
  */
+export async function getProductLike(product_id, user_id) {
+  try {
+    let query = supabase
+      .from('ProductLike')
+      .select('*', { count: 'exact' }) // countを取る設定
+      .eq('product_id', product_id);
 
-export async function getProductLike() {
+    if (user_id) {
+      query = query.eq('user_id', user_id);
+    }
 
-  // .from('ProductLike') : いいねを保存しているテーブルを指定
-  // .select('*') : 全てのカラムを取得
-  const { data, error } = await supabase
-    .from('ProductLike')
-    .select('*');
+    const { data, error, count } = await query;
 
-  if (error) {
+    if (error) {
+      console.error('いいね情報の取得に失敗:', error.message);
+      return { data: [], count: 0 };
+    }
 
-    console.error('いいね情報の取得に失敗:', error.message);
-    return null;
+    console.log(`取得成功: ${count}件`, data);
+    return { data, count };
 
-  } else {
-
-    console.log('いいね情報一覧:', data);
-    return data;
-
+  } catch (err) {
+    console.error('予期せぬエラーが発生しました:', err);
+    return { data: [], count: 0 };
   }
 }
-
-// 動作確認用（実行）
-//getProductLike();
