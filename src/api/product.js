@@ -51,3 +51,30 @@ export async function postProduct(title, content, is_public, is_finish) {
     console.log('制作物が追加に成功:', data);
   }
 }
+
+/**
+ * ユーザーが投稿した制作物を取得する関数
+ * @param {*} user_id // 作品を取得したいユーザーのID
+ * @returns // そのユーザーが投稿した作品の配列。エラーがあれば空配列を返す。
+ */
+export async function getMyProducts(user_id) {
+  // 1. user_id が空っぽの場合のガード（エラーを防ぐ）
+  if (!user_id) {
+    console.error('存在しないユーザーです');
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('Product')
+    .select('title,id') // 作品のタイトルとIDだけを取得する例
+    .eq('user_id', user_id);
+
+  if (error) {
+    console.error('制作物の取得に失敗:', error.message);
+    return []; // エラー時は空配列を返すと画面が壊れにくい
+  }
+  
+  console.log('制作物の取得に成功:', data); // 成功したら、持ってきたデータの中身をコンソールに表示する
+
+  return data;
+}
