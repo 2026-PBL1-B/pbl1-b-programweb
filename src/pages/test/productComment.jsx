@@ -24,8 +24,8 @@ function ProductCommentTest() {
         return;
       }
 
-      // 2. 入力された productId, comment と、取得した user_id を使ってAPIを呼び出す
-      await postProductComment(productId, user.id, comment);
+      // 2. 入力された productId, comment を使ってAPIを呼び出す
+      await postProductComment(productId, comment);
       
       alert(`Product ID: ${productId} にコメントを送信しました！`);
       setComment(''); // コメント入力欄をクリア
