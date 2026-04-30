@@ -7,6 +7,7 @@ import Login from './pages/Login' // Login をインポート
 import Home from './pages/Home'   // Home をインポート
 import ProductPost from './pages/ProductPost'   // ProductPost をインポート
 import ProductList from './pages/ProductList'   // ProductList をインポート
+import QuestionList from './pages/QuestionList' // QuestionList をインポート
 
 function App() {
   const [count, setCount] = useState(0)
@@ -19,6 +20,7 @@ function App() {
         <Route path="/home" element={<Home count={count} setCount={setCount} />} />
         <Route path="/productpost" element={<ProductPost count={count} setCount={setCount} />} />
         <Route path="/productList" element={<ProductList />} />
+        <Route path="/questionList" element={<QuestionList />} />
 
       </Routes>
     </BrowserRouter>
