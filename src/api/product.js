@@ -3,7 +3,11 @@ import { supabase } from '../spabase'
 
 
 //supabaseクライアントを作成するために関数を呼び出す
-export const fetchProducts = async () => {
+/**
+ * 製品一覧をSupabaseから取得する関数
+ * @returns データベースのすべて
+ */
+export const getProducts = async () => {
   const { data, error } = await supabase
     .from('Product')
     .select('*')
@@ -15,6 +19,7 @@ export const fetchProducts = async () => {
   // 成功した場合は取得した配列データをコンソールに表示
   else {
     console.log('取得データ:', data)
+    return data;
   }
 }
 
