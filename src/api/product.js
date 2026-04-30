@@ -36,7 +36,6 @@ export const getProducts = async () => {
  * @param {string} content 制作物本文テキスト
  * @param {boolean} is_public 制作物が公開状態(falseで非公開)
  * @param {boolean} is_finish 制作物が完成状態(trueで完成)
- * @param {string} user_id 制作物を追加するユーザーのID
  */
 export async function postProduct(title, content, is_public, is_finish) {
   const { data, error } = await supabase

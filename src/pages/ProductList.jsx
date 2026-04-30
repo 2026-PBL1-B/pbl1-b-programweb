@@ -1,7 +1,7 @@
 // src/pages/ProductList.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchProducts } from '../api/product';
+import { getProducts } from '../api/product';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -15,7 +15,7 @@ function ProductList() {
             setIsLoading(true);
             try {
                 // product.js の関数を呼び出してデータを受け取る
-                const data = await fetchProducts();
+                const data = await getProducts();
                 console.log('取得データ確認:', data); // デバッグ用
                 setArticles(data || []);
             } catch (error) {
