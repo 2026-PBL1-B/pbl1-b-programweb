@@ -22,7 +22,7 @@ function ProductGoodTest() {
       }
 
       // 2. 入力された productId と、取得した user_id を使ってAPIを呼び出す
-      await postProductLike(productId, user.id);
+      await postProductLike(productId);
       
       alert(`Product ID: ${productId} に「いいね」しました！`);
       setProductId(''); // 入力欄をクリア
