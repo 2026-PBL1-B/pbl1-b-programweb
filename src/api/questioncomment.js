@@ -26,7 +26,7 @@ export async function postQuestionComment(question_id, content){
  * @return コメントの配列。エラーがあれば空配列を返す。
  */
 
-export async function getCommentsOnly(question_id) {
+export async function getQuestionComments(question_id) {
   if (!question_id) return [];
 
   try {
@@ -42,7 +42,7 @@ export async function getCommentsOnly(question_id) {
     }
 
     console.log('コメントの取得に成功:', data);
-    return data || [];
+    return data ;
   } catch (err) {
     console.error('予期せぬエラー:', err);
     return [];
