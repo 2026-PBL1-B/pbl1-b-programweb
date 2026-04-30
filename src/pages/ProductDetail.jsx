@@ -26,7 +26,7 @@ function ProductDetail() {
   }, [id]);
 
   if (!product) return <p>読み込み中...</p>;
-
+  
   return (
     <div className="detail-container">
       {/* ヘッダー */}
@@ -54,6 +54,7 @@ function ProductDetail() {
         {/* 本文 */}
         <div className="post-content">
           {product.content}
+
         </div>
       </div>
     </div>

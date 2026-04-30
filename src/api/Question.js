@@ -20,3 +20,25 @@ if (error) {
   return data;
   }
 }
+
+/**
+ * SupabaseのQuestionテーブルに新しい質問を投稿する関数
+ * user_idはspabaseの機能で自動的に入るため、引数には入れない
+ * @param {*} title 質問のタイトル
+ * @param {*} content 質問の内容
+ * @param {*} is_public 公開フラグ(falseで非公開)
+ * @param {*} is_finish 終了フラグ(trueで完了)
+ */
+export async function postQuestion(title, content, is_public, is_finish) {
+  const { data, error } = await supabase
+    .from('Question')
+    .insert([
+      { title: title, content: content, is_public: is_public, is_finish: is_finish },
+    ]);
+
+  if (error) {
+    console.error('質問の追加に失敗:', error.message);
+  } else {
+    console.log('質問が追加に成功:', data);
+  }
+}

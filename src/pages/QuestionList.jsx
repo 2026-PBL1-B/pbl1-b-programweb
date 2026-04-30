@@ -1,36 +1,36 @@
-// src/pages/ProductList.jsx
+// src/pages/QuestionList.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getProducts } from '../api/product';
+import { getQuestions } from '../api/Question'; // 質問用のAPI関数をインポート
 
-function ProductList() {
-    const [articles, setArticles] = useState([]);
+function QuestionList() {
+    // articlesをquestionsに変更し、状態を管理します
+    const [questions, setQuestions] = useState([]);
     const [sortOrder, setSortOrder] = useState('desc');
     const [isLoading, setIsLoading] = useState(true);
 
-    const navigate = useNavigate(); // ボタンで画面遷移するための関数
+    const navigate = useNavigate();
 
     useEffect(() => {
-        const loadProducts = async () => {
+        const loadQuestions = async () => {
             setIsLoading(true);
             try {
-                // product.js の関数を呼び出してデータを受け取る
-                const data = await getProducts();
-                console.log('取得データ確認:', data); // デバッグ用
-                setArticles(data || []);
+                // 質問一覧を取得するAPIを呼び出します
+                const data = await getQuestions();
+                console.log('取得データ確認:', data);
+                setQuestions(data || []);
             } catch (error) {
-                // 例外がスローされた場合のエラーハンドリング
                 console.error('データの読み込み処理中にエラーが発生しました', error);
             } finally {
-                // 成功しても失敗してもロード状態を解除する
                 setIsLoading(false);
             }
         };
 
-        loadProducts();
+        loadQuestions();
     }, []);
 
-    const sortedArticles = [...articles].sort((a, b) => {
+    // 質問を作成日（created_at）の順序で並び替えます
+    const sortedQuestions = [...questions].sort((a, b) => {
         const dateA = new Date(a.created_at);
         const dateB = new Date(b.created_at);
         return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
@@ -41,16 +41,16 @@ function ProductList() {
             <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' ,
                 paddingBottom: '24px', borderBottom: '2px solid var(--border)' 
             }}>
-                <h1 style={{ margin: 0 }}>制作物投稿一覧ページ</h1>
+                <h1 style={{ margin: 0 }}>質問一覧ページ</h1>
                 <button 
-                    onClick={() => navigate('/productpost')} 
+                    onClick={() => navigate('/questionpost')} // 質問投稿ページへの遷移に変更
                     style={{
                         padding: '8px 16px', backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)',
                         borderRadius: '4px', cursor: 'pointer', color: 'var(--text)', width: '160px',
                         fontSize: '14px', fontWeight: 'bold', textAlign: 'center'
                     }}
                 >
-                    投稿する
+                    質問を投稿する
                 </button>
             </div>
 
@@ -69,30 +69,40 @@ function ProductList() {
                     {isLoading ? (
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>
                     ) : (
-                        sortedArticles.map((article) => (
-                            <div key={article.id} style={{ 
+                        sortedQuestions.map((question) => (
+                            <div key={question.id} style={{ 
                                 border: '1px solid var(--border)', borderRadius: '12px', padding: '24px',                   
                                 backgroundColor: 'var(--bg)', boxShadow: 'var(--shadow)', textAlign: 'left',
                                 width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '12px'                        
                             }}>
-                                <div style={{ fontSize: '14px', color: 'var(--text)' }}>
-                                    <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
-                                        {/* 【修正】取得したUserオブジェクトのnameを表示 */}
-                                        投稿者: {article.User?.name || '不明なユーザー'}
-                                    </span>
-                                    <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
+                                <div style={{ fontSize: '14px', color: 'var(--text)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div>
+                                        <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
+                                            投稿者: {question.User?.name || '不明なユーザー'}
+                                        </span>
+                                        <span>{new Date(question.created_at).toLocaleDateString('ja-JP')}</span>
+                                    </div>
+                                    
+                                    {/* DBの is_finish を活用したステータスラベル */}
+                                    <div style={{
+                                        padding: '4px 8px',
+                                        borderRadius: '4px',
+                                        backgroundColor: question.is_finish ? '#e0f2f1' : '#ffebee',
+                                        color: question.is_finish ? '#00695c' : '#c62828',
+                                        fontWeight: 'bold',
+                                        fontSize: '12px'
+                                    }}>
+                                        {question.is_finish ? '解決済み' : '受付中'}
+                                    </div>
                                 </div>
                                 
-                                {/* 詳細ページへのリンク */}
-                                <Link to={`/product/${article.id}`} style={{ textDecoration: 'none'}}>      
                                 <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
-                                    {article.title}
+                                    {question.title}
                                 </h2>
-                                </Link>
 
-                                {article.content && (
+                                {question.content && (
                                     <p style={{ fontSize: '14px', color: 'var(--text)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        {article.content}
+                                        {question.content}
                                     </p>
                                 )}
                             </div>
@@ -110,4 +120,4 @@ function ProductList() {
     );
 }
 
-export default ProductList;
+export default QuestionList;
