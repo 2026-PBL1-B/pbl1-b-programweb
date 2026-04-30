@@ -1,7 +1,9 @@
 // src/pages/ProductList.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchProducts } from '../api/product';
+// fetchProducts関数がなかったため、getproducts関数に書き換えました
+import { getProducts } from '../api/product';
+
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -15,7 +17,8 @@ function ProductList() {
             setIsLoading(true);
             try {
                 // product.js の関数を呼び出してデータを受け取る
-                const data = await fetchProducts();
+                // ここもgetproductsに変更修正しました。
+                const data = await getProducts();
                 console.log('取得データ確認:', data); // デバッグ用
                 setArticles(data || []);
             } catch (error) {
@@ -83,9 +86,12 @@ function ProductList() {
                                     <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
                                 </div>
                                 
+                                {/* 詳細ページへのリンク */}
+                                <Link to={`/product/${article.id}`} style={{ textDecoration: 'none'}}>      
                                 <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
                                     {article.title}
                                 </h2>
+                                </Link>
 
                                 {article.content && (
                                     <p style={{ fontSize: '14px', color: 'var(--text)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
