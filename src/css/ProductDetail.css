@@ -1,0 +1,73 @@
+.detail-container {
+  background: #e9e9e9;
+  min-height: 100vh;
+  padding: 20px 40px;
+}
+
+/* ヘッダー */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.site-title {
+  font-size: 32px;
+  font-weight: bold;
+}
+
+/* アイコン */
+.user-icon {
+  width: 60px;
+  height: 60px;
+}
+
+.icon-circle {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 4px solid black;
+}
+
+/* 投稿カード */
+.post-card {
+  background: #cfcfcf;
+  padding: 40px;
+  width: 70%;
+  min-height: 500px;
+}
+
+/* ユーザー名 */
+.user-name {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+/* 投稿タイトル */
+.post-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+/* 投稿タグ全体 */
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;   /* 折り返し */
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+/* 投稿タグ1つ */
+.tag {
+  background: #ffffff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  border: 1px solid #999;
+}
+/* 本文 */
+.post-content {
+  font-size: 16px;
+  line-height: 1.6;
+}
