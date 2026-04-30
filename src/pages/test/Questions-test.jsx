@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { getQuestions, postQuestion } from '../../api/Question';
+import { postQuestionComment } from '../../api/questioncomment';
 
 function QuestionsTest() {
   const [questions, setQuestions] = useState([]);
@@ -7,6 +8,10 @@ function QuestionsTest() {
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [isFinish, setIsFinish] = useState(false);
+
+  // コメント投稿用ステート
+  const [commentQuestionId, setCommentQuestionId] = useState('');
+  const [commentContent, setCommentContent] = useState('');
 
   // 質問取得処理
   const handleGetQuestions = async () => {
@@ -26,6 +31,20 @@ function QuestionsTest() {
     setContent('');
     // 投稿後に一覧を再取得したい場合はコメントアウトを外す
     // handleGetQuestions();
+  };
+
+  // コメント投稿処理
+  const handlePostComment = async (e) => {
+    e.preventDefault();
+    if (!commentQuestionId) {
+      alert('質問IDを入力してください');
+      return;
+    }
+    await postQuestionComment(commentQuestionId, commentContent);
+    alert('コメントを投稿しました（コンソールも確認してください）。');
+    // 入力フォームをクリア
+    setCommentQuestionId('');
+    setCommentContent('');
   };
 
   return (
@@ -89,7 +108,7 @@ function QuestionsTest() {
           <ul style={{ paddingLeft: '20px' }}>
             {questions.map((q) => (
               <li key={q.id || Math.random()} style={{ marginBottom: '12px', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>
-                <strong style={{ fontSize: '1.2em' }}>{q.title}</strong>
+                <strong style={{ fontSize: '1.2em' }}>{q.title} <span style={{ fontSize: '0.8em', color: 'gray' }}>(ID: {q.id})</span></strong>
                 <p style={{ margin: '4px 0' }}>{q.content}</p>
                 <div style={{ fontSize: '0.9em', color: 'gray' }}>
                   公開設定: {q.is_public ? '公開' : '非公開'} / 状態: {q.is_finish ? '完了' : '未完了'}
@@ -100,6 +119,35 @@ function QuestionsTest() {
         ) : (
           <p>まだ質問が取得されていません。</p>
         )}
+      </section>
+
+      <section style={{ padding: '20px', border: '1px solid var(--border)', borderRadius: '8px', marginTop: '40px' }}>
+        <h2>質問にコメントする (postQuestionComment)</h2>
+        <form onSubmit={handlePostComment} style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '400px' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px' }}>質問ID</label>
+            <input
+              type="text"
+              value={commentQuestionId}
+              onChange={(e) => setCommentQuestionId(e.target.value)}
+              required
+              placeholder="取得した質問のIDを入力"
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)' }}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px' }}>コメント内容</label>
+            <textarea
+              value={commentContent}
+              onChange={(e) => setCommentContent(e.target.value)}
+              required
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border)', minHeight: '80px' }}
+            />
+          </div>
+          <button type="submit" className="counter" style={{ marginTop: '8px', cursor: 'pointer' }}>
+            コメント投稿テスト
+          </button>
+        </form>
       </section>
     </div>
   );
