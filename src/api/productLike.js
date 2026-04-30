@@ -1,4 +1,4 @@
-import { supabase } from '../spabase'; // スペルが'supabase'なら直してください
+import { supabase } from '../spabase';
 
 /**
  * SpabaseのProductLikeテーブルに新しいいいね情報を追加する関数
