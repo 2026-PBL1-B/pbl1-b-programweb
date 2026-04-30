@@ -1,26 +1,37 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { supabase } from '../spabase';
 import "../css/ProductDetail.css";
 
 function ProductDetail() {
-  // 仮データ（あとでAPIに置き換え可能）
-  // 別途タグやいいね関連を追加予定
-  const post = {
-    //ユーザー
-    user: "@abcdefg12345",
-    // タイトル
-    title: "投稿タイトル",
-    // 本文
-    content: "ここに本文が入ります。サンプルテキストです。",
-    // タグ
-    tags: ["React", "CSS", "JavaScript", "UI", "フロントエンド"]
-  };
+  const { id } = useParams();
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { data, error } = await supabase
+        .from('Product')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error(error);
+      } else {
+        setProduct(data);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (!product) return <p>読み込み中...</p>;
   
   return (
     <div className="detail-container">
       {/* ヘッダー */}
       <header className="header">
-        <h1 className="site-title">タイトル</h1>
+        <h1 className="site-title">詳細ページ</h1>
 
         <div className="user-icon">
           <div className="icon-circle"></div>
@@ -29,25 +40,25 @@ function ProductDetail() {
 
       {/* 投稿カード */}
       <div className="post-card">
-        {/*投稿者*/}
-        <p className="user-name">{post.user}</p>
-        {/*タイトル*/}
-        <h2 className="post-title">{post.title}</h2>
-        {/*投稿タグ */}
+        {/* 投稿者（まだDBにないなら仮） */}
+        <p className="user-name">@user</p>
+
+        {/* タイトル */}
+        <h2 className="post-title">{product.title}</h2>
+
+        {/* タグ（まだDBに無いなら一旦空でOK） */}
         <div className="tag-list">
-        {/*投稿タグの数を5つに制限*/}
-          {post.tags.slice(0, 5).map((tag, i) => (
-            <span key={i} className="tag">
-              #{tag}
-            </span>
-          ))}
+          {/* 後でタグ機能追加したらここに表示 */}
         </div>
-        {/*本文*/}
+
+        {/* 本文 */}
         <div className="post-content">
-          {post.content}
+          {product.content}
+
         </div>
       </div>
     </div>
   );
 }
+
 export default ProductDetail;

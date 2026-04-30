@@ -83,9 +83,12 @@ function ProductList() {
                                     <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
                                 </div>
                                 
+                                {/* 詳細ページへのリンク */}
+                                <Link to={`/product/${article.id}`} style={{ textDecoration: 'none'}}>      
                                 <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
                                     {article.title}
                                 </h2>
+                                </Link>
 
                                 {article.content && (
                                     <p style={{ fontSize: '14px', color: 'var(--text)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
