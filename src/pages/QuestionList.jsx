@@ -95,10 +95,12 @@ function QuestionList() {
                                         {question.is_finish ? '解決済み' : '受付中'}
                                     </div>
                                 </div>
-                                
-                                <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
-                                    {question.title}
-                                </h2>
+                                {/* 質問の詳細ページへのリンク付け */}
+                                <Link to={`/question/${question.id}`} style={{ textDecoration: 'none'}}>      
+                                    <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
+                                        {question.title}
+                                    </h2>
+                                </Link>
 
                                 {question.content && (
                                     <p style={{ fontSize: '14px', color: 'var(--text)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
