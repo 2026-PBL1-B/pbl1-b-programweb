@@ -1,0 +1,130 @@
+/* src/css/MyPage.css */
+
+.mypage-container {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mypage-header {
+    width: 80%;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+}
+
+.mypage-title {
+    margin: 0;
+    font-size: 28px;
+    color: var(--text-h);
+}
+
+.mypage-subtitle {
+    color: var(--text);
+    margin-top: 8px;
+}
+
+.mypage-controls {
+    width: 80%;
+    display: flex;
+    justify-content: flex-end; /* 右寄せ */
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.tab-container {
+    display: flex;
+    gap: 8px;
+}
+
+.tab-button {
+    padding: 8px 16px;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.tab-button.active {
+    background-color: var(--code-bg);
+    color: var(--text-h);
+    border-bottom: 2px solid var(--accent); /* 選択中のタブを強調 */
+}
+
+
+.sort-button {
+    padding: 8px 16px;
+    background-color: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 14px;
+}
+
+.article-info {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.article-list {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.article-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    background-color: var(--bg);
+    box-shadow: var(--shadow);
+    text-align: left;
+    transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.article-card:hover {
+    transform: translateY(-2px);
+}
+
+.article-link {
+    text-decoration: none;
+}
+
+.article-title {
+    font-size: 22px;
+    margin: 0;
+    color: var(--text-h);
+    cursor: pointer;
+}
+
+.loading-text, .empty-text {
+    color: var(--text);
+    text-align: center;
+}
+
+.back-link-container {
+    margin-top: 40px;
+}
+
+.back-link {
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
