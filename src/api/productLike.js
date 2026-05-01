@@ -18,9 +18,10 @@ export async function postProductLike(product_id) {
 }
 
 /**
- * 特定の商品に対するいいね情報を取得する
- * @param {string} product_id - いいね情報を取得したい商品のID
+ * 特定の制作物投稿に対するいいね情報を取得する
+ * @param {string} product_id - いいね情報を取得したい制作物のID
  * @param {string} [user_id] - オプション: 特定のユーザーのいいね情報を取得したい場合はユーザーIDを指定
+ * @returns {Promise<{data: Array, count: number}>} いいね情報の配列とその数を返す。エラーがあれば空配列と0を返す。
  */
 export async function getProductLike(product_id, user_id) {
   try {
