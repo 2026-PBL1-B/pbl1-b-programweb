@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../spabase';
 import "../css/ProductDetail.css";
+import DetailComment from '../components/DetilComment';
 
 
 function ProductDetail() {
@@ -58,6 +59,9 @@ function ProductDetail() {
 
         </div>
       </div>
+      
+      {/* コメントフォーム */}
+      <DetailComment onSubmit={(comment) => console.log("コメント投稿:", comment)} />
     </div>
   );
 }
