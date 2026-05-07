@@ -1,4 +1,6 @@
 import { supabase } from '../spabase'
+import { getCurrentUserId } from './Signin'
+
 // 「通信待ち（時間のかかる処理）」
 /**
  * 質問一覧をSupabaseから取得する関数
@@ -41,4 +43,35 @@ export async function postQuestion(title, content, is_public, is_finish) {
   } else {
     console.log('質問が追加に成功:', data);
   }
+}
+
+/**
+ * 【データ取得】ログイン中のユーザーが投稿した質問（Questionテーブル）を取得する関数
+ */
+export async function getMyQuestions() {
+    // 1. まず「誰がログインしているか」のIDを取得（上記の関数を再利用）
+    const user_id = await getCurrentUserId();
+
+    // IDが取得できなかった（未ログイン）場合は、空の配列を返して処理を終了
+    if (!user_id) {
+        console.warn('取得対象のユーザーIDがありません（未ログイン）');
+        return [];
+    }
+
+    // 2. Supabaseの 'Question' テーブルからデータを取ってくる
+    const { data, error } = await supabase
+        .from('Question')              // 'Question' という名前のテーブルを指定
+        .select('title, id, updated_at')    // 取得したいカラムを指定（title と id と updated_at）
+        .eq('user_id', user_id);       // 条件：user_idカラムの値が、自分のIDと一致するもの
+
+    // データベース操作に失敗した場合（テーブル名ミスや権限エラーなど）
+    if (error) {
+        console.error('質問の取得に失敗:', error.message);
+        return [];
+    }
+
+    // 3. 取得したデータをコンソールに表示（デベロッパーツールのConsoleタブで見れる）
+    console.log('質問の取得に成功しました。データの中身:', data);
+    
+    return data; // 最終的に取得した配列を返す
 }
