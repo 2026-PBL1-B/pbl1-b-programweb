@@ -6,7 +6,7 @@ import "../css/Comment.css";
  * 制作物詳細と質問投稿詳細で使用する予定
  * - onSubmit: コメントが投稿されたときのコールバック関数。引数としてコメントの内容を受け取る。
  */
-export default function DetailComment({ onSubmit }) {
+export default function DetailCommentPost({ onSubmit }) {
   const [comment, setComment] = useState('');
   const textareaRef = useRef(null);
 
