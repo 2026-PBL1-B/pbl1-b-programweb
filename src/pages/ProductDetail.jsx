@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../spabase';
 import "../css/ProductDetail.css";
+import DetailCommentPost from '../components/DetilComment';
+import { postProductComment } from '../api/productcomment';
 
 
 function ProductDetail() {
@@ -27,6 +29,19 @@ function ProductDetail() {
   }, [id]);
 
   if (!product) return <p>読み込み中...</p>;
+
+  // コメント送信時の処理
+  const handleCommentSubmit = async (content) => {
+    const { error } = await postProductComment(id, content);
+
+    // コメント投稿の結果に応じてアラートを表示
+    if (error) {
+      console.error('コメントの投稿に失敗:', error.message);
+      alert('コメントの投稿に失敗しました。');
+    } else {
+      alert('コメントが投稿されました！');
+    }
+  };
   
   return (
     <div className="detail-container">
@@ -58,6 +73,9 @@ function ProductDetail() {
 
         </div>
       </div>
+      
+      {/* コメントフォーム */}
+      <DetailCommentPost onSubmit={handleCommentSubmit} />
     </div>
   );
 }
