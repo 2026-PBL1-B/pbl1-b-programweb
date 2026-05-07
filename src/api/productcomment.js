@@ -5,6 +5,7 @@ import { supabase } from '../spabase'
  * user_idはspabaseの機能で自動的に入るため、引数には入れない
  * @param {string} product_id - コメントを追加する制作物のID
  * @param {string} content - コメントの内容
+ * @return {Object} { data, error } - 追加されたコメントのデータとエラー情報
  */
 export async function postProductComment(product_id, content) {
   const { data, error } = await supabase
@@ -18,6 +19,8 @@ export async function postProductComment(product_id, content) {
   } else {
     console.log('コメントが追加に成功:', data);
   }
+  
+  return { data, error }; // 結果を返すように追加
 }
 
 /**
