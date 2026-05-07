@@ -1,17 +1,25 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../spabase';
 import "../css/ProductDetail.css";
-import DetailCommentPost from '../components/DetilComment';
-import { postProductComment } from '../api/productcomment';
+import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
+import { postProductComment, getProductComment } from '../api/productcomment';
 
 
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [comments, setComments] = useState([]); // コメントのstateを追加
+
+  // コメント一覧を取得する関数（useCallbackで最適化）
+  const fetchComments = useCallback(async () => {
+    const data = await getProductComment(id);
+    setComments(data || []);
+  }, [id]);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const initData = async () => {
+      // 1. 制作物の詳細を取得
       const { data, error } = await supabase
         .from('Product')
         .select('*')
@@ -23,10 +31,13 @@ function ProductDetail() {
       } else {
         setProduct(data);
       }
+
+      // 2. コメント一覧を取得
+      await fetchComments();
     };
 
-    fetchData();
-  }, [id]);
+    initData();
+  }, [id, fetchComments]);
 
   if (!product) return <p>読み込み中...</p>;
 
@@ -40,6 +51,7 @@ function ProductDetail() {
       alert('コメントの投稿に失敗しました。');
     } else {
       alert('コメントが投稿されました！');
+      fetchComments(); // 投稿成功時にコメント一覧を再取得する
     }
   };
   
@@ -76,6 +88,9 @@ function ProductDetail() {
       
       {/* コメントフォーム */}
       <DetailCommentPost onSubmit={handleCommentSubmit} />
+
+      {/* コメント一覧 */}
+      <DetailCommentGet comments={comments} />
     </div>
   );
 }
