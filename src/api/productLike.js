@@ -13,9 +13,10 @@ export async function postProductLike(product_id) {
 
   if (error) {
     console.error('いいねの追加に失敗:', error.message);
-  } else {
-    console.log('いいねが追加に成功:', data);
+    throw error;
   }
+  console.log('いいねが追加に成功:', data);
+  return data;
 }
 
 /**
@@ -28,7 +29,7 @@ export async function deleteProductLike(product_id) {
   
   if (!userId) {
     console.warn('ログインしていないため、いいねを削除できません');
-    return;
+    throw new Error('ログインしていません');
   }
 
   const { data, error } = await supabase
@@ -39,9 +40,10 @@ export async function deleteProductLike(product_id) {
 
   if (error) {
     console.error('いいねの削除に失敗:', error.message);
-  } else {
-    console.log('いいねが削除に成功:', data);
+    throw error;
   }
+  console.log('いいねが削除に成功:', data);
+  return data;
 }
 
 /**
