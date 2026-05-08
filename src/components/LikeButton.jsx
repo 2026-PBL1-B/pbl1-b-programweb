@@ -1,24 +1,8 @@
-import { useState } from 'react';
-
-
 {/* いいね機能 */}
-export default function LikeButton() {
-  const [liked, setLiked] = useState(false);   // いいね状態
-  const [count, setCount] = useState(0);        // いいね数
-
-  const handleLike = () => {
-    if (liked) {
-      setLiked(false);
-      setCount(count - 1);  // 取り消し
-    } else {
-      setLiked(true);
-      setCount(count + 1);  // いいね
-    }
-  };
-
+export default function LikeButton({ liked, count, onClick }) {
   return (
     <button
-      onClick={handleLike}
+      onClick={onClick}
       style={{
         backgroundColor: liked ? "#E24A4A" : "#ccc",  // いいね時は赤
         color: "white",
