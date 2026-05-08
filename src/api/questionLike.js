@@ -1,4 +1,25 @@
 import { supabase } from '../spabase';
+import { getCurrentUserId } from './Signin';
+
+
+/**
+ * 質問投稿にいいねを追加する
+ * usr_idはspabaseの機能で自動的に入るため、引数には入れない
+ * @param {string} question_id - いいねを追加する質問のID
+ * @returns {Promise<Array>} 追加されたいいねのデータ
+ */
+export async function postQuestionLike(question_id) {
+  const { data, error } = await supabase
+    .from('QuestionLike')
+    .insert([ { question_id: question_id },]);
+
+  if (error) {
+    console.error('いいねの追加に失敗:', error.message);
+    throw error;
+  }
+  console.log('いいねが追加に成功:', data);
+  return data;
+}
 
 /**
  * 特定の質問投稿に対するいいね情報を取得する
@@ -31,5 +52,69 @@ export async function getQuestionsLike(question_id, user_id) {
   } catch (err) {
     console.error('予期せぬエラーが発生しました:', err);
     return { data: [], count: 0 };
+  }
+}
+
+/**
+ * 自分の質問投稿に対するいいねを削除(取り消し)する関数
+ * @param {string} question_id いいねを削除する質問のID
+ * @returns {Promise<void>} 成功すればvoid、失敗すればエラーを投げる
+ */
+export async function deleteQuestionLike(question_id) {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    console.warn('ログインしていないため、いいねを削除できません');
+    throw new Error('ログインしていません');
+  }
+
+  const { data, error } = await supabase
+    .from('QuestionLike')
+    .delete()
+    .eq('question_id', question_id)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('いいねの削除に失敗:', error.message);
+    throw error;
+  }
+  console.log('いいねが削除に成功:', data);
+}
+
+/**
+ * 自分の質問投稿に対するいいね情報を取得する関数
+ * @param {string} question_id - いいね情報を取得したい質問のID
+ * @returns {Promise<boolean>} 自分がいいねしていればtrue、そうでなければfalse。エラーがあればfalseを返す。
+ */
+export async function getMyQuestionLike(question_id) {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      console.warn('ユーザーがログインしていません');
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from('QuestionLike')
+      .select('*')
+      .eq('question_id', question_id)
+      .eq('user_id', userId)
+      .single(); // 自分のいいねは1件しかないはずなのでsingle()で取得
+
+    if (error) {
+      if (error.code === 'PGRST116') { // データが見つからない場合のエラーコード
+        console.log('自分のいいねは見つかりませんでした');
+        return false; // いいねしていない状態
+      }
+      console.error('自分のいいね情報の取得に失敗:', error.message);
+      return false;
+    }
+
+    console.log('自分のいいね情報の取得に成功:', data);
+    return !!data; // データが存在すればtrue、存在しなければfalse
+
+  } catch (err) {
+    console.error('予期せぬエラーが発生しました:', err);
+    return false;
   }
 }
