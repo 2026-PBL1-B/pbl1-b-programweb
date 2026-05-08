@@ -10,6 +10,7 @@ import ProductList from './pages/ProductList'   // ProductList をインポー�
 import ProductDetail from './pages/ProductDetail' // ProductDetail をインポート
 import QuestionList from './pages/QuestionList' // QuestionList をインポート
 import QuestionPost from './pages/QuestionPost' // QuestionPost をインポート
+import QuestionDetail from './pages/QuestionDetail' // QuestionDetail をインポート
 import MyPage from './pages/MyPage';            // MyPageをインポート
 
 
@@ -27,6 +28,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/questionList" element={<QuestionList />} />
         <Route path="/questionPost" element={<QuestionPost />} />
+        <Route path="/question/:id" element={<QuestionDetail />} />
         <Route path="/mypage" element={<MyPage />} />
 
       </Routes>
