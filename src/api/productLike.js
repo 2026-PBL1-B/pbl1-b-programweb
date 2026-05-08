@@ -1,4 +1,5 @@
 import { supabase } from '../spabase';
+import { getCurrentUserId } from './Signin';
 
 /**
  * SpabaseのProductLikeテーブルに新しいいいね情報を追加する関数
@@ -19,14 +20,22 @@ export async function postProductLike(product_id) {
 
 /**
  * SpabaseのProductLikeテーブルからいいね情報を削除（取り消し）する関数
- * RLSで自分のみ削除可能に制限しています
+ * 明示的に自分のユーザーIDを指定して削除します
  * @param {string} product_id いいねを削除する制作物のID
  */
 export async function deleteProductLike(product_id) {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    console.warn('ログインしていないため、いいねを削除できません');
+    return;
+  }
+
   const { data, error } = await supabase
     .from('ProductLike')
     .delete()
-    .eq('product_id', product_id);
+    .eq('product_id', product_id)
+    .eq('user_id', userId);
 
   if (error) {
     console.error('いいねの削除に失敗:', error.message);
@@ -75,8 +84,8 @@ export async function getProductLike(product_id, user_id) {
  */
 export async function getMyProductLike(product_id) {
   try {
-    const user = supabase.auth.user();
-    if (!user) {
+    const userId = await getCurrentUserId();
+    if (!userId) {
       console.warn('ユーザーがログインしていません');
       return false;
     }
@@ -85,7 +94,7 @@ export async function getMyProductLike(product_id) {
       .from('ProductLike')
       .select('*')
       .eq('product_id', product_id)
-      .eq('user_id', user.id)
+      .eq('user_id', userId)
       .single(); // 自分のいいねは1件しかないはずなのでsingle()で取得
 
     if (error) {
