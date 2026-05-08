@@ -4,6 +4,7 @@ import { supabase } from '../spabase';
 import "../css/ProductDetail.css";
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postProductComment, getProductComment } from '../api/productcomment';
+import { postProductLike, deleteProductLike, getProductLike, getMyProductLike } from '../api/productLike';
 import LikeButton from '../components/LikeButton';
 
 
@@ -11,6 +12,8 @@ function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [comments, setComments] = useState([]); // コメントのstateを追加
+  const [liked, setLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
 
   // コメント一覧を取得する関数（useCallbackで最適化）
   const fetchComments = useCallback(async () => {
@@ -35,12 +38,43 @@ function ProductDetail() {
 
       // 2. コメント一覧を取得
       await fetchComments();
+
+      // いいね情報を取得
+      const { count } = await getProductLike(id); // いいねの数を取得
+      setLikeCount(count);
+      const isLiked = await getMyProductLike(id); // 自分がいいねしているかどうかを取得
+      setLiked(isLiked);
     };
 
     initData();
   }, [id, fetchComments]);
 
   if (!product) return <p>読み込み中...</p>;
+
+  // いいねボタンが押された時の処理
+  const handleLikeToggle = async () => {
+    // 楽観的UI更新
+    const previousLiked = liked;
+    const previousCount = likeCount;
+    
+    setLiked(!previousLiked);
+    setLikeCount(previousLiked ? previousCount - 1 : previousCount + 1);  // いいねの数も更新
+
+    // いいねの状態をサーバーに反映
+    try {
+      if (previousLiked) {
+        await deleteProductLike(id);
+      } else {
+        await postProductLike(id);
+      }
+    } catch (error) {
+      // 失敗した場合は元に戻す
+      console.error('いいねの処理に失敗:', error);
+      setLiked(previousLiked);
+      setLikeCount(previousCount);
+      alert("いいねの処理に失敗しました");
+    }
+  };
 
   // コメント送信時の処理
   const handleCommentSubmit = async (content) => {
@@ -69,7 +103,7 @@ function ProductDetail() {
 
     {/* いいねボタン */}
       <div className="like-button-container">
-        <LikeButton />
+        <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
       </div>
 
       {/* 投稿カード */}
