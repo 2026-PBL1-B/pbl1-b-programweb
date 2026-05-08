@@ -67,3 +67,41 @@ export async function getProductLike(product_id, user_id) {
     return { data: [], count: 0 };
   }
 }
+
+/**
+ * 自分のいいね情報を取得する関数
+ * @param {string} product_id - いいね情報を取得したい制作物のID
+ * @returns {Promise<boolean>} 自分がいいねしているかどうかを返す。エラーがあればfalseを返す。
+ */
+export async function getMyProductLike(product_id) {
+  try {
+    const user = supabase.auth.user();
+    if (!user) {
+      console.warn('ユーザーがログインしていません');
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from('ProductLike')
+      .select('*')
+      .eq('product_id', product_id)
+      .eq('user_id', user.id)
+      .single(); // 自分のいいねは1件しかないはずなのでsingle()で取得
+
+    if (error) {
+      if (error.code === 'PGRST116') { // データが見つからない場合のエラーコード
+        console.log('自分のいいねは見つかりませんでした');
+        return false; // いいねしていない状態
+      }
+      console.error('自分のいいね情報の取得に失敗:', error.message);
+      return false;
+    }
+
+    console.log('自分のいいね情報の取得に成功:', data);
+    return !!data; // データが存在すればtrue、存在しなければfalse
+
+  } catch (err) {
+    console.error('予期せぬエラーが発生しました:', err);
+    return false;
+  }
+}
