@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../spabase';
 import "../css/QuestionDetail.css";
+import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
+import { postQuestionComment, getQuestionComments } from '../api/questioncomment';
 
 
 function QuestionDetail() {
@@ -9,6 +11,12 @@ function QuestionDetail() {
     const { id } = useParams();
 
     const [question, setQuestion] = useState(null);
+    const [comments, setComments] = useState([]);
+
+    const fetchComments = useCallback(async () => {
+        const data = await getQuestionComments(id);
+        setComments(data || []);
+    }, [id]);
 
     useEffect(() => {
 
@@ -25,11 +33,25 @@ function QuestionDetail() {
             } else {
                 setQuestion(data);
             }
+
+            await fetchComments();
         };
 
         fetchQuestion();
 
-    }, [id]);
+    }, [id, fetchComments]);
+
+    const handleCommentSubmit = async (content) => {
+        const { error } = await postQuestionComment(id, content);
+
+        if (error) {
+            console.error('コメントの投稿に失敗:', error.message);
+            alert('コメントの投稿に失敗しました。');
+        } else {
+            alert('コメントが投稿されました！');
+            fetchComments();
+        }
+    };
 
     // 読み込み中
     if (!question) {
@@ -67,6 +89,12 @@ function QuestionDetail() {
                 </div>
 
             </div>
+
+            {/* コメントフォーム */}
+            <DetailCommentPost onSubmit={handleCommentSubmit} />
+
+            {/* コメント一覧 */}
+            <DetailCommentGet comments={comments} />
 
             </div>
 
