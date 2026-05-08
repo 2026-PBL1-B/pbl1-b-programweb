@@ -21,3 +21,18 @@ export async function signInEmailandPassword(email, password) {
 
     return data.user // サインインに成功したユーザー情報を返す
 }
+
+/**
+ * Spabaseを使って、ログイン中のユーザーidを取得する関数
+ * @returns {Promise<string|null>} ログイン中のユーザーIDまたはnull
+ */
+export async function getCurrentUserId() {
+    const { data: { user }, error } = await supabase.auth.getUser()
+
+    if (error) {
+        console.error('ユーザー情報の取得エラー:', error.message)
+        return null
+    }
+
+    return user ? user.id : null // ユーザーが存在すればIDを返し、存在しなければnullを返す
+}

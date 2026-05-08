@@ -1,0 +1,59 @@
+/* コンテナ全体を使って中央配置 */
+.comment-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 20px 0;
+}
+
+/* ヘッダーの幅を入力ボックスに合わせる */
+.comment-form-header {
+  width: 80vw;
+  margin-bottom: 8px;
+}
+
+.comment-form-title {
+  font-weight: bold;
+}
+
+/* フォーム本体の幅を画面の8割（80vw）に設定 */
+.comment-form-body {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+}
+
+/* 入力ボックスのスタイル */
+.comment-input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.comment-input:focus {
+  border-color: #007bff;
+}
+
+/* 送信ボタンを右下に配置 */
+.comment-form-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.comment-submit-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comment-submit-button:disabled {
+  cursor: not-allowed;
+}

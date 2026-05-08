@@ -2,15 +2,16 @@ import { supabase } from '../spabase'
 
 /**
  * ProductCommentテーブルに新しいコメントを追加する関数
+ * user_idはspabaseの機能で自動的に入るため、引数には入れない
  * @param {string} product_id - コメントを追加する制作物のID
- * @param {string} user_id - コメントを追加するユーザーのID
  * @param {string} content - コメントの内容
+ * @return {Object} { data, error } - 追加されたコメントのデータとエラー情報
  */
-export async function postProductComment(product_id, user_id, content) {
+export async function postProductComment(product_id, content) {
   const { data, error } = await supabase
     .from('ProductComment')
     .insert([
-      { product_id: product_id, user_id: user_id, content: content },
+      { product_id: product_id, content: content },
     ]);
 
   if (error) {
@@ -18,6 +19,8 @@ export async function postProductComment(product_id, user_id, content) {
   } else {
     console.log('コメントが追加に成功:', data);
   }
+  
+  return { data, error }; // 結果を返すように追加
 }
 
 /**
