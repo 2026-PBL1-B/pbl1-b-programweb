@@ -55,3 +55,34 @@ export default function DetailCommentPost({ onSubmit }) {
     </div>
   );
 }
+
+/**
+ * コメント一覧を表示するコンポーネント
+ * @param {Array} comments - コメントの配列
+ */
+export function DetailCommentGet({ comments }) {
+  if (!comments || comments.length === 0) {
+    return <div className="comment-list-empty">コメントはまだありません。</div>;
+  }
+
+  return (
+    <div className="comment-list-container">
+      {comments.map((comment) => (
+        <div key={comment.id || comment.created_at} className="comment-item">
+          <div className="comment-header">
+            {/* ユーザー名（userテーブルと紐づくまでは仮のID表示） */}
+            <span className="comment-username">
+              @{comment.user_id ? `user_${comment.user_id.substring(0, 5)}` : 'guest'}
+            </span>
+            <span className="comment-date">
+              {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
+            </span>
+          </div>
+          <div className="comment-body">
+            {comment.content}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

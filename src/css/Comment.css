@@ -57,3 +57,67 @@
 .comment-submit-button:disabled {
   cursor: not-allowed;
 }
+
+/* =========================================
+   コメント一覧部分
+   ========================================= */
+
+/* コメント一覧コンテナ */
+.comment-list-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* 中央寄せ */
+  width: 100%;
+  padding-bottom: 40px;
+}
+
+/* コメントがない場合の表示 */
+.comment-list-empty {
+  width: 80vw;
+  text-align: center;
+  color: #666;
+  padding: 20px 0;
+}
+
+/* コメント1件のカード */
+.comment-item {
+  width: 80vw;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* カードらしい影をつける */
+  box-sizing: border-box;
+}
+
+/* コメントのヘッダー（ユーザー名と日付） */
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eeeeee; /* ヘッダーと本文の境界線 */
+}
+
+/* ユーザー名 */
+.comment-username {
+  font-weight: bold;
+  color: #333;
+  font-size: 14px;
+}
+
+/* 投稿日時 */
+.comment-date {
+  font-size: 12px;
+  color: #888;
+}
+
+/* コメント本文 */
+.comment-body {
+  font-size: 15px;
+  color: #444;
+  line-height: 1.5;
+  white-space: pre-wrap; /* 改行を反映する */
+  word-wrap: break-word; /* 長い単語で折り返す */
+}

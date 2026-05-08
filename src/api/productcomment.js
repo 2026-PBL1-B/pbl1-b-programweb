@@ -33,7 +33,8 @@ export async function getProductComment(product_id) {
   const { data, error} = await supabase
     .from('ProductComment')
     .select('*')
-    .eq('product_id', product_id);
+    .eq('product_id', product_id)
+    .order('created_at', { ascending: false });
 
   if (error) {
     console.error('コメントの取得に失敗:', error.message);
