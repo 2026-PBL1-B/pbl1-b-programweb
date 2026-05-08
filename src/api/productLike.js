@@ -1,4 +1,5 @@
 import { supabase } from '../spabase';
+import { getCurrentUserId } from './Signin';
 
 /**
  * SpabaseのProductLikeテーブルに新しいいいね情報を追加する関数
@@ -12,9 +13,37 @@ export async function postProductLike(product_id) {
 
   if (error) {
     console.error('いいねの追加に失敗:', error.message);
-  } else {
-    console.log('いいねが追加に成功:', data);
+    throw error;
   }
+  console.log('いいねが追加に成功:', data);
+  return data;
+}
+
+/**
+ * SpabaseのProductLikeテーブルからいいね情報を削除（取り消し）する関数
+ * 明示的に自分のユーザーIDを指定して削除します
+ * @param {string} product_id いいねを削除する制作物のID
+ */
+export async function deleteProductLike(product_id) {
+  const userId = await getCurrentUserId();
+  
+  if (!userId) {
+    console.warn('ログインしていないため、いいねを削除できません');
+    throw new Error('ログインしていません');
+  }
+
+  const { data, error } = await supabase
+    .from('ProductLike')
+    .delete()
+    .eq('product_id', product_id)
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('いいねの削除に失敗:', error.message);
+    throw error;
+  }
+  console.log('いいねが削除に成功:', data);
+  return data;
 }
 
 /**
@@ -47,5 +76,43 @@ export async function getProductLike(product_id, user_id) {
   } catch (err) {
     console.error('予期せぬエラーが発生しました:', err);
     return { data: [], count: 0 };
+  }
+}
+
+/**
+ * 自分のいいね情報を取得する関数
+ * @param {string} product_id - いいね情報を取得したい制作物のID
+ * @returns {Promise<boolean>} 自分がいいねしているかどうかを返す。エラーがあればfalseを返す。
+ */
+export async function getMyProductLike(product_id) {
+  try {
+    const userId = await getCurrentUserId();
+    if (!userId) {
+      console.warn('ユーザーがログインしていません');
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from('ProductLike')
+      .select('*')
+      .eq('product_id', product_id)
+      .eq('user_id', userId)
+      .single(); // 自分のいいねは1件しかないはずなのでsingle()で取得
+
+    if (error) {
+      if (error.code === 'PGRST116') { // データが見つからない場合のエラーコード
+        console.log('自分のいいねは見つかりませんでした');
+        return false; // いいねしていない状態
+      }
+      console.error('自分のいいね情報の取得に失敗:', error.message);
+      return false;
+    }
+
+    console.log('自分のいいね情報の取得に成功:', data);
+    return !!data; // データが存在すればtrue、存在しなければfalse
+
+  } catch (err) {
+    console.error('予期せぬエラーが発生しました:', err);
+    return false;
   }
 }
