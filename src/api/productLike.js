@@ -18,6 +18,24 @@ export async function postProductLike(product_id) {
 }
 
 /**
+ * SpabaseのProductLikeテーブルからいいね情報を削除（取り消し）する関数
+ * RLSで自分のみ削除可能に制限しています
+ * @param {string} product_id いいねを削除する制作物のID
+ */
+export async function deleteProductLike(product_id) {
+  const { data, error } = await supabase
+    .from('ProductLike')
+    .delete()
+    .eq('product_id', product_id);
+
+  if (error) {
+    console.error('いいねの削除に失敗:', error.message);
+  } else {
+    console.log('いいねが削除に成功:', data);
+  }
+}
+
+/**
  * 特定の制作物投稿に対するいいね情報を取得する
  * @param {string} product_id - いいね情報を取得したい制作物のID
  * @param {string} [user_id] - オプション: 特定のユーザーのいいね情報を取得したい場合はユーザーIDを指定
