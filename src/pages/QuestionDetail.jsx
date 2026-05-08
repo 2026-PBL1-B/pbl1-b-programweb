@@ -4,6 +4,8 @@ import { supabase } from '../spabase';
 import "../css/QuestionDetail.css";
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postQuestionComment, getQuestionComments } from '../api/questioncomment';
+import { postQuestionLike, deleteQuestionLike, getQuestionsLike, getMyQuestionLike } from '../api/questionLike';
+import LikeButton from '../components/LikeButton';
 
 
 function QuestionDetail() {
@@ -12,6 +14,8 @@ function QuestionDetail() {
 
     const [question, setQuestion] = useState(null);
     const [comments, setComments] = useState([]);
+    const [liked, setLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
 
     const fetchComments = useCallback(async () => {
         const data = await getQuestionComments(id);
@@ -35,11 +39,42 @@ function QuestionDetail() {
             }
 
             await fetchComments();
+
+            // いいね情報を取得
+            const { count } = await getQuestionsLike(id); // いいねの数を取得
+            setLikeCount(count);
+            const isLiked = await getMyQuestionLike(id); // 自分がいいねしているかどうかを取得
+            setLiked(isLiked);
         };
 
         fetchQuestion();
 
     }, [id, fetchComments]);
+
+    // いいねボタンが押された時の処理
+    const handleLikeToggle = async () => {
+        // 楽観的UI更新
+        const previousLiked = liked;
+        const previousCount = likeCount;
+        
+        setLiked(!previousLiked);
+        setLikeCount(previousLiked ? previousCount - 1 : previousCount + 1);  // いいねの数も更新
+
+        // いいねの状態をサーバーに反映
+        try {
+            if (previousLiked) {
+                await deleteQuestionLike(id);
+            } else {
+                await postQuestionLike(id);
+            }
+        } catch (error) {
+            // 失敗した場合は元に戻す
+            console.error('いいねの処理に失敗:', error);
+            setLiked(previousLiked);
+            setLikeCount(previousCount);
+            alert("いいねの処理に失敗しました");
+        }
+    };
 
     const handleCommentSubmit = async (content) => {
         const { error } = await postQuestionComment(id, content);
@@ -63,6 +98,11 @@ function QuestionDetail() {
         <>
         <h1>詳細ページ</h1>
             <div className="detail-container">
+
+            {/* いいねボタン */}
+            <div className="like-button-container">
+                <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
+            </div>
 
             {/* タイトルエリア */}
             <div className="content-section">
