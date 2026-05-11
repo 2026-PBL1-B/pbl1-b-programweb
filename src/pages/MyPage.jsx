@@ -82,7 +82,7 @@ function MyPage() {
                             className={`tab-button ${viewType === 'products' ? 'active' : ''}`}
                             onClick={() => setViewType('products')}
                         >
-                            投稿物一覧
+                            制作物一覧
                         </button>
                         <button 
                             className={`tab-button ${viewType === 'questions' ? 'active' : ''}`}
@@ -136,9 +136,15 @@ function MyPage() {
             
             {/* リンク(デバック用) */}
             <div className="back-link-container">
-                <Link to="/productlist" className="back-link">
-                    ← 投稿一覧へ戻る
-                </Link>
+                {viewType === 'products' ? (
+                    <Link to="/productList" className="back-link">
+                        ← 制作物一覧へ戻る
+                    </Link>
+                ) : (
+                    <Link to="/questionList" className="back-link">
+                        ← 質問一覧へ戻る
+                    </Link>
+                )}
             </div>
         </section>
     );
