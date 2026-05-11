@@ -124,7 +124,7 @@ function MyPage() {
                             
                             {/* リンク先を投稿か質問かで切り替え */}
                             <Link 
-                                to={viewType === 'products' ? `/product/${article.id}` : `/questiondetail/${article.id}`} 
+                                to={viewType === 'products' ? `/product/${article.id}` : `/question/${article.id}`} 
                                 className="article-link"
                             >      
                                 <h2 className="article-title">{article.title}</h2>
