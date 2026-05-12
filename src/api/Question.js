@@ -4,22 +4,36 @@ import { getCurrentUserId } from './Signin'
 // 「通信待ち（時間のかかる処理）」
 /**
  * 質問一覧をSupabaseから取得する関数
+ * @param {string[]} [tagIds] - 絞り込みたいタグIDの配列（任意）
  * @returns データベースのすべて
 */
-export async function getQuestions() {
-// Supabaseから返事が来るまで次の行に行かずに待機する命令
-const { data, error } = await supabase
-  .from('Question')
-  .select('*');
+export async function getQuestions(tagIds) {
+  let query = supabase.from('Question').select('*');
 
-// 通信に失敗したりテーブル名が間違っていたりしてエラーが出た場合
-if (error) {
-  // コンソールに赤文字でエラー内容を表示する
-  console.error('get question failed:', error.message);
-} else {
-  // 成功したら、持ってきたデータの中身をコンソールに表示する
-  console.log('取得した質問:', data);
-  return data;
+  // tagIdsが指定されており、かつ中身がある場合は、QuestionTagを介して絞り込む
+  if (tagIds && tagIds.length > 0) {
+    query = supabase
+      .from('Question')
+      .select(`
+        *,
+        QuestionTag!inner (
+          tag_id
+        )
+      `)
+      .in('QuestionTag.tag_id', tagIds);
+  }
+
+  const { data, error } = await query;
+
+  // 通信に失敗したりテーブル名が間違っていたりしてエラーが出た場合
+  if (error) {
+    // コンソールに赤文字でエラー内容を表示する
+    console.error('get question failed:', error.message);
+    return [];
+  } else {
+    // 成功したら、持ってきたデータの中身をコンソールに表示する
+    console.log('取得した質問:', data);
+    return data;
   }
 }
 

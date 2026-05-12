@@ -5,20 +5,34 @@ import { supabase } from '../spabase'
 //supabaseクライアントを作成するために関数を呼び出す
 /**
  * 製品一覧をSupabaseから取得する関数
+ * @param {string[]} [tagIds] - 絞り込みたいタグIDの配列（任意）
  * @returns データベースのすべて
  */
-export const getProducts = async () => {
-  const { data, error } = await supabase
-    .from('Product')
-    .select('*')
+export const getProducts = async (tagIds) => {
+  let query = supabase.from('Product').select('*');
+
+  if (tagIds && tagIds.length > 0) {
+    query = supabase
+      .from('Product')
+      .select(`
+        *,
+        ProductTag!inner (
+          tag_id
+        )
+      `)
+      .in('ProductTag.tag_id', tagIds);
+  }
+
+  const { data, error } = await query;
 
   // エラーが発生した場合はコンソールに表示
   if (error) {
-    console.error('Error:', error)
+    console.error('Error:', error);
+    return [];
   } 
   // 成功した場合は取得した配列データをコンソールに表示
   else {
-    console.log('取得データ:', data)
+    console.log('取得データ:', data);
     return data;
   }
 }
