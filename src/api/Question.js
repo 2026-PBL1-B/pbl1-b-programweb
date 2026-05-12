@@ -30,18 +30,22 @@ if (error) {
  * @param {*} content 質問の内容
  * @param {*} is_public 公開フラグ(falseで非公開)
  * @param {*} is_finish 終了フラグ(trueで完了)
+ * @return {Object|null} 追加された質問のデータ。エラーがあればnullを返す。これによりすぐに追加された質問のIDなどを知ることができる。(タグ付けなどの続きの処理がしやすくなる)
  */
 export async function postQuestion(title, content, is_public, is_finish) {
   const { data, error } = await supabase
     .from('Question')
     .insert([
       { title: title, content: content, is_public: is_public, is_finish: is_finish },
-    ]);
+    ])
+    .select();
 
   if (error) {
     console.error('質問の追加に失敗:', error.message);
+    return null;
   } else {
     console.log('質問が追加に成功:', data);
+    return data[0];
   }
 }
 

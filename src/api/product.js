@@ -36,18 +36,22 @@ export const getProducts = async () => {
  * @param {string} content 制作物本文テキスト
  * @param {boolean} is_public 制作物が公開状態(falseで非公開)
  * @param {boolean} is_finish 制作物が完成状態(trueで完成)
+ * @return {Object|null} 追加された制作物のデータ。エラーがあればnullを返す。これによりすぐに追加された制作物のIDなどを知ることができる。(タグ付けなどの続きの処理がしやすくなる)
  */
 export async function postProduct(title, content, is_public, is_finish) {
   const { data, error } = await supabase
     .from('Product')
     .insert([
       { title: title, content: content, is_public: is_public, is_finish: is_finish },
-    ]);
+    ])
+    .select();
 
   if (error) {
     console.error('制作物の追加に失敗:', error.message);
+    return null;
   } else {
     console.log('制作物が追加に成功:', data);
+    return data[0];
   }
 }
 
