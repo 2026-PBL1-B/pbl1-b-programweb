@@ -1,0 +1,20 @@
+/* src/Header.css */
+
+.nav-link {
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+}
+
+.nav-link-hp {
+  margin-left: 200px;
+}
+
+.nav-link-question {
+  margin-left: 50px;
+}
+
+.nav-link-post {
+  margin-left: 100px;
+}
