@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import { postProduct } from '../../api/product';
+import { getOrCreateTags, postProductTags } from '../../api/Tag';
 
 function PostProductTest() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [isFinish, setIsFinish] = useState(false);
+  const [tagsInput, setTagsInput] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -16,12 +18,21 @@ function PostProductTest() {
 
     try {
       // API関数を呼び出す（user_idはSupabase側で自動付与される前提）
-      await postProduct(title, content, isPublic, isFinish);
+      const newProduct = await postProduct(title, content, isPublic, isFinish);
       
-      alert('投稿が完了しました！コンソールを確認してください。');
+      if (newProduct && tagsInput.trim()) {
+        const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
+        const tagIds = await getOrCreateTags(tagNames);
+        if (tagIds && tagIds.length > 0) {
+          await postProductTags(newProduct.id, tagIds);
+        }
+      }
+
+      alert('投稿とタグの紐付けが完了しました！コンソールを確認してください。');
       // 入力欄をクリア
       setTitle('');
       setContent('');
+      setTagsInput('');
     } catch (error) {
       alert('エラーが発生しました。');
       console.error(error);
@@ -52,6 +63,17 @@ function PostProductTest() {
             onChange={(e) => setContent(e.target.value)} 
             required 
             rows="4"
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div>
+          <label>タグ (カンマ区切り):</label><br />
+          <input 
+            type="text" 
+            value={tagsInput} 
+            onChange={(e) => setTagsInput(e.target.value)} 
+            placeholder="例: React, JavaScript"
             style={{ width: '100%' }}
           />
         </div>
