@@ -91,7 +91,7 @@ export async function getMyProducts(user_id) {
 
   const { data, error } = await supabase
     .from('Product')
-    .select('title,id,created_at') // 作品のタイトル,ID,作成日時だけを取得する例
+    .select('title,id,created_at,is_finish') // 作品のタイトル,ID,作成日時,終了フラグだけを取得する例
     .eq('user_id', user_id);
 
   if (error) {
