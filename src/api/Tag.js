@@ -2,7 +2,7 @@ import { supabase } from '../spabase'
 
 
 /**
- * Tagテーブルからタグを取得する関数
+ * Tagテーブルから全てのタグを取得する関数
  * id,name,created_atを取得する
  * @return タグの配列。エラーがあれば空配列を返す。
  */
@@ -112,5 +112,47 @@ export async function postProductTags(productId, tagIds) {
     console.error('ProductTagへの追加に失敗:', error.message);
   } else {
     console.log('タグの紐づけに成功しました。');
+  }
+}
+
+/**
+ * 特定の制作物に紐づくタグ名の配列を取得する関数
+ * ProductとProductTagの結合クエリを実行
+ * @param {string} productId - 制作物のUUID
+ * @return タグ名の配列。エラーがあれば空配列を返す。
+ */
+export async function getProductTagNames(productId) {
+  const { data, error } = await supabase
+    .from('ProductTag')
+    .select('Tag(name)')
+    .eq('product_id', productId);
+
+  if (error) {
+    console.error('制作物のタグ名の取得に失敗:', error.message);
+    return [];
+  } else {
+    console.log('制作物のタグ名の取得に成功:', data);
+    return data.map(item => item.Tag.name);
+  }
+}
+
+/**
+ * 特定の質問に紐づくタグ名の配列を取得する関数
+ * QuestionとQuestionTagの結合クエリを実行
+ * @param {string} questionId - 質問のUUID
+ * @return タグ名の配列。エラーがあれば空配列を返す。
+ */
+export async function getQuestionTagNames(questionId) {
+  const { data, error } = await supabase
+    .from('QuestionTag')
+    .select('Tag(name)')
+    .eq('question_id', questionId);
+
+  if (error) {
+    console.error('質問のタグ名の取得に失敗:', error.message);
+    return [];
+  } else {
+    console.log('質問のタグ名の取得に成功:', data);
+    return data.map(item => item.Tag.name);
   }
 }
