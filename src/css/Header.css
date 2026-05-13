@@ -1,0 +1,58 @@
+/* src/css/Header.css */
+
+/* ナビゲーションバー */
+.nav-bar {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  background-color: #4A90E2;
+  height: 72px;
+  width: 100%;
+  margin-top: 60px;
+  justify-content: space-around;  /* ✅ 等間隔に並べる */
+}
+
+/* ナビゲーションリンク */
+.nav-link {
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+  flex: 1;                /* ✅ 各要素が均等に幅を取る */
+  text-align: center;     /* ✅ 各要素内で中央揃え */
+}
+
+/* ヘッダー全体 */
+.header-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+
+/* アカウントボタン */
+.account-button {
+  position: fixed;
+  top: 8px;
+  right: 16px;
+  background-color: #4A90E2;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* ログインリンク */
+.login-link {
+  color: var(--accent);
+  font-size: 32px;
+  font-weight: bold;
+  position: fixed;    /* ✅ 画面基準で固定 */
+  bottom: 16px;       /* ✅ 下から16px */
+  left: 16px;         /* ✅ 左から16px */
+  z-index: 1000;
+}
