@@ -1,0 +1,146 @@
+/* src/css/Post.css */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 40px;
+    /* 背景色もテーマに合わせるか、不要であれば削除できます */
+    min-height: 100vh;
+}
+
+/* 入力欄（タイトル） */
+.title {
+    padding: 20px;
+    font-size: 18px;
+    border: 1px solid var(--border); /* 追加: サイト共通の枠線 */
+    border-radius: 8px;              /* 追加: 角を少し丸く */
+    background: var(--bg);           /* 変更: サイト共通の背景色 */
+    color: var(--text);              /* 追加: サイト共通の文字色 */
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* タグ入力コンテナ（Qiita風） */
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--bg);           /* 変更: サイト共通の背景色 */
+    border: 1px solid var(--border); /* 追加: サイト共通の枠線 */
+    border-radius: 8px;              /* 追加: 角を少し丸く */
+    min-height: 60px;
+    box-sizing: border-box;
+}
+
+/* 確定したタグ */
+.tag-badge {
+    display: flex;
+    align-items: center;
+    background: var(--code-bg);      /* 変更: 少し異なる背景色でタグを目立たせる */
+    border: 1px solid var(--border); /* 追加: タグ自体にも枠線を付与 */
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+    color: var(--text);
+}
+
+/* タグ削除ボタン */
+.tag-badge button {
+    background: none;
+    border: none;
+    margin-left: 6px;
+    cursor: pointer;
+    color: #888;
+    font-weight: bold;
+    padding: 0;
+}
+
+.tag-badge button:hover {
+    color: #ff0000;
+}
+
+/* タグ入力欄 */
+.tag-input {
+    border: none;
+    background: transparent;
+    outline: none;
+    flex-grow: 1;
+    font-size: 18px;
+    min-width: 200px;
+    color: var(--text); /* 追加: 入力中の文字色もテーマに合わせる */
+}
+
+/* ヘッダー */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-h); /* 追加: 見出しの色 */
+}
+
+.mode-buttons button {
+    margin-left: 10px;
+    padding: 6px 12px;
+    cursor: pointer;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 4px;
+}
+
+/* 本文エリア */
+.content-area {
+    display: flex;
+    gap: 20px;
+}
+
+/* エディタとプレビューの共通 */
+.editor, .preview {
+    width: 100%;
+    height: 400px;
+    padding: 20px;
+    background: var(--bg);           /* 変更: 白などの固定色ではなく変数を使用 */
+    border: 1px solid var(--border); /* 追加: 本文とプレビューにも枠線を追加 */
+    border-radius: 8px;              /* 追加: 角を丸く */
+    color: var(--text);              /* 追加: 文字色 */
+    box-sizing: border-box;
+}
+
+.editor {
+    resize: none;
+    font-family: inherit;
+}
+
+.preview {
+    overflow-y: auto;
+}
+
+/* モード制御 */
+.content-area.edit .preview {
+    display: none;
+}
+
+.content-area.preview .editor {
+    display: none;
+}
+
+.content-area.split .editor,
+.content-area.split .preview {
+    width: 50%;
+}
+
+/* プレビュー内のタグ表示 */
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.tag {
+    color: var(--accent); /* 変更: リンク色もサイトのアクセントカラーに統一 */
+    font-weight: bold;
+}
