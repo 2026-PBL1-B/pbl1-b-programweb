@@ -39,18 +39,33 @@ export async function getQuestions(tagIds) {
 
 /**
  * SupabaseのQuestionテーブルに新しい質問を投稿する関数
+ * gradeとdepartmentのデータ整形はこちらで行う
  * user_idはspabaseの機能で自動的に入るため、引数には入れない
- * @param {*} title 質問のタイトル
- * @param {*} content 質問の内容
- * @param {*} is_public 公開フラグ(falseで非公開)
- * @param {*} is_finish 終了フラグ(trueで完了)
+ * @param {string} title 質問のタイトル
+ * @param {string} content 質問の内容
+ * @param {boolean} is_public 公開フラグ(falseで非公開)
+ * @param {boolean} is_finish 終了フラグ(trueで完了)
+ * @param {int|null} grade 学年 null許容
+ * @param {string} department 学科 無しは空文字で表現(nullは不可)
  * @return {Object|null} 追加された質問のデータ。エラーがあればnullを返す。これによりすぐに追加された質問のIDなどを知ることができる。(タグ付けなどの続きの処理がしやすくなる)
  */
-export async function postQuestion(title, content, is_public, is_finish) {
+export async function postQuestion(title, content, is_public, is_finish, grade, department) {
+  // departmentがnullやundefinedの場合は空文字にする
+  const safeDepartment = department ?? '';
+  // gradeを数値に変換（nullの場合はnullのままにする）
+  const safeGrade = (grade === null || grade === '') ? null : Number(grade);
+
   const { data, error } = await supabase
     .from('Question')
     .insert([
-      { title: title, content: content, is_public: is_public, is_finish: is_finish },
+      { 
+        title: title, 
+        content: content, 
+        is_public: is_public, 
+        is_finish: is_finish, 
+        grade: safeGrade, 
+        department: safeDepartment 
+      },
     ])
     .select();
 
