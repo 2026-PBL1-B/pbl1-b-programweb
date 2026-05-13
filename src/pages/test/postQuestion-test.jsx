@@ -7,6 +7,8 @@ function PostQuestionTest() {
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [isFinish, setIsFinish] = useState(false);
+  const [grade, setGrade] = useState('');
+  const [department, setDepartment] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +17,7 @@ function PostQuestionTest() {
     setLoading(true);
 
     try {
-      const newQuestion = await postQuestion(title, content, isPublic, isFinish);
+      const newQuestion = await postQuestion(title, content, isPublic, isFinish, grade, department);
       
       if (newQuestion && tagsInput.trim()) {
         const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
@@ -28,6 +30,8 @@ function PostQuestionTest() {
       alert('質問を投稿し、タグを紐づけました（コンソールも確認してください）。');
       setTitle('');
       setContent('');
+      setGrade('');
+      setDepartment('');
       setTagsInput('');
     } catch (error) {
       console.error(error);
@@ -58,6 +62,26 @@ function PostQuestionTest() {
             onChange={(e) => setContent(e.target.value)}
             required
             rows="4"
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
+        <div>
+          <label>学年 (空欄可):</label><br />
+          <input
+            type="number"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            placeholder="例: 1"
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
+        <div>
+          <label>学科:</label><br />
+          <input
+            type="text"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            placeholder="例: 情報工学科"
             style={{ width: '100%', padding: '8px' }}
           />
         </div>
