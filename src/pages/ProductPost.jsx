@@ -1,22 +1,42 @@
 // src/pages/ProductPost.jsx
 import { useState } from 'react';
-import PostForm from '../components/PostForm'; // 作成した共通コンポーネントを読み込む
+import { useNavigate } from 'react-router-dom';
+import PostForm from '../components/PostForm';
 import { postProduct } from '../api/product'; 
-
-// import '../css/ProductPost.css'  ←現在使わなくなったのでインポートしていません
+// ↓ 新しく Tag.js の関数を読み込みます
+import { getOrCreateTags, postProductTags } from '../api/Tag'; 
 
 function ProductPost() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  // 共通コンポーネントの「投稿」ボタンが押されたときに呼ばれる関数
   const handleProductSubmit = async (formData) => {
-    // formDataの中には、PostFormで入力された { title, content, tags, isPublic, isFinish } が入ってきます
     setLoading(true);
 
     try {
-      await postProduct(formData.title, formData.content, formData.isPublic, formData.isFinish);
-      alert('投稿が完了しました！');
+      // 1. 制作物のメインデータを送信し、結果（newProduct）を受け取る
+      const newProduct = await postProduct(
+        formData.title, 
+        formData.content, 
+        formData.isPublic, 
+        formData.isFinish
+      );
+
+      // 2. 制作物が正常に作成され、かつ入力されたタグがある場合
+      if (newProduct && formData.tags && formData.tags.length > 0) {
+        // タグIDの配列を取得（なければ作成される）
+        const tagIds = await getOrCreateTags(formData.tags);
+        
+        // 3. 制作物ID(newProduct.id)とタグIDを紐付ける
+        if (tagIds && tagIds.length > 0) {
+          await postProductTags(newProduct.id, tagIds);
+        }
+      }
+
+      alert('制作物の投稿とタグの保存が完了しました！');
       // ※投稿成功後の画面遷移（ページ移動）などをここに書くと良いでしょう
+      navigate('/productList');
+
     } catch (error) {
       alert('エラーが発生しました。');
       console.error(error);
@@ -30,7 +50,6 @@ function ProductPost() {
       <h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
 			制作物を投稿する
 		</h1>
-      {/* 共通のPostFormを呼び出し、文言や関数を渡す */}
       <PostForm 
         titlePlaceholder="タイトルを入力してください"
         contentLabel="本文"
