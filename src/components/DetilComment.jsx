@@ -1,5 +1,39 @@
 import { useState, useRef, useEffect } from 'react';
 import "../css/Comment.css";
+import { getUserName } from '../api/User';
+
+/**
+ * ユーザーIDから名前を取得して表示する小さなコンポーネント
+ */
+function CommentAuthor({ userId }) {
+  const [name, setName] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchName = async () => {
+      if (!userId) {
+        setIsLoading(false);
+        return;
+      }
+      const fetchedName = await getUserName(userId);
+      if (isMounted) {
+        setName(fetchedName);
+        setIsLoading(false);
+      }
+    };
+    fetchName();
+    return () => { isMounted = false; };
+  }, [userId]);
+
+  if (isLoading) return <span className="comment-username">@...</span>;
+  
+  return (
+    <span className="comment-username">
+      @{name || '不明なユーザー'}
+    </span>
+  );
+}
 
 /**
  * コメントコンポーネント
@@ -70,10 +104,8 @@ export function DetailCommentGet({ comments }) {
       {comments.map((comment) => (
         <div key={comment.id || comment.created_at} className="comment-item">
           <div className="comment-header">
-            {/* ユーザー名（userテーブルと紐づくまでは仮のID表示） */}
-            <span className="comment-username">
-              @{comment.user_id ? `user_${comment.user_id.substring(0, 5)}` : 'guest'}
-            </span>
+            {/* ユーザー名（getUserNameを使用して取得） */}
+            <CommentAuthor userId={comment.user_id} />
             <span className="comment-date">
               {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
             </span>
