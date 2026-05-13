@@ -126,9 +126,6 @@ function PostForm({
                     <button type="submit" disabled={loading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
                         {loading ? '送信中...' : submitButtonText}
                     </button>
-                    
-                    {/* ProductList または QuestionList の対応する画面に戻る */}
-                    {showCancel && <Link to={cancelLink}>キャンセルして戻る</Link>}
                 </div>
             </form>
         </div>

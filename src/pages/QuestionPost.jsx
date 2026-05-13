@@ -40,8 +40,6 @@ function QuestionPost() {
 			submitButtonText="質問を投稿する"
 			onSubmit={handleQuestionSubmit}
 			loading={loading}
-			showCancel={true}              /* キャンセルボタンを表示する */
-			cancelLink="/questionlist"     /* キャンセル時の戻るリンク先 */
 			showFinish={false}
 		/>
 		</div>
