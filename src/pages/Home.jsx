@@ -1,28 +1,14 @@
-// src/Home.jsx
-// 仮ページ
-import { Link } from 'react-router-dom';
-import reactLogo from '../assets/react.svg';
-import viteLogo from '../assets/vite.svg';
-import heroImg from '../assets/hero.png';
+// src/pages/Home.jsx
+import { useNavigate } from "react-router-dom";
+import Header from '../components/Header.jsx';  // ✅ {}を削除
 
-function Home({ count, setCount }) {
-    return (
-        <section id="center">
-        <div className="hero">
-            <img src={heroImg} className="base" width="170" height="179" alt="" />
-            <img src={reactLogo} className="framework" alt="React logo" />
-            <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <h1>Home Page</h1>
-        <button className="counter" onClick={() => setCount((c) => c + 1)}>
-            Count is {count}
-        </button>
-        <br />
-        <Link to="/" style={{ color: 'var(--accent)', fontSize: '20px', fontWeight: 'bold' }}>
-            ログイン画面へ戻る
-        </Link>
-        </section>
-    );
+function Home() {  // ✅ Header→Homeに名前変更
+  return (
+    <div>
+      <Header />  {/* ✅ importしたHeaderを使う */}
+      
+    </div>
+  );
 }
 
-export default Home; // 他のファイルから読み込めるようにします
+export default Home;
