@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { getTags, getOrCreateTags, postQuestionTags, postProductTags } from '../../api/Tag';
+import { getTags, getOrCreateTags, postQuestionTags, postProductTags, getProductTagNames, getQuestionTagNames } from '../../api/Tag';
 
 function TagTest() {
   const [tags, setTags] = useState([]);
@@ -12,6 +12,13 @@ function TagTest() {
   // Product用ステート
   const [productId, setProductId] = useState('');
   const [productTagsInput, setProductTagsInput] = useState('');
+
+  // 取得用ステート
+  const [fetchQuestionId, setFetchQuestionId] = useState('');
+  const [fetchedQuestionTags, setFetchedQuestionTags] = useState([]);
+  
+  const [fetchProductId, setFetchProductId] = useState('');
+  const [fetchedProductTags, setFetchedProductTags] = useState([]);
 
   // タグ取得処理
   const handleGetTags = async () => {
@@ -85,6 +92,44 @@ function TagTest() {
     }
   };
 
+  // Questionのタグ取得処理
+  const handleGetQuestionTags = async (e) => {
+    e.preventDefault();
+    if (!fetchQuestionId) {
+      alert('Question IDを入力してください。');
+      return;
+    }
+    setLoading(true);
+    try {
+      const tags = await getQuestionTagNames(fetchQuestionId);
+      setFetchedQuestionTags(tags || []);
+    } catch (error) {
+      console.error(error);
+      alert('エラーが発生しました。');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Productのタグ取得処理
+  const handleGetProductTags = async (e) => {
+    e.preventDefault();
+    if (!fetchProductId) {
+      alert('Product IDを入力してください。');
+      return;
+    }
+    setLoading(true);
+    try {
+      const tags = await getProductTagNames(fetchProductId);
+      setFetchedProductTags(tags || []);
+    } catch (error) {
+      console.error(error);
+      alert('エラーが発生しました。');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto', textAlign: 'left', color: 'var(--text-color)' }}>
       <h1>タグAPI テストページ</h1>
@@ -141,7 +186,7 @@ function TagTest() {
         </form>
       </section>
 
-      <section style={{ padding: '20px', border: '1px solid var(--border, #ccc)', borderRadius: '8px' }}>
+      <section style={{ marginBottom: '40px', padding: '20px', border: '1px solid var(--border, #ccc)', borderRadius: '8px' }}>
         <h2>3. Productにタグを紐づける (postProductTags)</h2>
         <form onSubmit={handlePostProductTags} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
@@ -170,6 +215,66 @@ function TagTest() {
             {loading ? '処理中...' : 'Productにタグを紐づける'}
           </button>
         </form>
+      </section>
+
+      <section style={{ marginBottom: '40px', padding: '20px', border: '1px solid var(--border, #ccc)', borderRadius: '8px' }}>
+        <h2>4. Questionのタグを取得する (getQuestionTagNames)</h2>
+        <form onSubmit={handleGetQuestionTags} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px' }}>対象の Question ID</label>
+            <input
+              type="text"
+              value={fetchQuestionId}
+              onChange={(e) => setFetchQuestionId(e.target.value)}
+              placeholder="例: a1b2c3d4-..."
+              required
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border, #ccc)' }}
+            />
+          </div>
+          <button type="submit" disabled={loading} style={{ padding: '8px 16px', cursor: 'pointer', alignSelf: 'flex-start' }}>
+            {loading ? '処理中...' : 'Questionのタグを取得'}
+          </button>
+        </form>
+        {fetchedQuestionTags.length > 0 && (
+          <div style={{ marginTop: '16px' }}>
+            <strong>取得したタグ:</strong>
+            <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
+              {fetchedQuestionTags.map((tag, index) => (
+                <li key={index} style={{ marginBottom: '4px' }}>{tag}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+
+      <section style={{ padding: '20px', border: '1px solid var(--border, #ccc)', borderRadius: '8px' }}>
+        <h2>5. Productのタグを取得する (getProductTagNames)</h2>
+        <form onSubmit={handleGetProductTags} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '4px' }}>対象の Product ID</label>
+            <input
+              type="text"
+              value={fetchProductId}
+              onChange={(e) => setFetchProductId(e.target.value)}
+              placeholder="例: e5f6g7h8-..."
+              required
+              style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid var(--border, #ccc)' }}
+            />
+          </div>
+          <button type="submit" disabled={loading} style={{ padding: '8px 16px', cursor: 'pointer', alignSelf: 'flex-start' }}>
+            {loading ? '処理中...' : 'Productのタグを取得'}
+          </button>
+        </form>
+        {fetchedProductTags.length > 0 && (
+          <div style={{ marginTop: '16px' }}>
+            <strong>取得したタグ:</strong>
+            <ul style={{ paddingLeft: '20px', marginTop: '8px' }}>
+              {fetchedProductTags.map((tag, index) => (
+                <li key={index} style={{ marginBottom: '4px' }}>{tag}</li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
     </div>
