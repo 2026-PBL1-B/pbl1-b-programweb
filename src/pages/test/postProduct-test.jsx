@@ -9,6 +9,8 @@ function PostProductTest() {
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
   const [isFinish, setIsFinish] = useState(false);
+  const [grade, setGrade] = useState('');
+  const [department, setDepartment] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -18,7 +20,7 @@ function PostProductTest() {
 
     try {
       // API関数を呼び出す（user_idはSupabase側で自動付与される前提）
-      const newProduct = await postProduct(title, content, isPublic, isFinish);
+      const newProduct = await postProduct(title, content, isPublic, isFinish, grade, department);
       
       if (newProduct && tagsInput.trim()) {
         const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
@@ -32,6 +34,8 @@ function PostProductTest() {
       // 入力欄をクリア
       setTitle('');
       setContent('');
+      setGrade('');
+      setDepartment('');
       setTagsInput('');
     } catch (error) {
       alert('エラーが発生しました。');
@@ -63,6 +67,28 @@ function PostProductTest() {
             onChange={(e) => setContent(e.target.value)} 
             required 
             rows="4"
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div>
+          <label>学年 (空欄可):</label><br />
+          <input
+            type="number"
+            value={grade}
+            onChange={(e) => setGrade(e.target.value)}
+            placeholder="例: 1"
+            style={{ width: '100%' }}
+          />
+        </div>
+
+        <div>
+          <label>学科:</label><br />
+          <input
+            type="text"
+            value={department}
+            onChange={(e) => setDepartment(e.target.value)}
+            placeholder="例: 情報工学科"
             style={{ width: '100%' }}
           />
         </div>
