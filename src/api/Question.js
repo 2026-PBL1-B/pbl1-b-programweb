@@ -80,6 +80,7 @@ export async function postQuestion(title, content, is_public, is_finish, grade, 
 
 /**
  * 【データ取得】ログイン中のユーザーが投稿した質問（Questionテーブル）を取得する関数
+ * @returns そのユーザーが投稿した質問の配列。エラーがあれば空配列を返す。
  */
 export async function getMyQuestions() {
     // 1. まず「誰がログインしているか」のIDを取得（上記の関数を再利用）
@@ -94,7 +95,7 @@ export async function getMyQuestions() {
     // 2. Supabaseの 'Question' テーブルからデータを取ってくる
     const { data, error } = await supabase
         .from('Question')              // 'Question' という名前のテーブルを指定
-        .select('title, id, updated_at')    // 取得したいカラムを指定（title と id と updated_at）
+        .select('title, id, created_at, is_finish')    // 取得したいカラムを指定
         .eq('user_id', user_id);       // 条件：user_idカラムの値が、自分のIDと一致するもの
 
     // データベース操作に失敗した場合（テーブル名ミスや権限エラーなど）

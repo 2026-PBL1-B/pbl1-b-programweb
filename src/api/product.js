@@ -1,5 +1,6 @@
 // spabaseファイルから初期化済みの supabase インスタンスをインポート
 import { supabase } from '../spabase'
+import { getCurrentUserId } from './Signin'
 
 
 //supabaseクライアントを作成するために関数を呼び出す
@@ -79,19 +80,21 @@ export async function postProduct(title, content, is_public, is_finish, grade, d
 
 /**
  * ユーザーが投稿した制作物を取得する関数
- * @param {*} user_id // 作品を取得したいユーザーのID
  * @returns // そのユーザーが投稿した作品の配列。エラーがあれば空配列を返す。
  */
-export async function getMyProducts(user_id) {
+export async function getMyProducts() {
   // 1. user_id が空っぽの場合のガード（エラーを防ぐ）
-  if (!user_id) {
-    console.error('存在しないユーザーです');
-    return [];
-  }
+  const user_id = await getCurrentUserId();
+
+   // IDが取得できなかった（未ログイン）場合は、空の配列を返して処理を終了
+    if (!user_id) {
+        console.warn('取得対象のユーザーIDがありません（未ログイン）');
+        return [];
+    }
 
   const { data, error } = await supabase
     .from('Product')
-    .select('title,id,created_at') // 作品のタイトル,ID,作成日時だけを取得する例
+    .select('title,id,created_at,is_finish') // 作品のタイトル,ID,作成日時,終了フラグだけを取得する例
     .eq('user_id', user_id);
 
   if (error) {
