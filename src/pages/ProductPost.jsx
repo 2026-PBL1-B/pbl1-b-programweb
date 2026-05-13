@@ -27,6 +27,9 @@ function ProductPost() {
 
   return (
     <div>
+      <h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
+			制作物を投稿する
+		</h1>
       {/* 共通のPostFormを呼び出し、文言や関数を渡す */}
       <PostForm 
         titlePlaceholder="タイトルを入力してください"

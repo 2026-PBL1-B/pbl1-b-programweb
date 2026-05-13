@@ -29,7 +29,7 @@ function QuestionPost() {
 
 	return (
 		<div>
-		<h1 style={{ padding: '0 40px', background: '#f5f5f5', margin: 0, paddingTop: '40px' }}>
+		<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
 			質問を投稿する
 		</h1>
 		{/* 共通のPostFormを呼び出し、質問用の文言や関数を渡す */}
