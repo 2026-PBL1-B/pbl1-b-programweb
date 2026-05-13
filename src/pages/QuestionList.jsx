@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getQuestions } from '../api/Question'; // 質問用のAPI関数をインポート
+import { getUserName } from '../api/User';
 
 function QuestionList() {
     // articlesをquestionsに変更し、状態を管理します
@@ -18,7 +19,16 @@ function QuestionList() {
                 // 質問一覧を取得するAPIを呼び出します
                 const data = await getQuestions();
                 console.log('取得データ確認:', data);
-                setQuestions(data || []);
+                
+                // getUserNameを使ってユーザー名を取得しデータに結合
+                const dataWithNames = await Promise.all(
+                    (data || []).map(async (question) => {
+                        const userName = await getUserName(question.user_id);
+                        return { ...question, fetchedUserName: userName };
+                    })
+                );
+                
+                setQuestions(dataWithNames);
             } catch (error) {
                 console.error('データの読み込み処理中にエラーが発生しました', error);
             } finally {
@@ -78,7 +88,7 @@ function QuestionList() {
                                 <div style={{ fontSize: '14px', color: 'var(--text)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div>
                                         <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
-                                            投稿者: {question.User?.name || '不明なユーザー'}
+                                            投稿者: {question.fetchedUserName || '不明なユーザー'}
                                         </span>
                                         <span>{new Date(question.created_at).toLocaleDateString('ja-JP')}</span>
                                     </div>
