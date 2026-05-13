@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getProducts } from '../api/product';
+import { getUserName } from '../api/User';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -17,7 +18,16 @@ function ProductList() {
                 // product.js の関数を呼び出してデータを受け取る
                 const data = await getProducts();
                 console.log('取得データ確認:', data); // デバッグ用
-                setArticles(data || []);
+                
+                // getUserNameを使ってユーザー名を取得しデータに結合
+                const dataWithNames = await Promise.all(
+                    (data || []).map(async (article) => {
+                        const userName = await getUserName(article.user_id);
+                        return { ...article, fetchedUserName: userName };
+                    })
+                );
+                
+                setArticles(dataWithNames);
             } catch (error) {
                 // 例外がスローされた場合のエラーハンドリング
                 console.error('データの読み込み処理中にエラーが発生しました', error);
@@ -77,8 +87,8 @@ function ProductList() {
                             }}>
                                 <div style={{ fontSize: '14px', color: 'var(--text)' }}>
                                     <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
-                                        {/* 【修正】取得したUserオブジェクトのnameを表示 */}
-                                        投稿者: {article.User?.name || '不明なユーザー'}
+                                        {/* getUserNameで取得したユーザー名を表示 */}
+                                        投稿者: {article.fetchedUserName || '不明なユーザー'}
                                     </span>
                                     <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
                                 </div>
