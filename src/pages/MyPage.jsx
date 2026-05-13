@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { getMyProducts } from '../api/product';
 import { getProductLike } from '../api/productLike';
 import { getMyQuestions } from '../api/Question'; //質問取得用API
-import { getCurrentUserId } from '../api/Signin';
 import "../css/MyPage.css";
 
 function MyPage() {
@@ -17,12 +16,9 @@ function MyPage() {
         const loadMyProducts = async () => {
             setIsLoading(true);
             try {
-                // getCurrentUserId を実行してユーザーIDを直接取得する
-                const userId = await getCurrentUserId();
                 
-                if (userId) {
                     if (viewType === 'products') {
-                        const products = await getMyProducts(userId);  // プロダクト一覧取得
+                        const products = await getMyProducts();  // プロダクト一覧取得
                         
                         if (products && products.length > 0) {
                             // Promise.allを使って、全記事のいいね数を並列で取得
@@ -52,7 +48,6 @@ function MyPage() {
                             setMyArticles([]);
                         }
                     }
-                }
             } catch (error) {
                 console.error('エラー:', error);
             } finally {
