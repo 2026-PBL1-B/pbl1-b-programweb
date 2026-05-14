@@ -1,34 +1,40 @@
 // src/pages/QuestionList.jsx
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getQuestions } from '../api/Question'; // 質問用のAPI関数をインポート
+import { getQuestions } from '../api/Question';
 import { getUserName } from '../api/User';
+import { getTags, getQuestionTagNames } from '../api/Tag';
+import TagFilterSortBar from '../components/TagFilterSortBar';
+import '../css/ListPage.css';
 
 function QuestionList() {
-    // articlesをquestionsに変更し、状態を管理します
     const [questions, setQuestions] = useState([]);
     const [sortOrder, setSortOrder] = useState('desc');
     const [isLoading, setIsLoading] = useState(true);
 
+    const [availableTags, setAvailableTags] = useState([]); 
+    const [selectedTagNames, setSelectedTagNames] = useState([]); 
+
     const navigate = useNavigate();
 
     useEffect(() => {
-        const loadQuestions = async () => {
+        const loadData = async () => {
             setIsLoading(true);
             try {
-                // 質問一覧を取得するAPIを呼び出します
+                const tagsData = await getTags();
+                setAvailableTags(tagsData || []);
+
                 const data = await getQuestions();
-                console.log('取得データ確認:', data);
                 
-                // getUserNameを使ってユーザー名を取得しデータに結合
-                const dataWithNames = await Promise.all(
+                const dataWithNamesAndTags = await Promise.all(
                     (data || []).map(async (question) => {
                         const userName = await getUserName(question.user_id);
-                        return { ...question, fetchedUserName: userName };
+                        const tagNames = await getQuestionTagNames(question.id);
+                        return { ...question, fetchedUserName: userName, tags: tagNames };
                     })
                 );
                 
-                setQuestions(dataWithNames);
+                setQuestions(dataWithNamesAndTags);
             } catch (error) {
                 console.error('データの読み込み処理中にエラーが発生しました', error);
             } finally {
@@ -36,84 +42,84 @@ function QuestionList() {
             }
         };
 
-        loadQuestions();
+        loadData();
     }, []);
 
-    // 質問を作成日（created_at）の順序で並び替えます
-    const sortedQuestions = [...questions].sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-        return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-    });
+    // --- 絞り込みと並び替えの部分 ---
+    const filteredAndSortedQuestions = [...questions]
+        .filter((question) => {
+            // 何も選択されていない場合はすべて表示
+            if (selectedTagNames.length === 0) return true;
+            if (!question.tags) return false;
+            
+            // 選択されたタグの「いずれか」が含まれていれば表示
+            return selectedTagNames.some(tag => question.tags.includes(tag));
+        })
+        .sort((a, b) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
 
     return (
-        <section style={{ minHeight: '100vh', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' ,
-                paddingBottom: '24px', borderBottom: '2px solid var(--border)' 
-            }}>
-                <h1 style={{ margin: 0 }}>質問一覧ページ</h1>
+        <section className="page-container">
+            <div className="page-header">
+                <h1 className="header-title">質問一覧ページ</h1>
                 <button 
-                    onClick={() => navigate('/questionpost')} // 質問投稿ページへの遷移に変更
-                    style={{
-                        padding: '8px 16px', backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)',
-                        borderRadius: '4px', cursor: 'pointer', color: 'var(--text)', width: '160px',
-                        fontSize: '14px', fontWeight: 'bold', textAlign: 'center'
-                    }}
+                    className="primary-button"
+                    onClick={() => navigate('/questionpost')} 
                 >
                     質問を投稿する
                 </button>
             </div>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '16px' }}>
-                <div style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                    <button 
-                        onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-                        style={{
-                            padding: '8px 16px', backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)',
-                            borderRadius: '4px', cursor: 'pointer', color: 'var(--text)', width: '160px', alignSelf: 'flex-end'
-                        }}
-                    >
-                        {sortOrder === 'desc' ? '新しい順 ↓' : '古い順 ↑'}
-                    </button>
+            <div className="content-layout">
+                <div className="main-column">
+                    <TagFilterSortBar 
+                        availableTags={availableTags}
+                        selectedTagNames={selectedTagNames}
+                        setSelectedTagNames={setSelectedTagNames}
+                        sortOrder={sortOrder}
+                        setSortOrder={setSortOrder}
+                    />
 
                     {isLoading ? (
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>
                     ) : (
-                        sortedQuestions.map((question) => (
-                            <div key={question.id} style={{ 
-                                border: '1px solid var(--border)', borderRadius: '12px', padding: '24px',                   
-                                backgroundColor: 'var(--bg)', boxShadow: 'var(--shadow)', textAlign: 'left',
-                                width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '12px'                        
-                            }}>
-                                <div style={{ fontSize: '14px', color: 'var(--text)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        filteredAndSortedQuestions.map((question) => (
+                            <div key={question.id} className="item-card">
+                                <div className="card-meta">
                                     <div>
-                                        <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
+                                        <span className="author-name">
                                             投稿者: {question.fetchedUserName || '不明なユーザー'}
                                         </span>
                                         <span>{new Date(question.created_at).toLocaleDateString('ja-JP')}</span>
                                     </div>
                                     
-                                    {/* DBの is_finish を活用したステータスラベル */}
-                                    <div style={{
-                                        padding: '4px 8px',
-                                        borderRadius: '4px',
-                                        backgroundColor: question.is_finish ? '#e0f2f1' : '#ffebee',
-                                        color: question.is_finish ? '#00695c' : '#c62828',
-                                        fontWeight: 'bold',
-                                        fontSize: '12px'
-                                    }}>
+                                    {/* 状態によって色を切り替えるクラスを動的に付与します */}
+                                    <div className={`status-badge ${question.is_finish ? 'status-resolved' : 'status-open'}`}>
                                         {question.is_finish ? '解決済み' : '受付中'}
                                     </div>
                                 </div>
-                                {/* 質問の詳細ページへのリンク付け */}
-                                <Link to={`/question/${question.id}`} style={{ textDecoration: 'none'}}>      
-                                    <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
+                                
+                                <Link to={`/question/${question.id}`} className="title-link">      
+                                    <h2 className="item-title">
                                         {question.title}
                                     </h2>
                                 </Link>
 
+                                {question.tags && question.tags.length > 0 && (
+                                    <div className="tag-list">
+                                        {question.tags.map((tagName, index) => (
+                                            <span key={index} className="tag-badge">
+                                                {tagName}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
                                 {question.content && (
-                                    <p style={{ fontSize: '14px', color: 'var(--text)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    <p className="item-content">
                                         {question.content}
                                     </p>
                                 )}
@@ -121,12 +127,6 @@ function QuestionList() {
                         ))
                     )}
                 </div>
-            </div>
-
-            <div style={{ marginTop: '40px' }}>
-                <Link to="/" style={{ color: 'var(--accent)', fontSize: '16px', fontWeight: 'bold', textDecoration: 'none' }}>
-                    ← ログイン画面へ戻る
-                </Link>
             </div>
         </section>
     );
