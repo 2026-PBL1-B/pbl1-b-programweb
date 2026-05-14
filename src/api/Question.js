@@ -108,3 +108,31 @@ export async function getMyQuestions() {
     
     return data; // 最終的に取得した配列を返す
 }
+
+
+/**
+ * 指定したユーザーの質問を取得する関数
+ * user_idはgetCurrentUserId()で取得してから引数に入れる想定
+ * @param {string} user_id - 質問を取得したいユーザーのID
+ * @returns そのユーザーが投稿した質問の配列。エラーがあれば空配列を返す。
+ */
+export async function getQuestionsByUserId(user_id) {
+  if (!user_id) {
+    console.warn('取得対象のユーザーIDがありません');
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('Question')
+    .select('title, id, created_at, is_finish')
+    .eq('user_id', user_id);
+
+  if (error) {
+    console.error('質問の取得に失敗:', error.message);
+    return [];
+  }
+
+  console.log('質問の取得に成功しました。データの中身:', data);
+  
+  return data;
+}
