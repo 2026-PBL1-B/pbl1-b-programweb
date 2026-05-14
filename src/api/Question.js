@@ -112,7 +112,6 @@ export async function getMyQuestions() {
 
 /**
  * 指定したユーザーの質問を取得する関数
- * user_idはgetCurrentUserId()で取得してから引数に入れる想定
  * @param {string} user_id - 質問を取得したいユーザーのID
  * @returns そのユーザーが投稿した質問の配列。エラーがあれば空配列を返す。
  */
