@@ -1,6 +1,6 @@
 import { supabase } from '../spabase'
 /**
- * プロフィール情報を登録・更新する関数
+ * プロフィール情報を登録関数
  * user_idはsupabaseの機能で自動的に入るため、引数には入れない
  * @param {string} avatar_url - アイコン画像のURL
  * @param {Int} grade - 学年
