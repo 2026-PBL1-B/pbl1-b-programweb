@@ -1,12 +1,10 @@
 // src/pages/Home.jsx
-import { useNavigate } from "react-router-dom";
-import Header from '../components/Header.jsx';  // ✅ {}を削除
+import Header from '../components/Header.jsx';
 
-function Header() { 
+function Home() { 
   return (
     <div>
-      <Header />  {/* ✅ importしたHeaderを使う */}
-      
+          <Header />
     </div>
   );
 }
