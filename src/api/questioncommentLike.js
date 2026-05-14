@@ -45,3 +45,35 @@ export async function deleteQuestionCommentLike(question_comment_id) {
     return data;
 }
 
+/**
+ * 特定の質問コメントに対するいいね情報を取得する
+ * ログインユーザーや特定のユーザーがそのコメントにいいねしているかも取得することも可能
+ * @param {string} question_comment_id - いいね情報を取得したいコメントのID
+ * @param {string} [user_id] - オプション: 特定のユーザーのいいね情報を取得したい場合はユーザーIDを指定
+ * @returns {Promise<{data: Array, count: number}>} いいね情報の配列とその数を返す。エラーがあれば空配列と0を返す。
+*/
+export async function getQuestionCommentLike(question_comment_id, user_id) {
+    try {
+        let query = supabase
+            .from('QuestionCommentLike')
+            .select('*', { count: 'exact' }) // countを取る設定
+            .eq('question_comment_id', question_comment_id);
+
+        if (user_id) {
+            query = query.eq('user_id', user_id);
+        }
+
+        const { data, error, count } = await query;
+
+        if (error) {
+            console.error('いいね情報の取得に失敗:', error.message);
+            return { data: [], count: 0 };
+        }
+
+        console.log('いいね情報の取得に成功:', data, 'いいねの数:', count);
+        return { data, count };
+    } catch (error) {
+        console.error('いいね情報の取得中にエラーが発生:', error.message);
+        return { data: [], count: 0 };
+    }
+}
