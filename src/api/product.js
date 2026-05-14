@@ -106,3 +106,28 @@ export async function getMyProducts() {
 
   return data;
 }
+
+/**
+ * 指定ユーザーの制作物を取得する関数
+ * @param {string} user_id - 作品を取得したいユーザーのID
+ * @returns そのユーザーが投稿した作品の配列。エラーがあれば空配列を返す。
+ */
+export async function getProductsByUserId(user_id) {
+  if (!user_id) {
+    console.error('存在しないユーザーです');
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('Product')
+    .select('title, id, created_at, is_finish') // 作品のタイトル,ID,作成日時,完成フラグだけを取得する例
+    .eq('user_id', user_id);
+
+  if (error) {
+    console.error('制作物の取得に失敗:', error.message);
+    return [];
+  } else {
+    console.log('制作物の取得に成功:', data);
+    return data;
+  }
+}
