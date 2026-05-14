@@ -15,8 +15,8 @@ export default function Header() {
 
       <div className="nav-bar">
         <h2 className="nav-link" onClick={() => navigate("/Home")}>HP</h2>
-        <h2 className="nav-link" onClick={() => navigate("/QuestionList")}>質問</h2>
         <h2 className="nav-link" onClick={() => navigate("/productlist")}>制作物</h2>
+        <h2 className="nav-link" onClick={() => navigate("/QuestionList")}>質問</h2>
       </div>
     </header>
   );
