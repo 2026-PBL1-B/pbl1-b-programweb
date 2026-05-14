@@ -1,6 +1,6 @@
 // src/components/TagFilterSortBar.jsx
 import React, { useState, useRef, useEffect } from 'react';
-import '../css/ListPage.css';
+import '../css/TagFilterSortBar.css';
 
 function TagFilterSortBar({ 
     availableTags, 
