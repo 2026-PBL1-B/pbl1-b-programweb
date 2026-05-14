@@ -3,36 +3,46 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getProducts } from '../api/product';
 import { getUserName } from '../api/User';
+import { getTags, getProductTagNames } from '../api/Tag';
+import TagFilterSortBar from '../components/TagFilterSortBar';
+import '../css/ListPage.css';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
     const [sortOrder, setSortOrder] = useState('desc');
     const [isLoading, setIsLoading] = useState(true);
 
-    const navigate = useNavigate(); // ボタンで画面遷移するための関数
+    // タグ関連の状態管理
+    const [availableTags, setAvailableTags] = useState([]);
+    const [selectedTagNames, setSelectedTagNames] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadProducts = async () => {
             setIsLoading(true);
             try {
-                // product.js の関数を呼び出してデータを受け取る
+                // 1. 全タグ一覧を取得
+                const tagsData = await getTags();
+                setAvailableTags(tagsData || []);
+
+                // 2. 制作物一覧を取得
                 const data = await getProducts();
                 console.log('取得データ確認:', data); // デバッグ用
                 
-                // getUserNameを使ってユーザー名を取得しデータに結合
-                const dataWithNames = await Promise.all(
+                // 3. 各制作物にユーザー名と紐づくタグ名リストを追加
+                const dataWithNamesAndTags = await Promise.all(
                     (data || []).map(async (article) => {
                         const userName = await getUserName(article.user_id);
-                        return { ...article, fetchedUserName: userName };
+                        const tagNames = await getProductTagNames(article.id);
+                        return { ...article, fetchedUserName: userName, tags: tagNames };
                     })
                 );
                 
-                setArticles(dataWithNames);
+                setArticles(dataWithNamesAndTags);
             } catch (error) {
-                // 例外がスローされた場合のエラーハンドリング
-                console.error('データの読み込み処理中にエラーが発生しました', error);
+                console.error('データの読み込み中にエラーが発生しました', error);
             } finally {
-                // 成功しても失敗してもロード状態を解除する
                 setIsLoading(false);
             }
         };
@@ -40,68 +50,78 @@ function ProductList() {
         loadProducts();
     }, []);
 
-    const sortedArticles = [...articles].sort((a, b) => {
-        const dateA = new Date(a.created_at);
-        const dateB = new Date(b.created_at);
-        return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
-    });
+    // ★重要: ここで絞り込みと並び替えを行った新しい配列を作成します
+    const filteredAndSortedArticles = [...articles]
+        .filter((article) => {
+            // 選択されているタグがない場合はすべて表示
+            if (selectedTagNames.length === 0) return true;
+            if (!article.tags) return false;
+            // 選択されたタグの「いずれか」が含まれているものを抽出
+            return selectedTagNames.some(tag => article.tags.includes(tag));
+        })
+        .sort((a, b) => {
+            const dateA = new Date(a.created_at);
+            const dateB = new Date(b.created_at);
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
 
     return (
-        <section style={{ minHeight: '100vh', padding: '40px 20px', display: 'flex', flexDirection: 'column', alignItems: 'flex-start'}}>
-            <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' ,
-                paddingBottom: '24px', borderBottom: '2px solid var(--border)' 
-            }}>
-                <h1 style={{ margin: 0 }}>制作物投稿一覧ページ</h1>
+        <section className="page-container">
+            <header className="page-header">
+                <h1 className="header-title">制作物一覧</h1>
                 <button 
-                    onClick={() => navigate('/productpost')} 
-                    style={{
-                        padding: '8px 16px', backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)',
-                        borderRadius: '4px', cursor: 'pointer', color: 'var(--text)', width: '160px',
-                        fontSize: '14px', fontWeight: 'bold', textAlign: 'center'
-                    }}
+                    className="primary-button"
+                    onClick={() => navigate('/post-product')}
                 >
-                    投稿する
+                    制作物を投稿する
                 </button>
-            </div>
+            </header>
 
-            <div style={{ width: '100%', display: 'flex', flexDirection: 'row', alignItems: 'flex-start', gap: '16px' }}>
-                <div style={{ width: '80%', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '16px' }}>
-                    <button 
-                        onClick={() => setSortOrder(sortOrder === 'desc' ? 'asc' : 'desc')}
-                        style={{
-                            padding: '8px 16px', backgroundColor: 'var(--code-bg)', border: '1px solid var(--border)',
-                            borderRadius: '4px', cursor: 'pointer', color: 'var(--text)', width: '160px', alignSelf: 'flex-end'
-                        }}
-                    >
-                        {sortOrder === 'desc' ? '新しい順 ↓' : '古い順 ↑'}
-                    </button>
+            <div className="content-layout">
+                <div className="main-column">
+                    {/* 絞り込み・並び替えバー */}
+                    <TagFilterSortBar 
+                        availableTags={availableTags}
+                        selectedTagNames={selectedTagNames}
+                        setSelectedTagNames={setSelectedTagNames}
+                        sortOrder={sortOrder}
+                        setSortOrder={setSortOrder}
+                    />
 
                     {isLoading ? (
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>
+                    ) : filteredAndSortedArticles.length === 0 ? (
+                        <p>該当する制作物はありません。</p>
                     ) : (
-                        sortedArticles.map((article) => (
-                            <div key={article.id} style={{ 
-                                border: '1px solid var(--border)', borderRadius: '12px', padding: '24px',                   
-                                backgroundColor: 'var(--bg)', boxShadow: 'var(--shadow)', textAlign: 'left',
-                                width: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', gap: '12px'                        
-                            }}>
-                                <div style={{ fontSize: '14px', color: 'var(--text)' }}>
-                                    <span style={{ fontWeight: 'bold', marginRight: '8px' }}>
-                                        {/* getUserNameで取得したユーザー名を表示 */}
-                                        投稿者: {article.fetchedUserName || '不明なユーザー'}
-                                    </span>
-                                    <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
+                        filteredAndSortedArticles.map((article) => (
+                            <div key={article.id} className="item-card">
+                                <div className="card-meta">
+                                    <div>
+                                        <span className="author-name">
+                                            投稿者: {article.fetchedUserName || '不明なユーザー'}
+                                        </span>
+                                        <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
+                                    </div>
                                 </div>
                                 
-                                {/* 詳細ページへのリンク */}
-                                <Link to={`/product/${article.id}`} style={{ textDecoration: 'none'}}>      
-                                <h2 style={{ fontSize: '22px', margin: '0', color: 'var(--text-h)', cursor: 'pointer' }}>
-                                    {article.title}
-                                </h2>
+                                <Link to={`/product/${article.id}`} className="title-link">      
+                                    <h2 className="item-title">
+                                        {article.title}
+                                    </h2>
                                 </Link>
 
+                                {article.tags && article.tags.length > 0 && (
+                                    <div className="tag-list">
+                                        {article.tags.map((tagName, index) => (
+                                            <span key={index} className="tag-badge">
+                                                {tagName}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
+
                                 {article.content && (
-                                    <p style={{ fontSize: '14px', color: 'var(--text)', margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                                    <p className="item-content">
                                         {article.content}
                                     </p>
                                 )}
@@ -109,12 +129,6 @@ function ProductList() {
                         ))
                     )}
                 </div>
-            </div>
-
-            <div style={{ marginTop: '40px' }}>
-                <Link to="/" style={{ color: 'var(--accent)', fontSize: '16px', fontWeight: 'bold', textDecoration: 'none' }}>
-                    ← ログイン画面へ戻る
-                </Link>
             </div>
         </section>
     );

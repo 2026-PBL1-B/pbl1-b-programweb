@@ -1,0 +1,216 @@
+/* src/css/ListPage.css */
+
+/* ページ全体のレイアウト */
+.page-container {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+/* ヘッダー部分 */
+.page-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+}
+
+.header-title {
+    margin: 0;
+}
+
+/* 共通のボタンデザイン */
+.primary-button {
+    padding: 8px 16px;
+    background-color: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text);
+    width: 160px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* 一覧部分のレイアウト */
+.content-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.main-column {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+/* カード（質問・制作物）のデザイン */
+.item-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    background-color: var(--bg);
+    box-shadow: var(--shadow);
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.card-meta {
+    font-size: 14px;
+    color: var(--text);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.author-name {
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+/* 解決状態のバッジ */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 12px;
+}
+.status-resolved {
+    background-color: #e0f2f1;
+    color: #00695c;
+}
+.status-open {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* タイトルとリンク */
+.title-link {
+    text-decoration: none;
+}
+.item-title {
+    font-size: 22px;
+    margin: 0;
+    color: var(--text-h);
+    cursor: pointer;
+}
+
+/* タグ一覧 */
+.tag-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.tag-badge {
+    font-size: 12px;
+    background-color: var(--code-bg);
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+}
+
+/* コンテンツテキストの省略表示（...） */
+.item-content {
+    font-size: 14px;
+    color: var(--text);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 戻るリンク */
+.back-link-container {
+    margin-top: 40px;
+}
+.back-link {
+    color: var(--accent);
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* --- 絞り込み・並び替えバー用 --- */
+.filter-sort-bar {
+    display: flex;
+    gap: 12px;
+    align-self: flex-end;
+}
+.filter-select {
+    padding: 8px 12px;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 14px;
+}
+
+
+/* --- カスタムドロップダウン用 --- */
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-toggle {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    color: var(--text);
+    font-size: 14px;
+    min-width: 180px;
+    text-align: left;
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 4px;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    z-index: 10;
+    min-width: 200px;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.dropdown-item:hover {
+    background-color: var(--code-bg);
+}
+
+.dropdown-item input[type="checkbox"] {
+    cursor: pointer;
+}
