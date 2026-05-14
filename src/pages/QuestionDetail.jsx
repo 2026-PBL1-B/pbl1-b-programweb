@@ -1,21 +1,21 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../spabase';
-import "../css/QuestionDetail.css";
+//import "../css/ListPage.css"; // 一覧のベーススタイルを読み込む
+import "../css/DetailPage.css"; // 詳細独自のスタイルを読み込む
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postQuestionComment, getQuestionComments } from '../api/questioncomment';
 import { postQuestionLike, deleteQuestionLike, getQuestionsLike, getMyQuestionLike } from '../api/questionLike';
 import LikeButton from '../components/LikeButton';
-
+import { getQuestionTagNames } from '../api/Tag';
 
 function QuestionDetail() {
-
     const { id } = useParams();
-
     const [question, setQuestion] = useState(null);
     const [comments, setComments] = useState([]);
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
+    const [tags, setTags] = useState([]);
 
     const fetchComments = useCallback(async () => {
         const data = await getQuestionComments(id);
@@ -23,9 +23,7 @@ function QuestionDetail() {
     }, [id]);
 
     useEffect(() => {
-
         const fetchQuestion = async () => {
-
             const { data, error } = await supabase
                 .from('Question')
                 .select('*')
@@ -40,27 +38,27 @@ function QuestionDetail() {
 
             await fetchComments();
 
-            // いいね情報を取得
-            const { count } = await getQuestionsLike(id); // いいねの数を取得
+            const { count } = await getQuestionsLike(id);
             setLikeCount(count);
-            const isLiked = await getMyQuestionLike(id); // 自分がいいねしているかどうかを取得
+            const isLiked = await getMyQuestionLike(id);
             setLiked(isLiked);
+
+            if (getQuestionTagNames) {
+                const tagNames = await getQuestionTagNames(id);
+                setTags(tagNames || []);
+            }
         };
 
         fetchQuestion();
-
     }, [id, fetchComments]);
 
-    // いいねボタンが押された時の処理
     const handleLikeToggle = async () => {
-        // 楽観的UI更新
         const previousLiked = liked;
         const previousCount = likeCount;
         
         setLiked(!previousLiked);
-        setLikeCount(previousLiked ? previousCount - 1 : previousCount + 1);  // いいねの数も更新
+        setLikeCount(previousLiked ? previousCount - 1 : previousCount + 1);
 
-        // いいねの状態をサーバーに反映
         try {
             if (previousLiked) {
                 await deleteQuestionLike(id);
@@ -68,7 +66,6 @@ function QuestionDetail() {
                 await postQuestionLike(id);
             }
         } catch (error) {
-            // 失敗した場合は元に戻す
             console.error('いいねの処理に失敗:', error);
             setLiked(previousLiked);
             setLikeCount(previousCount);
@@ -78,7 +75,6 @@ function QuestionDetail() {
 
     const handleCommentSubmit = async (content) => {
         const { error } = await postQuestionComment(id, content);
-
         if (error) {
             console.error('コメントの投稿に失敗:', error.message);
             alert('コメントの投稿に失敗しました。');
@@ -88,58 +84,61 @@ function QuestionDetail() {
         }
     };
 
-    // 読み込み中
-    if (!question) {
-        return <p>読み込み中...</p>;
-    }
+    if (!question) return <p style={{ color: 'var(--text)', padding: '40px' }}>読み込み中...</p>;
 
     return (
-        // 詳細ページタイトル
-        <>
-        <h1>詳細ページ</h1>
-            <div className="detail-container">
-
-            {/* いいねボタン */}
-            <div className="like-button-container">
-                <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
+        <section className="page-container">
+            {/* ヘッダー部分（リストページと同じ構造） */}
+            <div className="page-header">
+                <h1 className="header-title">質問詳細ページ</h1>
             </div>
 
-            {/* タイトルエリア */}
-            <div className="content-section">
+            {/* コンテンツレイアウト部分 */}
+            <div className="content-layout">
+                <div className="main-column">
+                    
+                    {/* 詳細情報のカード */}
+                    <div className="detail-card">
+                        
+                        <div className="like-button-container">
+                            <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
+                        </div>
 
-                <p className="section-label">
-                    質問タイトル
-                </p>
+                        <div>
+                            <p className="section-label">質問タイトル</p>
+                            <h2 className="post-title">{question.title}</h2>
+                        </div>
 
-                <h2 className="post-title">
-                    {question.title}
-                </h2>
+                        {/* タグリスト（リストページのスタイルを再利用） */}
+                        <div className="tag-list">
+                            {tags.length > 0 ? (
+                                tags.map((tag, index) => (
+                                    <span key={index} className="tag-badge">
+                                        {tag}
+                                    </span>
+                                ))
+                            ) : (
+                                <p className="item-content">タグはありません</p>
+                            )}
+                        </div>
 
-            </div>
+                        <div>
+                            <p className="section-label">質問内容</p>
+                            <div className="post-content">
+                                {question.content}
+                            </div>
+                        </div>
+                    </div>
 
-            {/* 本文エリア */}
-            <div className="content-section">
+                    {/* コメントエリア */}
+                    <div className="comment-section">
+                        <DetailCommentPost onSubmit={handleCommentSubmit} />
+                        <DetailCommentGet comments={comments} />
+                    </div>
 
-                <p className="section-label">
-                    質問内容
-                </p>
-
-                <div className="post-content">
-                    {question.content}
                 </div>
-
             </div>
-
-            {/* コメントフォーム */}
-            <DetailCommentPost onSubmit={handleCommentSubmit} />
-
-            {/* コメント一覧 */}
-            <DetailCommentGet comments={comments} />
-
-            </div>
-
-       
-        </>
+        </section>
     );
 }
 
