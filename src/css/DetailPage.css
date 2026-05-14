@@ -1,0 +1,125 @@
+/* DetailPage.css */
+
+/* --- ベースレイアウト (ListPage.css から移植 & 詳細向け調整) --- */
+
+.page-container {
+    min-height: 100vh;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 中央寄せ（中身が100%なら全体に広がる） */
+    background-color: var(--bg-page, #f3f4f6); /* ページ背景色（任意） */
+}
+
+.page-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border, #e5e7eb);
+}
+
+.header-title {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-h, #111);
+}
+
+.content-layout {
+    width: 100%; /* 画面全体を使用 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ← 追加: 中の要素を中央に配置します */
+}
+
+.main-column {
+    width: 80%; /* 幅80%の要素が中央に配置されるようになります */
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* --- 詳細カードのデザイン --- */
+
+.detail-card {
+    width: 80%;
+    border: 1px solid var(--border, #e5e7eb);
+    border-radius: 12px;
+    padding: 40px;
+    background-color: var(--bg, #ffffff);
+    box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.section-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-muted, #6b7280);
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.post-title {
+    font-size: 32px;
+    font-weight: bold;
+    line-height: 1.4;
+    color: var(--text-h, #111);
+    margin: 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border, #e5e7eb);
+}
+
+.post-content {
+    font-size: 17px;
+    line-height: 2;
+    color: var(--text, #374151);
+    white-space: pre-wrap;
+    padding: 24px;
+    background-color: var(--code-bg, #f9fafb);
+    border-radius: 8px;
+    border: 1px solid var(--border, #e5e7eb);
+    min-height: 200px;
+    margin-bottom: 16px;  /* 次に来るいいねボタンとの間隔を指定 */
+}
+
+/* --- タグ・ボタン系 --- */
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-badge {
+    padding: 4px 12px;
+    background-color: var(--tag-bg, #e5e7eb);
+    color: var(--tag-text, #374151);
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+/* いいねボタンを右下に配置するコンテナ */
+.like-button-container {
+    display: flex;
+    /* 右寄せにする */
+    justify-content: flex-end; 
+    /* カードの下部 padding と合わさってちょうどいい位置になるよう調整 */
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.comment-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
