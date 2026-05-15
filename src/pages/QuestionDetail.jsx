@@ -4,13 +4,14 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import { supabase } from '../spabase';
-//import "../css/ListPage.css"; // 一覧のベーススタイルを読み込む
 import "../css/DetailPage.css"; // 詳細独自のスタイルを読み込む
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postQuestionComment, getQuestionComments } from '../api/questioncomment';
 import { postQuestionLike, deleteQuestionLike, getQuestionsLike, getMyQuestionLike } from '../api/questionLike';
 import LikeButton from '../components/LikeButton';
 import { getQuestionTagNames } from '../api/Tag';
+import { getUserName } from '../api/User'; 
+import { grades } from '../domain/GradeDepartment';
 
 function QuestionDetail() {
     const { id } = useParams();
@@ -19,6 +20,7 @@ function QuestionDetail() {
     const [liked, setLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
     const [tags, setTags] = useState([]);
+    const [userName, setUserName] = useState('');
 
     const fetchComments = useCallback(async () => {
         const data = await getQuestionComments(id);
@@ -37,6 +39,12 @@ function QuestionDetail() {
                 console.error('取得エラー:', error);
             } else {
                 setQuestion(data);
+            }
+
+            // user_idを使ってユーザーネームを取得する処理
+            if (data.user_id) {
+                const name = await getUserName(data.user_id);
+                setUserName(name || '不明なユーザー');
             }
 
             await fetchComments();
@@ -89,6 +97,13 @@ function QuestionDetail() {
 
     if (!question) return <p style={{ color: 'var(--text)', padding: '40px' }}>読み込み中...</p>;
 
+    // 学年のラベル変換
+    let gradeLabel = '';
+    if (question.grade) {
+        const foundGrade = grades.find(g => g.value === String(question.grade));
+        gradeLabel = foundGrade.label; 
+    }
+
     return (
         <section className="page-container">
             {/* ヘッダー部分（リストページと同じ構造） */}
@@ -107,8 +122,17 @@ function QuestionDetail() {
                             <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
                         </div>
 
-                        <div>
-                            <p className="section-label">質問タイトル</p>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
+                            {/* 1行目: ユーザーネーム */}
+                            <div>投稿者: {userName}</div>
+                            
+                            {/* 2行目: 学科・学年（こちらは横並び） */}
+                            <div style={{ display: 'flex', gap: '8px' }}>
+                                {question.department && <span>{question.department}</span>}
+                                {gradeLabel && <span>{gradeLabel}</span>}
+                            </div>
+
+                            {/* 制作物タイトル */}
                             <h2 className="post-title">{question.title}</h2>
                         </div>
 
