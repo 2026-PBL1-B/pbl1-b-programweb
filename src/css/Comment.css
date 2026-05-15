@@ -139,3 +139,45 @@
   white-space: pre-wrap; /* 改行を反映する */
   word-wrap: break-word; /* 長い単語で折り返す */
 }
+
+/* =========================================
+   黒いコメントカード（新デザイン）
+   ========================================= */
+.comment-item-black {
+  width: 80vw;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+.comment-item-black .comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.comment-item-black .comment-username {
+  font-weight: bold;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+.comment-item-black .comment-date {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.comment-item-black .comment-body {
+  font-size: 15px;
+  color: #eaeaea;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}

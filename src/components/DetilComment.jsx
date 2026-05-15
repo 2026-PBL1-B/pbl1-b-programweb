@@ -138,7 +138,7 @@ export function DetailCommentGet({ comments }) {
   return (
     <div className="comment-list-container">
       {comments.map((comment) => (
-        <div key={comment.id || comment.created_at} className="comment-item">
+        <div key={comment.id || comment.created_at} className="comment-item-black">
           <div className="comment-header">
             <CommentAuthor userId={comment.user_id} />
             <span className="comment-date">
