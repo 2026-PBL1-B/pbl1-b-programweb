@@ -1,6 +1,7 @@
 // src/components/PostForm.jsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import GradeDepartmentSelect from './GradeDepartmentSelect';
 import '../css/Post.css';
 
 function PostForm({ 
@@ -12,15 +13,22 @@ function PostForm({
     loading = false,
     showCancel = false,
     cancelLink = "/",
-    showFinish = true // 完成済みチェックボックス
+    showFinish = true, // 完成済みチェックボックス
+    showGradeDepartment = false
 }) {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
     const [content, setContent] = useState("");
     const [mode, setMode] = useState("edit");
+
+    // 公開,完成の変数
     const [isPublic, setIsPublic] = useState(true);
     const [isFinish, setIsFinish] = useState(false);
+
+    // 学年と学科の状態を管理する変数
+    const [grade, setGrade] = useState(""); 
+    const [department, setDepartment] = useState("");
 
     const handleKeyDown = (e) => {
         if (e.nativeEvent.isComposing) return;
@@ -44,7 +52,7 @@ function PostForm({
             alert("タイトルと本文を入力してください。");
             return;
         }
-        onSubmit({ title, content, tags, isPublic, isFinish });
+        onSubmit({ title, content, tags, isPublic, isFinish , grade, department});
     };
 
     return (
@@ -76,6 +84,16 @@ function PostForm({
                         />
                     )}
                 </div>
+
+                {/* 学年・学科選択コンポーネント */}
+                {showGradeDepartment && (
+                    <GradeDepartmentSelect 
+                        grade={grade} 
+                        setGrade={setGrade} 
+                        department={department} 
+                        setDepartment={setDepartment} 
+                    />
+                )}
 
                 <div className="content-header" style={{ marginTop: '20px' }}>
                     <h2>{contentLabel}</h2>
