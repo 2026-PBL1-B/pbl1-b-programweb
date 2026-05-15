@@ -6,7 +6,7 @@ import { supabase } from '../spabase'
  * @return {Object} { success, data, error }
  */
 
-export const getMyProfile = async (user_id) => {
+export const getProfileForUserID = async (user_id) => {
 
 if (!user_id) {
         console.warn('取得対象のユーザーIDがありません（未ログイン）'); // エラーを防ぐために、user_idがない場合は空の配列を返して処理を終了
