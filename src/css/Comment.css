@@ -24,7 +24,7 @@
   width: 80vw;
 }
 
-/* 入力ボックスのスタイル */
+/* 入力ボックスとプレビューの共通スタイル */
 .comment-input {
   width: 100%;
   padding: 12px;
@@ -32,6 +32,24 @@
   border-radius: 8px;
   box-sizing: border-box;
   outline: none;
+
+  background-color: #1a1a1a; /* ここに使いたい背景色（黒など）を指定 */
+  color: #ffffff;           /* テキストの色 */
+  border: 1px solid #333;   /* 枠線を明示的に指定 */
+  min-height: 44px;         /* 1行分の最低高さ */
+  line-height: 1.5;         /* 行間を統一 */
+}
+
+/* プレビュー側（div）専用の調整 */
+.preview-container {
+  white-space: pre-wrap;    /* 改行を反映させる */
+  word-break: break-all;    /* 長い文字列の折り返し */
+  text-align: left;         /* 左寄せ */
+}
+
+/* Markdown内の余計な余白を消してtextareaに合わせる */
+.preview-container p {
+  margin: 0;
 }
 
 .comment-input:focus {
@@ -120,4 +138,71 @@
   line-height: 1.5;
   white-space: pre-wrap; /* 改行を反映する */
   word-wrap: break-word; /* 長い単語で折り返す */
+}
+
+/* =========================================
+   黒いコメントカード（新デザイン）
+   ========================================= */
+.comment-item-black {
+  width: 80vw;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+.comment-item-black .comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #444;
+}
+
+.comment-item-black .comment-username {
+  font-weight: bold;
+  color: #e0e0e0;
+  font-size: 14px;
+}
+
+.comment-item-black .comment-date {
+  font-size: 12px;
+  color: #aaa;
+}
+
+.comment-item-black .comment-body {
+  font-size: 15px;
+  color: #eaeaea;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* =========================================
+   Markdownコンテンツ内の見出しサイズ制限
+   ========================================= */
+.markdown-content h1 {
+  font-size: 1.3rem;
+  margin: 10px 0 5px;
+}
+
+.markdown-content h2 {
+  font-size: 1.15rem;
+  margin: 8px 0 4px;
+}
+
+.markdown-content h3 {
+  font-size: 1.05rem;
+  margin: 5px 0 2px;
+}
+
+.markdown-content h4, 
+.markdown-content h5, 
+.markdown-content h6 {
+  font-size: 1rem;
+  margin: 5px 0 2px;
 }

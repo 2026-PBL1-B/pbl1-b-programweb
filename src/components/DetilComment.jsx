@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import "../css/Comment.css";
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import { getUserName } from '../api/User';
 
 /**
@@ -42,15 +45,20 @@ function CommentAuthor({ userId }) {
  */
 export default function DetailCommentPost({ onSubmit }) {
   const [comment, setComment] = useState('');
+  const [isPreview, setIsPreview] = useState(false);
+  const [height, setHeight] = useState('auto'); // 高さをStateで管理
   const textareaRef = useRef(null);
 
-  // 入力内容が変わるたびに高さを自動調整
+  // 入力内容が変わるたびに高さを計算し、Stateに保存
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto'; // autoにして縮む動きに対応
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    if (!isPreview && textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      const scrollHeight = textareaRef.current.scrollHeight;
+      const newHeight = `${scrollHeight}px`;
+      textareaRef.current.style.height = newHeight;
+      setHeight(newHeight); // プレビュー側でも使えるように保存
     }
-  }, [comment]);
+  }, [comment, isPreview]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -59,6 +67,8 @@ export default function DetailCommentPost({ onSubmit }) {
       onSubmit(comment);
     }
     setComment('');
+    setIsPreview(false);
+    setHeight('auto'); // リセット
   };
 
   return (
@@ -67,16 +77,43 @@ export default function DetailCommentPost({ onSubmit }) {
         <span className="comment-form-title">コメントを投稿する</span>
       </div>
       <form onSubmit={handleSubmit} className="comment-form-body">
-        <textarea
-          ref={textareaRef} // テキストエリアの高さを自動調整するためのref
-          className="comment-input"
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          placeholder="ここにコメントを入力できます"
-          rows={1} // 初期行数は1行
-          style={{ overflow: 'hidden', resize: 'none' }} // スクロールと手動リサイズを無効化
-        />
+        {!isPreview ? (
+          <textarea
+            ref={textareaRef}
+            className="comment-input"
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="ここにコメントを入力できます"
+            rows={1}
+            style={{ overflow: 'hidden', resize: 'none' }}
+          />
+        ) : (
+          <div 
+            className="comment-input markdown-content" 
+            style={{ 
+              minHeight: height,
+              overflowWrap: 'anywhere'
+            }}
+          >
+            {comment.trim() ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                {comment}
+              </ReactMarkdown>
+            ) : (
+              <span style={{ color: '#999' }}>プレビューする内容がありません</span>
+            )}
+          </div>
+        )}
+        
         <div className="comment-form-footer">
+          <button
+            type="button"
+            className="comment-mode-button"
+            onClick={() => setIsPreview(!isPreview)}
+            style={{ marginRight: '8px' }}
+          >
+            {isPreview ? '編集' : 'プレビュー'}
+          </button>
           <button 
             type="submit" 
             className="comment-submit-button" 
@@ -92,7 +129,6 @@ export default function DetailCommentPost({ onSubmit }) {
 
 /**
  * コメント一覧を表示するコンポーネント
- * @param {Array} comments - コメントの配列
  */
 export function DetailCommentGet({ comments }) {
   if (!comments || comments.length === 0) {
@@ -102,16 +138,17 @@ export function DetailCommentGet({ comments }) {
   return (
     <div className="comment-list-container">
       {comments.map((comment) => (
-        <div key={comment.id || comment.created_at} className="comment-item">
+        <div key={comment.id || comment.created_at} className="comment-item-black">
           <div className="comment-header">
-            {/* ユーザー名（getUserNameを使用して取得） */}
             <CommentAuthor userId={comment.user_id} />
             <span className="comment-date">
               {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
             </span>
           </div>
-          <div className="comment-body">
-            {comment.content}
+          <div className="comment-body markdown-content">
+            <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+              {comment.content}
+            </ReactMarkdown>
           </div>
         </div>
       ))}
