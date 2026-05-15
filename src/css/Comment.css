@@ -24,7 +24,7 @@
   width: 80vw;
 }
 
-/* 入力ボックスのスタイル */
+/* 入力ボックスとプレビューの共通スタイル */
 .comment-input {
   width: 100%;
   padding: 12px;
@@ -32,6 +32,24 @@
   border-radius: 8px;
   box-sizing: border-box;
   outline: none;
+
+  background-color: #1a1a1a; /* ここに使いたい背景色（黒など）を指定 */
+  color: #ffffff;           /* テキストの色 */
+  border: 1px solid #333;   /* 枠線を明示的に指定 */
+  min-height: 44px;         /* 1行分の最低高さ */
+  line-height: 1.5;         /* 行間を統一 */
+}
+
+/* プレビュー側（div）専用の調整 */
+.preview-container {
+  white-space: pre-wrap;    /* 改行を反映させる */
+  word-break: break-all;    /* 長い文字列の折り返し */
+  text-align: left;         /* 左寄せ */
+}
+
+/* Markdown内の余計な余白を消してtextareaに合わせる */
+.preview-container p {
+  margin: 0;
 }
 
 .comment-input:focus {
