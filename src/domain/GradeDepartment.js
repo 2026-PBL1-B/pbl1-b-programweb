@@ -9,9 +9,14 @@ export const grades = [
 
 // 学科の選択肢データ
 export const departments = [
-    { value: "", label: "選択しない" },
-    { value: "IT", label: "IT学科" },
-    { value: "Design", label: "デザイン学科" },
-    { value: "Game", label: "ゲーム学科" },
-    { value: "Business", label: "ビジネス学科" }
+    "ITエキスパート学科",
+    "ITスペシャリスト学科",
+    "情報処理学科",
+    "AIシステム開発学科",
+    "情報工学科",
+    "ロボット制御コース",
+    "情報ビジネス学科",
+    "ゲーム開発研究学科",
+    "ゲームエンジニア学科",
+    "ゲーム制作学科"
 ];
