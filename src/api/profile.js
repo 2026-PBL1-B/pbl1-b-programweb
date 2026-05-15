@@ -1,4 +1,3 @@
-import { data } from 'react-router-dom';
 import { supabase } from '../spabase'
 /**
  * プロフィール情報を登録関数
