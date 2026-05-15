@@ -71,7 +71,7 @@ function ProductList() {
                 <h1 className="header-title">制作物一覧</h1>
                 <button 
                     className="primary-button"
-                    onClick={() => navigate('/post-product')}
+                    onClick={() => navigate('/productpost')}
                 >
                     制作物を投稿する
                 </button>
