@@ -39,3 +39,37 @@ export const postProfile = async (avatar_url, grade, department, graduation_year
     return { success: false, error: error.message };  // エラー情報を返す
   }
 };
+
+/**
+ * 特定のユーザーIDを指定してプロフィールを取得する関数
+ * @param {string} user_id - 取得したいユーザーのUUID
+ * @return {Object} { success, data, error }
+ */
+
+export const getMyProfile = async (user_id) => {
+
+if (!user_id) {
+        console.warn('取得対象のユーザーIDがありません（未ログイン）'); // エラーを防ぐために、user_idがない場合は空の配列を返して処理を終了
+        return { success: false, data: null, error: 'No User ID' };
+    }
+
+  try {
+
+    const { data, error } = await supabase
+      .from('Profile')
+      .select('*')          // すべてのカラムを取得
+      .eq('user_id', user_id) // user_idが引数のuser_idと一致するものを探す
+      .single();        
+
+    if (error) throw error;
+
+   console.log('プロフィールの取得に成功:', data);
+    return { success: true, data };
+
+  } catch (error) {
+
+    console.error('プロフィール取得に失敗:', error.message);
+    return { success: false, data: null, error: error.message };
+
+  }
+};
