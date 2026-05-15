@@ -181,3 +181,28 @@
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+/* =========================================
+   Markdownコンテンツ内の見出しサイズ制限
+   ========================================= */
+.markdown-content h1 {
+  font-size: 1.3rem;
+  margin: 10px 0 5px;
+}
+
+.markdown-content h2 {
+  font-size: 1.15rem;
+  margin: 8px 0 4px;
+}
+
+.markdown-content h3 {
+  font-size: 1.05rem;
+  margin: 5px 0 2px;
+}
+
+.markdown-content h4, 
+.markdown-content h5, 
+.markdown-content h6 {
+  font-size: 1rem;
+  margin: 5px 0 2px;
+}

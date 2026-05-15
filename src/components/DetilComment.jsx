@@ -89,7 +89,7 @@ export default function DetailCommentPost({ onSubmit }) {
           />
         ) : (
           <div 
-            className="comment-input" 
+            className="comment-input markdown-content" 
             style={{ 
               minHeight: height,
               overflowWrap: 'anywhere'
@@ -145,7 +145,7 @@ export function DetailCommentGet({ comments }) {
               {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
             </span>
           </div>
-          <div className="comment-body">
+          <div className="comment-body markdown-content">
             <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
               {comment.content}
             </ReactMarkdown>
