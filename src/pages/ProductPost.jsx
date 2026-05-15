@@ -19,7 +19,9 @@ function ProductPost() {
         formData.title, 
         formData.content, 
         formData.isPublic, 
-        formData.isFinish
+        formData.isFinish,
+        formData.grade,
+				formData.department
       );
 
       // 2. 制作物が正常に作成され、かつ入力されたタグがある場合
@@ -57,6 +59,7 @@ function ProductPost() {
         submitButtonText="投稿する"
         onSubmit={handleProductSubmit}
         loading={loading}
+        showGradeDepartment={true}
       />
     </div>
   );

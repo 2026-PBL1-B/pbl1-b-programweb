@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostForm from '../components/PostForm';
 import { postQuestion } from '../api/Question'; 
-// ↓ 新しく Tag.js の関数を読み込みます（パスは Tag.js の実際の場所に合わせてください）
 import { getOrCreateTags, postQuestionTags } from '../api/Tag'; 
 
 function QuestionPost() {
@@ -19,7 +18,9 @@ function QuestionPost() {
 				formData.title, 
 				formData.content, 
 				formData.isPublic, 
-				formData.isFinish
+				formData.isFinish,
+				formData.grade,
+				formData.department
 			);
 			
 			// 2. 質問が正常に作成され、かつ入力されたタグがある場合
@@ -34,7 +35,6 @@ function QuestionPost() {
 			}
 
 			alert('質問の投稿とタグの保存が完了しました！');
-			// ※投稿成功後の画面遷移などをここに書くと良いでしょう
 			navigate('/questionList');
 
 		} catch (error) {
@@ -58,6 +58,7 @@ function QuestionPost() {
 				onSubmit={handleQuestionSubmit}
 				loading={loading}
 				showFinish={false}
+				showGradeDepartment={true}
 			/>
 		</div>
 	);
