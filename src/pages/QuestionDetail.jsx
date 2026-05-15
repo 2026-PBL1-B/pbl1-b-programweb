@@ -1,5 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import { supabase } from '../spabase';
 //import "../css/ListPage.css"; // 一覧のベーススタイルを読み込む
 import "../css/DetailPage.css"; // 詳細独自のスタイルを読み込む
@@ -124,8 +127,10 @@ function QuestionDetail() {
 
                         <div>
                             <p className="section-label">質問内容</p>
-                            <div className="post-content">
-                                {question.content}
+                            <div className="post-content markdown-preview">
+                                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                                    {question.content}
+                                </ReactMarkdown>
                             </div>
                         </div>
                     </div>

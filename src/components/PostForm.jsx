@@ -1,6 +1,9 @@
 // src/components/PostForm.jsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
 
 function PostForm({ 
@@ -10,8 +13,6 @@ function PostForm({
     submitButtonText = "投稿する",
     onSubmit,
     loading = false,
-    showCancel = false,
-    cancelLink = "/",
     showFinish = true // 完成済みチェックボックス
 }) {
     const [title, setTitle] = useState("");
@@ -104,7 +105,11 @@ function PostForm({
                                     <span key={i} className="tag">#{tag}</span>
                                 ))}
                             </div>
-                            <p style={{ whiteSpace: 'pre-wrap' }}>{content || "本文がここに表示されます"}</p>
+                            <div className="markdown-preview">
+                                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                                    {content || "本文がここに表示されます"}
+                                </ReactMarkdown>
+                            </div>
                         </div>
                     )}
                 </div>
