@@ -9,7 +9,12 @@ import { getProductLike } from '../api/productLike';// 制作物いいね情報�
 import { getQuestionsByUserId } from '../api/Question'; // 質問取得用API
 import { getQuestionsLike } from '../api/questionLike';// 質問のいいね取得用API
 
+import { getProductTagNames, getQuestionTagNames } from '../api/Tag';
+import { getUserName } from '../api/User';
+import UserLink from '../components/UserLink';
+
 import "../css/UserPage.css";
+import "../css/ListPage.css";
 
 function UserPage() {
 
@@ -21,6 +26,7 @@ function UserPage() {
   
   // プロフィール情報の状態
   const [profile, setProfile] = useState({
+    name: "",
     comment: "",
     grade: "",
     department: "",
@@ -31,31 +37,43 @@ function UserPage() {
           const loadUserProducts = async () => {
               setIsLoading(true);
               try {
-                      // プロフィール情報の取得
-                      const profileResult = await getProfileForUserID(user_id);
+                      // プロフィール情報とユーザー名の取得
+                      const [profileResult, name] = await Promise.all([
+                        getProfileForUserID(user_id),
+                        getUserName(user_id)
+                      ]);
+
                       if (profileResult.success && profileResult.data) {
                         setProfile({
+                          name: name || "不明なユーザー",
                           comment: profileResult.data.comment || "",
                           grade: profileResult.data.grade || "",
                           department: profileResult.data.department || "",
                           graduation_year: profileResult.data.graduation_year || ""
                         });
+                      } else {
+                        setProfile(prev => ({ ...prev, name: name || "不明なユーザー" }));
                       }
 
                       if (viewType === 'products') {
                           const products = await getProductsByUserId(user_id);  // 投稿者のプロダクト一覧取得
                           
                           if (products && products.length > 0) {
-                              // Promise.allを使って、全記事のいいね数を並列で取得
-                              const productsWithLikes = await Promise.all(
+                              // 全記事のいいね数とタグを並列で取得
+                              const productsWithDetails = await Promise.all(
                                   products.map(async (product) => {
-                                      // user_idは渡さず、その投稿に対する全体のいいね数を取得する
-                                      const { count } = await getProductLike(product.id);
-                                      // 元のデータに likeCount プロパティを追加
-                                      return { ...product, likeCount: count || 0 };
+                                      const [likeRes, tagNames] = await Promise.all([
+                                        getProductLike(product.id),
+                                        getProductTagNames(product.id)
+                                      ]);
+                                      return { 
+                                        ...product, 
+                                        likeCount: likeRes.count || 0,
+                                        tags: tagNames || []
+                                      };
                                   })
                               );
-                              setUserArticles(productsWithLikes);
+                              setUserArticles(productsWithDetails);
                           } else {
                               setUserArticles([]);
                           }
@@ -63,17 +81,20 @@ function UserPage() {
                           // 投稿者の質問一覧の取得処理
                           const questions = await getQuestionsByUserId(user_id);
                           if (questions && questions.length > 0) {
-                              const questionsWithLikes = await Promise.all(
+                              const questionsWithDetails = await Promise.all(
                                 questions.map(async (question) => {
-                                  const { count } = await getQuestionsLike(question.id);
+                                  const [likeRes, tagNames] = await Promise.all([
+                                    getQuestionsLike(question.id),
+                                    getQuestionTagNames(question.id)
+                                  ]);
                                   return { 
                                     ...question, 
-                                    created_at: question.updated_at || question.created_at,
-                                    likeCount: count || 0
+                                    likeCount: likeRes.count || 0,
+                                    tags: tagNames || []
                                   };
                                 })
                               );
-                              setUserArticles(questionsWithLikes);
+                              setUserArticles(questionsWithDetails);
                           } else {
                               setUserArticles([]);
                           }
@@ -98,7 +119,7 @@ function UserPage() {
           <div className="profile-icon"></div>
 
           <div className="profile-info">
-            <h1>{user_id}</h1>
+            <h1>{profile.name || user_id}</h1>
            { /*<p className="userid">{user.userid}</p> */}
             <p className="bio">{profile.comment ? profile.comment : "コメントはありません。"}</p>
           </div>
@@ -188,55 +209,52 @@ function UserPage() {
           {viewType === "products" ? "制作物一覧": "質問一覧"}
         </h2>
         
-        {viewType === "products" ? (
-
-          <div className="product-grid">
-
-          {userArticles.length === 0 ? (
+        <div className="main-column" style={{ width: '100%' }}>
+          {isLoading ? (
+            <p>読み込み中...</p>
+          ) : userArticles.length === 0 ? (
             <p className="empty-message">
-              投稿はまだありません。
+              {viewType === "products" ? "制作物はまだありません。" : "質問はまだありません。"}
             </p>
-          ) :(
-            userArticles.map((product) => (
-
-            <div key={product.id} className="product-card">
-
-              
-
-              <div className="product-content">
-                <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <h3>{product.title}</h3>
-                </Link>
-                <p>❤️ {product.likeCount}</p>
-              </div>
-
-            </div>
-
-          ))
-        )}
-      
-        </div>
-      ) : (
-        <div className="question-list">
-
-            {userArticles.length === 0 ? (
-              <p className="empty-message">
-                質問はまだありません。
-              </p>
-            ) : (
-              // userArticles
-              userArticles.map((question) => (
-                <div key={question.id} className="question-card">
-                  <Link to={`/questions/${question.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <h3>{question.title}</h3>
-                  </Link>
-                  <p>❤️ {question.likeCount}</p>
+          ) : (
+            userArticles.map((article) => (
+              <div key={article.id} className="item-card">
+                <div className="card-meta">
+                  <div>
+                    <UserLink userId={user_id} userName={profile.name} prefix="@" className="author-name" />
+                    <span>
+                      {new Date(article.created_at).toLocaleString('ja-JP', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
+                    </span>
+                  </div>
                 </div>
-              ))
-            )}
 
-          </div>
-        )}
+                <Link to={`/${viewType === "products" ? "product" : "question"}/${article.id}`} className="title-link">
+                  <h2 className="item-title">{article.title}</h2>
+                </Link>
+
+                {article.tags && article.tags.length > 0 && (
+                  <div className="tag-list">
+                    {article.tags.map((tagName, index) => (
+                      <span key={index} className="tag-badge">
+                        {tagName}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
+                <div className="card-footer" style={{ marginTop: '10px' }}>
+                  <p>❤️ {article.likeCount}</p>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
         
       </section>
 
