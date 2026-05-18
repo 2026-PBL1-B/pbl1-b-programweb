@@ -14,6 +14,8 @@ import QuestionDetail from './pages/QuestionDetail' // QuestionDetail をイン�
 // import MyPage from './pages/MyPage';            // MyPageをインポート
 import UserPage from './pages/UserPage';   // UserPageをインポート
 
+import MyProfileEdit from './pages/MyProfileEdit'; // MyProfileEditをインポート
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,6 +32,9 @@ function App() {
         <Route path="/questionList" element={<QuestionList />} />
         <Route path="/questionPost" element={<QuestionPost />} />
         <Route path="/question/:id" element={<QuestionDetail />} />
+
+
+        <Route path="/myprofileedit" element={<MyProfileEdit />} />
         {/* <Route path="/mypage" element={<MyPage />} /> */}
         <Route path="/userpage/:user_id" element={<UserPage />} />
 

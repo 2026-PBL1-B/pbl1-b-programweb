@@ -15,6 +15,9 @@ function GradeDepartmentSelect({ grade, setGrade, department, setDepartment }) {
                     onChange={(e) => setGrade(e.target.value)}
                     className="custom-select"
                 >
+                    {/* 先頭に「選択しない（値は空文字）」を固定で用意する */}
+                    <option value="">選択しない</option>
+
                     {grades.map((g) => (
                         <option key={g.value} value={g.value}>
                             {g.label}

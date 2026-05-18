@@ -1,0 +1,172 @@
+.myprofile-container {
+  min-height: 100vh;
+  background-color: #f4f7fb;
+
+  padding: 40px 20px;
+}
+
+/* タイトル */
+.myprofile-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.myprofile-header h1 {
+  font-size: 32px;
+  color: #222;
+  margin-bottom: 8px;
+}
+
+.myprofile-header p {
+  color: #666;
+  font-size: 15px;
+}
+
+/* カード */
+.profile-card {
+  max-width: 700px;
+
+  margin: 0 auto;
+
+  background: white;
+
+  border-radius: 24px;
+
+  padding: 40px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* アイコン */
+.icon-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  margin-bottom: 32px;
+}
+
+.profile-icon {
+  width: 120px;
+  height: 120px;
+
+  border-radius: 50%;
+
+  background: #d9e6f7;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: 48px;
+
+  margin-bottom: 16px;
+}
+
+.icon-button {
+  border: none;
+
+  background: #222;
+  color: white;
+
+  padding: 10px 20px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.icon-button:hover {
+  opacity: 0.8;
+}
+
+/* フォーム */
+.form-group {
+  display: flex;
+  flex-direction: column;
+
+  margin-bottom: 24px;
+}
+
+.form-group label {
+  font-weight: bold;
+
+  margin-bottom: 8px;
+
+  color: #333;
+}
+
+/* 入力欄 */
+.form-group input,
+.form-group textarea,
+.form-group select {
+
+  width: 100%;
+
+  padding: 14px;
+
+  border-radius: 12px;
+
+  border: 1px solid #ccc;
+
+  font-size: 15px;
+
+  box-sizing: border-box;
+}
+
+/* textarea */
+.form-group textarea {
+  resize: vertical;
+}
+
+/* 保存ボタン */
+.save-button {
+  width: 100%;
+
+  border: none;
+
+  background: #4b7bec;
+
+  color: white;
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  font-size: 16px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.save-button:hover {
+  opacity: 0.85;
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+
+  .profile-card {
+    padding: 24px;
+  }
+
+  .myprofile-header h1 {
+    font-size: 26px;
+  }
+
+}
+
+.form-group input:disabled {
+
+  background-color: #f1f3f5;
+
+  color: #777;
+
+  cursor: not-allowed;
+
+  border: 1px solid #dcdcdc;
+}
