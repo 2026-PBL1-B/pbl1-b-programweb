@@ -13,6 +13,8 @@ import QuestionPost from './pages/QuestionPost' // QuestionPost をインポー�
 import QuestionDetail from './pages/QuestionDetail' // QuestionDetail をインポート
 import MyPage from './pages/MyPage';            // MyPageをインポート
 
+import MyProfileEdit from './pages/MyProfileEdit'; // MyProfileEditをインポート
+
 
 function App() {
   const [count, setCount] = useState(0)
@@ -30,6 +32,7 @@ function App() {
         <Route path="/questionPost" element={<QuestionPost />} />
         <Route path="/question/:id" element={<QuestionDetail />} />
         <Route path="/mypage" element={<MyPage />} />
+        <Route path="/myprofileedit" element={<MyProfileEdit />} />
 
       </Routes>
     </BrowserRouter>
