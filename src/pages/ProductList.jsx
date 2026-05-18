@@ -6,6 +6,8 @@ import { getUserName } from '../api/User';
 import { getTags, getProductTagNames } from '../api/Tag';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
+import Guideheader from '../components/Header.jsx';
+
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -67,7 +69,9 @@ function ProductList() {
 
     return (
         <section className="page-container">
+            <Guideheader />
             <header className="page-header">
+                <Guideheader />
                 <h1 className="header-title">制作物一覧</h1>
                 <button 
                     className="primary-button"
