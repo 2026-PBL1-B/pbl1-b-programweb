@@ -14,6 +14,7 @@ import { getProductTagNames } from '../api/Tag';
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
 
+
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);

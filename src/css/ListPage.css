@@ -25,7 +25,7 @@
 }
 
 /* 共通のボタンデザイン */
-.primary-button {
+.primary-button { 
     padding: 8px 16px;
     background-color: var(--code-bg);
     border: 1px solid var(--border);

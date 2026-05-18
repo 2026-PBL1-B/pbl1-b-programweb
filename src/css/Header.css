@@ -1,39 +1,24 @@
 /* src/css/Header.css */
-
-/* ナビゲーションバー */
-.nav-bar {
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  background-color: #4A90E2;
-  height: 72px;
-  width: 100%;
-  margin-top: 60px;
-  justify-content: space-around;  /* ✅ 等間隔に並べる */
-}
-
-/* ナビゲーションリンク */
-.nav-link {
-  font-size: 32px;
+/* アクティブなナビゲーションリンク */
+.nav-link.active {
+  text-decoration: underline;
   color: white;
-  cursor: pointer;
-  margin: 0;
-  flex: 1;                /* ✅ 各要素が均等に幅を取る */
-  text-align: center;     /* ✅ 各要素内で中央揃え */
+  text-underline-offset: 8px;  
 }
-
-/* ヘッダー全体 */
-.header-wrapper {
-  position: relative;
-  display: flex;
-  flex-direction: column;
+/* アカウントボタン背景（ナビバーより上の白塗り） */
+.header-top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 48px;           /* ✅ ナビバーのtopと同じ高さ */
+  background-color: white;
+  z-index: 9997;          /* ✅ ナビバーより下、コンテンツより上 */
 }
-
-
 /* アカウントボタン */
 .account-button {
   position: fixed;
-  top: 8px;
+  top: 0;               /* ✅ 一番上 */
   right: 16px;
   background-color: #4A90E2;
   color: white;
@@ -43,16 +28,48 @@
   height: 48px;
   font-size: 24px;
   cursor: pointer;
-  z-index: 1000;
+  z-index: 9999;
 }
 
-/* ログインリンク */
-.login-link {
-  color: var(--accent);
-  font-size: 32px;
-  font-weight: bold;
-  position: fixed;    /* ✅ 画面基準で固定 */
-  bottom: 16px;       /* ✅ 下から16px */
-  left: 16px;         /* ✅ 左から16px */
-  z-index: 1000;
+/* ナビゲーションバー */
+.nav-bar {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  background-color: #4A90E2;
+  height: auto;           /* ✅ fixedからautoに変更 */
+  min-height: 72px; 
+  width: 100%;
+  justify-content: space-around;
+  position: fixed;
+  top: 48px;            /* ✅ アカウントボタンの真下 */
+  left: 0;
+  z-index: 9998;        /* ✅ アカウントボタンより一段低い */
 }
+
+/* ナビゲーションリンク */
+.nav-link {
+  font-size: 32px;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+  flex: 1;                /* 各要素が均等に幅を取る */
+  text-align: center;     /* 各要素内で中央揃え */
+  padding: 16px 0;
+}
+
+/* ヘッダー全体 */
+.header-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+}
+.nav-link:hover {
+  color: purple;           /* 紫色 */
+  text-decoration: underline;  /* 下線 */
+  text-underline-offset: 8px;
+}
+
+
+

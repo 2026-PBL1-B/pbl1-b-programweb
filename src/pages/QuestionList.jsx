@@ -6,6 +6,7 @@ import { getUserName } from '../api/User';
 import { getTags, getQuestionTagNames } from '../api/Tag';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
+import Guideheader from '../components/Header.jsx';
 
 function QuestionList() {
     const [questions, setQuestions] = useState([]);
@@ -62,8 +63,9 @@ function QuestionList() {
         });
 
     return (
-        <section className="page-container">
+        <section className="page-container"> 
             <div className="page-header">
+                <Guideheader/>       
                 <h1 className="header-title">質問一覧ページ</h1>
                 <button 
                     className="primary-button"
