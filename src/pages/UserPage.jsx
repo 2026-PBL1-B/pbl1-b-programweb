@@ -217,7 +217,9 @@ function UserPage() {
               {viewType === "products" ? "制作物はまだありません。" : "質問はまだありません。"}
             </p>
           ) : (
-            userArticles.map((article) => (
+            [...userArticles]
+              .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+              .map((article) => (
               <div key={article.id} className="item-card">
                 <div className="card-meta">
                   <div>
