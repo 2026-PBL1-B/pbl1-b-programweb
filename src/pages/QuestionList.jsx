@@ -64,26 +64,30 @@ function QuestionList() {
 
     return (
         <section className="page-container"> 
-            <div className="page-header">
-                <Guideheader/>       
-                <h1 className="header-title">質問一覧ページ</h1>
-                <button 
-                    className="primary-button"
-                    onClick={() => navigate('/questionpost')} 
-                >
-                    質問を投稿する
-                </button>
-            </div>
-
+            {/* Guideheaderは独立させて一番上に配置します */}
+            <Guideheader/>
+            
             <div className="content-layout">
                 <div className="main-column">
-                    <TagFilterSortBar 
-                        availableTags={availableTags}
-                        selectedTagNames={selectedTagNames}
-                        setSelectedTagNames={setSelectedTagNames}
-                        sortOrder={sortOrder}
-                        setSortOrder={setSortOrder}
-                    />
+                    {/* アクションバー：フィルターとボタンを横並びに配置 */}
+                    <div className="action-bar">
+                        {/* 左側にフィルターとソート */}
+                        <TagFilterSortBar 
+                            availableTags={availableTags}
+                            selectedTagNames={selectedTagNames}
+                            setSelectedTagNames={setSelectedTagNames}
+                            sortOrder={sortOrder}
+                            setSortOrder={setSortOrder}
+                        />
+                        
+                        {/* 右側に投稿ボタン */}
+                        <button 
+                            className="primary-button"
+                            onClick={() => navigate('/questionPost')}
+                        >
+                            質問を投稿する
+                        </button>
+                    </div>
 
                     {isLoading ? (
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>

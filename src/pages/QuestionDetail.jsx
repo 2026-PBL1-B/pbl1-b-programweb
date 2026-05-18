@@ -13,6 +13,8 @@ import { getQuestionTagNames } from '../api/Tag';
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
 
+import Guideheader from '../components/Header.jsx';
+
 function QuestionDetail() {
     const { id } = useParams();
     const [question, setQuestion] = useState(null);
@@ -106,10 +108,13 @@ function QuestionDetail() {
 
     return (
         <section className="page-container">
+            {/* Guideheaderは独立させて一番上に配置します */}
+            <Guideheader />
+
             {/* ヘッダー部分（リストページと同じ構造） */}
-            <div className="page-header">
+            {/* <div className="page-header">
                 <h1 className="header-title">質問詳細ページ</h1>
-            </div>
+            </div> */}
 
             {/* コンテンツレイアウト部分 */}
             <div className="content-layout">
