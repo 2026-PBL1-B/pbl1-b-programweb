@@ -7,6 +7,7 @@ import { getTags, getQuestionTagNames } from '../api/Tag';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
+import UserLink from '../components/UserLink';
 
 function QuestionList() {
     const [questions, setQuestions] = useState([]);
@@ -64,26 +65,30 @@ function QuestionList() {
 
     return (
         <section className="page-container"> 
-            <div className="page-header">
-                <Guideheader/>       
-                <h1 className="header-title">質問一覧ページ</h1>
-                <button 
-                    className="primary-button"
-                    onClick={() => navigate('/questionpost')} 
-                >
-                    質問を投稿する
-                </button>
-            </div>
-
+            {/* Guideheaderは独立させて一番上に配置します */}
+            <Guideheader/>
+            
             <div className="content-layout">
                 <div className="main-column">
-                    <TagFilterSortBar 
-                        availableTags={availableTags}
-                        selectedTagNames={selectedTagNames}
-                        setSelectedTagNames={setSelectedTagNames}
-                        sortOrder={sortOrder}
-                        setSortOrder={setSortOrder}
-                    />
+                    {/* アクションバー：フィルターとボタンを横並びに配置 */}
+                    <div className="action-bar">
+                        {/* 左側にフィルターとソート */}
+                        <TagFilterSortBar 
+                            availableTags={availableTags}
+                            selectedTagNames={selectedTagNames}
+                            setSelectedTagNames={setSelectedTagNames}
+                            sortOrder={sortOrder}
+                            setSortOrder={setSortOrder}
+                        />
+                        
+                        {/* 右側に投稿ボタン */}
+                        <button 
+                            className="primary-button"
+                            onClick={() => navigate('/questionPost')}
+                        >
+                            質問を投稿する
+                        </button>
+                    </div>
 
                     {isLoading ? (
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>
@@ -93,7 +98,7 @@ function QuestionList() {
                                 <div className="card-meta">
                                     <div>
                                         <span className="author-name">
-                                            投稿者: {question.fetchedUserName || '不明なユーザー'}
+                                            投稿者: <UserLink userId={question.user_id} userName={question.fetchedUserName} />
                                         </span>
                                         <span>{new Date(question.created_at).toLocaleDateString('ja-JP')}</span>
                                     </div>
