@@ -15,8 +15,9 @@ export default function UserLink({ userId, userName, className, prefix = "" }) {
   useEffect(() => {
     let isMounted = true;
     const fetchName = async () => {
-      // 既にuserNameが渡されている場合は取得しない
+      // 既にuserNameが渡されている場合はそれを使用し、取得は行わない
       if (userName) {
+        setName(userName);
         setIsLoading(false);
         return;
       }

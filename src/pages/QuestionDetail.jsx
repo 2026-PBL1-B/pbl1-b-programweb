@@ -40,14 +40,13 @@ function QuestionDetail() {
 
             if (error) {
                 console.error('取得エラー:', error);
-            } else {
+            } else if (data) {
                 setQuestion(data);
-            }
-
-            // user_idを使ってユーザーネームを取得する処理
-            if (data.user_id) {
-                const name = await getUserName(data.user_id);
-                setUserName(name || '不明なユーザー');
+                // user_idを使ってユーザーネームを取得する処理
+                if (data.user_id) {
+                    const name = await getUserName(data.user_id);
+                    setUserName(name || '不明なユーザー');
+                }
             }
 
             await fetchComments();

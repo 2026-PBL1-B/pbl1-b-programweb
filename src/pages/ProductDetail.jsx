@@ -41,13 +41,12 @@ function ProductDetail() {
 
       if (error) {
         console.error(error);
-      } else {
+      } else if (data) {
         setProduct(data);
-      }
-
-      if (data.user_id) {
-        const name = await getUserName(data.user_id);
-        setUserName(name || '不明なユーザー');
+        if (data.user_id) {
+          const name = await getUserName(data.user_id);
+          setUserName(name || '不明なユーザー');
+        }
       }
 
       await fetchComments();
