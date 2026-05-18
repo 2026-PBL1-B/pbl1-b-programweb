@@ -31,6 +31,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/questionList" element={<QuestionList />} />
         <Route path="/questionPost" element={<QuestionPost />} />
+        <Route path="/questionPost/:id" element={<QuestionPost />} />
         <Route path="/question/:id" element={<QuestionDetail />} />
 
 

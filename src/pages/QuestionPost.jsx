@@ -1,6 +1,7 @@
 // src/pages/QuestionPost.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import PostForm from '../components/PostForm';
 import { postQuestion } from '../api/Question'; 
 import { getOrCreateTags, postQuestionTags } from '../api/Tag'; 
@@ -8,9 +9,9 @@ import { getOrCreateTags, postQuestionTags } from '../api/Tag';
 import Guideheader from '../components/Header.jsx';
 
 function QuestionPost() {
+	const { id } = useParams();
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
-
 	const handleQuestionSubmit = async (formData) => {
 		setLoading(true);
 

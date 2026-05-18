@@ -33,6 +33,18 @@
     align-items: center;
     margin-bottom: 16px;
 }
+/*  */
+.mypage-tab-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.tab-container-left {
+    display: flex;
+    gap: 8px;
+}
 
 .tab-container {
     display: flex;
