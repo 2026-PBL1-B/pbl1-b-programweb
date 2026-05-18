@@ -4,7 +4,8 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 40px;
+    /* 上に140pxの余白を取り、左右と下は40pxにします */
+    padding: 140px 40px 40px 40px;
     /* 背景色もテーマに合わせるか、不要であれば削除できます */
     min-height: 100vh;
 }
@@ -28,9 +29,9 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: var(--bg);           /* 変更: サイト共通の背景色 */
-    border: 1px solid var(--border); /* 追加: サイト共通の枠線 */
-    border-radius: 8px;              /* 追加: 角を少し丸く */
+    background: var(--bg);           /* サイト共通の背景色 */
+    border: 1px solid var(--border); /* サイト共通の枠線 */
+    border-radius: 8px;              /* 角を少し丸く */
     min-height: 60px;
     box-sizing: border-box;
 }
@@ -39,8 +40,8 @@
 .tag-badge {
     display: flex;
     align-items: center;
-    background: var(--code-bg);      /* 変更: 少し異なる背景色でタグを目立たせる */
-    border: 1px solid var(--border); /* 追加: タグ自体にも枠線を付与 */
+    background: var(--code-bg);      /* 少し異なる背景色でタグを目立たせる */
+    border: 1px solid var(--border); /* タグ自体にも枠線を付与 */
     padding: 6px 12px;
     border-radius: 20px;
     font-size: 14px;
@@ -70,7 +71,7 @@
     flex-grow: 1;
     font-size: 18px;
     min-width: 200px;
-    color: var(--text); /* 追加: 入力中の文字色もテーマに合わせる */
+    color: var(--text); /* 入力中の文字色もテーマに合わせる */
 }
 
 /* ヘッダー */
@@ -78,7 +79,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-h); /* 追加: 見出しの色 */
+    color: var(--text-h); /* 見出しの色 */
 }
 
 .mode-buttons button {
@@ -102,10 +103,10 @@
     width: 100%;
     height: 400px;
     padding: 20px;
-    background: var(--bg);           /* 変更: 白などの固定色ではなく変数を使用 */
-    border: 1px solid var(--border); /* 追加: 本文とプレビューにも枠線を追加 */
-    border-radius: 8px;              /* 追加: 角を丸く */
-    color: var(--text);              /* 追加: 文字色 */
+    background: var(--bg);           /* 白などの固定色ではなく変数を使用 */
+    border: 1px solid var(--border); /* 本文とプレビューにも枠線を追加 */
+    border-radius: 8px;              /* 角を丸く */
+    color: var(--text);              /* 文字色 */
     box-sizing: border-box;
 }
 
@@ -141,6 +142,6 @@
 }
 
 .tag {
-    color: var(--accent); /* 変更: リンク色もサイトのアクセントカラーに統一 */
+    color: var(--accent); /* リンク色もサイトのアクセントカラーに統一 */
     font-weight: bold;
 }

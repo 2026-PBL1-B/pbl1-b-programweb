@@ -14,6 +14,8 @@ import { getProductTagNames } from '../api/Tag';
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
 
+import Guideheader from '../components/Header.jsx';
+import UserLink from '../components/UserLink';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -39,13 +41,12 @@ function ProductDetail() {
 
       if (error) {
         console.error(error);
-      } else {
+      } else if (data) {
         setProduct(data);
-      }
-
-      if (data.user_id) {
-        const name = await getUserName(data.user_id);
-        setUserName(name || '不明なユーザー');
+        if (data.user_id) {
+          const name = await getUserName(data.user_id);
+          setUserName(name || '不明なユーザー');
+        }
       }
 
       await fetchComments();
@@ -105,10 +106,12 @@ function ProductDetail() {
 
   return (
     <section className="page-container">
+      {/* Guideheaderは独立させて一番上に配置します */}
+      <Guideheader />
       {/* ヘッダー部分 */}
-      <div className="page-header">
+      {/* <div className="page-header">
         <h1 className="header-title">制作物詳細ページ</h1>
-      </div>
+      </div> */}
 
       {/* コンテンツレイアウト部分 */}
       <div className="content-layout">
@@ -123,7 +126,7 @@ function ProductDetail() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
               {/* 1行目: ユーザーネーム */}
-              <div>投稿者: {userName}</div>
+              <div>投稿者: <UserLink userId={product.user_id} userName={userName} /></div>
               
               {/* 2行目: 学科・学年（こちらは横並び） */}
               <div style={{ display: 'flex', gap: '8px' }}>
@@ -161,7 +164,7 @@ function ProductDetail() {
           <div className="comment-section">
             <DetailCommentPost onSubmit={handleCommentSubmit} />
             {/* コメント一覧を表示する場合はコメントアウトを外してください */}
-            {/* <DetailCommentGet comments={comments} /> */}
+            <DetailCommentGet comments={comments} type="product" />
           </div>
 
         </div>

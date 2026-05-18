@@ -7,7 +7,7 @@ import { getTags, getProductTagNames } from '../api/Tag';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
-
+import UserLink from '../components/UserLink';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -69,27 +69,30 @@ function ProductList() {
 
     return (
         <section className="page-container">
-            <header className="page-header">
-                <Guideheader />
-                <h1 className="header-title">制作物一覧</h1>
-                <button 
-                    className="primary-button"
-                    onClick={() => navigate('/productpost')}
-                >
-                    制作物を投稿する
-                </button>
-            </header>
+            {/* Guideheaderは独立させて一番上に配置します */}
+            <Guideheader />
 
             <div className="content-layout">
                 <div className="main-column">
-                    {/* 絞り込み・並び替えバー */}
-                    <TagFilterSortBar 
-                        availableTags={availableTags}
-                        selectedTagNames={selectedTagNames}
-                        setSelectedTagNames={setSelectedTagNames}
-                        sortOrder={sortOrder}
-                        setSortOrder={setSortOrder}
-                    />
+                    {/* アクションバー：フィルターとボタンを横並びに配置 */}
+                    <div className="action-bar">
+                        {/* 左側にフィルターとソート */}
+                        <TagFilterSortBar 
+                            availableTags={availableTags}
+                            selectedTagNames={selectedTagNames}
+                            setSelectedTagNames={setSelectedTagNames}
+                            sortOrder={sortOrder}
+                            setSortOrder={setSortOrder}
+                        />
+                        
+                        {/* 右側に投稿ボタン */}
+                        <button 
+                            className="primary-button"
+                            onClick={() => navigate('/productpost')}
+                        >
+                            制作物を投稿する
+                        </button>
+                    </div>
 
                     {isLoading ? (
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>
@@ -101,7 +104,7 @@ function ProductList() {
                                 <div className="card-meta">
                                     <div>
                                         <span className="author-name">
-                                            投稿者: {article.fetchedUserName || '不明なユーザー'}
+                                            投稿者: <UserLink userId={article.user_id} userName={article.fetchedUserName} />
                                         </span>
                                         <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
                                     </div>

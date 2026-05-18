@@ -8,6 +8,7 @@ import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
 
 function PostForm({ 
+    pageTitle, // 🌟追加: ページの一番上に表示するタイトルを受け取れるようにします
     titlePlaceholder = "タイトルを入力してください",
     contentLabel = "本文",
     contentPlaceholder = "本文を入力してください",
@@ -58,6 +59,12 @@ function PostForm({
 
     return (
         <div className="container">
+            {/* pageTitle が設定されている場合のみ、タイトルを表示します */}
+            {pageTitle && (
+                <h1 style={{ margin: '0 0 20px 0', color: 'var(--text-h)', fontSize: '40px' }}>
+                    {pageTitle}
+                </h1>
+            )}
             <form onSubmit={handleSubmitClick}>
                 <input
                     className="title"
