@@ -5,6 +5,7 @@ import "../css/ProductDetail.css";
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postProductComment, getProductComment } from '../api/productcomment';
 import { postProductLike, deleteProductLike, getProductLike, getMyProductLike } from '../api/productLike';
+import LikeButton from '../components/LikeButton';
 
 
 

@@ -69,7 +69,6 @@ function ProductList() {
 
     return (
         <section className="page-container">
-            <Guideheader />
             <header className="page-header">
                 <Guideheader />
                 <h1 className="header-title">制作物一覧</h1>
