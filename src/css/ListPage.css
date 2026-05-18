@@ -9,19 +9,13 @@
     align-items: flex-start;
 }
 
-/* ヘッダー部分 */
-.page-header {
+/* フィルターと投稿ボタンの横並びコンテナ */
+.action-bar {
     width: 100%;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 24px;
-    padding-bottom: 24px;
-    border-bottom: 2px solid var(--border);
-}
-
-.header-title {
-    margin: 0;
+    justify-content: space-between; /* 要素を左右の両端に離して配置します */
+    align-items: center;            /* 縦方向の中央を揃えます */
+    margin-bottom: 0px;            /* 下のリストとの間に余白を作ります */
 }
 
 /* 共通のボタンデザイン */
@@ -45,6 +39,7 @@
     flex-direction: row;
     align-items: flex-start;
     gap: 16px;
+    padding: 110px; /* ヘッダーと被らないように大きめの数値で設定 */
 }
 
 .main-column {
