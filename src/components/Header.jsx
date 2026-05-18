@@ -1,17 +1,32 @@
 // src/components/Header.jsx
-import { useNavigate, useLocation } from "react-router-dom";  
+import { useNavigate, useLocation } from "react-router-dom";
+import { getCurrentUserId } from "../api/Signin"
 import '../css/Header.css';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleAccountClick = async () => {
+    try {
+      const userId = await getCurrentUserId();
+      if (userId) {
+        navigate(`/userpage/${userId}`);
+      } else {
+        // ログインしていない場合はログイン画面（ルート）へ
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("ユーザーIDの取得に失敗しました:", error);
+    }
+  };
+
   return (
     <header className="header-wrapper">
       <div className="header-top" />
       <button
         className="account-button"
-        onClick={() => navigate("/mypage")}
+        onClick={handleAccountClick}
       >
         👤
       </button>

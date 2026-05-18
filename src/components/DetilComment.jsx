@@ -3,44 +3,10 @@ import "../css/Comment.css";
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { getUserName } from '../api/User';
-
-/**
- * ユーザーIDから名前を取得して表示する小さなコンポーネント
- */
-function CommentAuthor({ userId }) {
-  const [name, setName] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchName = async () => {
-      if (!userId) {
-        setIsLoading(false);
-        return;
-      }
-      const fetchedName = await getUserName(userId);
-      if (isMounted) {
-        setName(fetchedName);
-        setIsLoading(false);
-      }
-    };
-    fetchName();
-    return () => { isMounted = false; };
-  }, [userId]);
-
-  if (isLoading) return <span className="comment-username">@...</span>;
-  
-  return (
-    <span className="comment-username">
-      @{name || '不明なユーザー'}
-    </span>
-  );
-}
+import UserLink from './UserLink';
 
 /**
  * コメントコンポーネント
- * 制作物詳細と質問投稿詳細で使用する予定
  * - onSubmit: コメントが投稿されたときのコールバック関数。引数としてコメントの内容を受け取る。
  */
 export default function DetailCommentPost({ onSubmit }) {
@@ -140,7 +106,7 @@ export function DetailCommentGet({ comments }) {
       {comments.map((comment) => (
         <div key={comment.id || comment.created_at} className="comment-item-black">
           <div className="comment-header">
-            <CommentAuthor userId={comment.user_id} />
+            <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
             <span className="comment-date">
               {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
             </span>

@@ -12,6 +12,7 @@ import LikeButton from '../components/LikeButton';
 import { getQuestionTagNames } from '../api/Tag';
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
+import UserLink from '../components/UserLink';
 
 import Guideheader from '../components/Header.jsx';
 
@@ -129,7 +130,7 @@ function QuestionDetail() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
                             {/* 1行目: ユーザーネーム */}
-                            <div>投稿者: {userName}</div>
+                            <div>投稿者: <UserLink userId={question.user_id} userName={userName} /></div>
                             
                             {/* 2行目: 学科・学年（こちらは横並び） */}
                             <div style={{ display: 'flex', gap: '8px' }}>

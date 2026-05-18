@@ -7,6 +7,7 @@ import { getTags, getQuestionTagNames } from '../api/Tag';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
+import UserLink from '../components/UserLink';
 
 function QuestionList() {
     const [questions, setQuestions] = useState([]);
@@ -97,7 +98,7 @@ function QuestionList() {
                                 <div className="card-meta">
                                     <div>
                                         <span className="author-name">
-                                            投稿者: {question.fetchedUserName || '不明なユーザー'}
+                                            投稿者: <UserLink userId={question.user_id} userName={question.fetchedUserName} />
                                         </span>
                                         <span>{new Date(question.created_at).toLocaleDateString('ja-JP')}</span>
                                     </div>
