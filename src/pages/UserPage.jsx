@@ -19,7 +19,7 @@ import "../css/ListPage.css";
 function UserPage() {
 
   const [userArticles, setUserArticles] = useState([]);
-  const [sortOrder, setSortOrder] = useState('desc');
+  // const [sortOrder, setSortOrder] = useState('desc');
   const [isLoading, setIsLoading] = useState(true);
   const { user_id } = useParams(); // 追加
   const [viewType, setViewType] = useState('products'); //表示の切り替え状態
@@ -116,7 +116,8 @@ function UserPage() {
       <section className="profile-header">
 
         <div className="profile-left">
-          <div className="profile-icon"></div>
+            {/* ここにプロフィールアイコンを入れる予定 スプリント3では不要 */}
+          {/* <div className="profile-icon"></div> */}
 
           <div className="profile-info">
             <h1>{profile.name || user_id}</h1>
