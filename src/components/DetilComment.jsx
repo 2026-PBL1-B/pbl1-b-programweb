@@ -4,6 +4,10 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import UserLink from './UserLink';
+import LikeButton from './LikeButton';
+import { postProductCommentLike, deleteProductCommentLike, getProductCommentLike } from '../api/productcommentLike';
+import { postQuestionCommentLike, deleteQuestionCommentLike, getQuestionCommentLike } from '../api/questioncommentLike';
+import { getCurrentUserId } from '../api/Signin';
 
 /**
  * コメントコンポーネント
@@ -93,10 +97,90 @@ export default function DetailCommentPost({ onSubmit }) {
   );
 }
 
+function CommentItem({ comment, type }) {
+  const [likeCount, setLikeCount] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    const fetchLikeData = async () => {
+      const currentUserId = await getCurrentUserId();
+      setUserId(currentUserId);
+
+      let likeData;
+      if (type === 'product') {
+        likeData = await getProductCommentLike(comment.id);
+      } else if (type === 'question') {
+        likeData = await getQuestionCommentLike(comment.id);
+      }
+
+      if (likeData) {
+        setLikeCount(likeData.count);
+        if (currentUserId && likeData.data) {
+          const userLiked = likeData.data.some(like => like.user_id === currentUserId);
+          setIsLiked(userLiked);
+        }
+      }
+    };
+    if (comment.id && type) {
+      fetchLikeData();
+    }
+  }, [comment.id, type]);
+
+  const toggleLike = async () => {
+    if (!userId) {
+      alert("いいねするにはログインが必要です");
+      return;
+    }
+
+    try {
+      if (isLiked) {
+        if (type === 'product') {
+          await deleteProductCommentLike(comment.id);
+        } else if (type === 'question') {
+          await deleteQuestionCommentLike(comment.id);
+        }
+        setLikeCount(prev => prev - 1);
+        setIsLiked(false);
+      } else {
+        if (type === 'product') {
+          await postProductCommentLike(comment.id);
+        } else if (type === 'question') {
+          await postQuestionCommentLike(comment.id);
+        }
+        setLikeCount(prev => prev + 1);
+        setIsLiked(true);
+      }
+    } catch (error) {
+      console.error("いいねの切り替えに失敗しました", error);
+      alert("いいねの操作に失敗しました");
+    }
+  };
+
+  return (
+    <div className="comment-item-black">
+      <div className="comment-header" style={{ alignItems: 'flex-start' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
+          <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} />
+        </div>
+        <span className="comment-date">
+          {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
+        </span>
+      </div>
+      <div className="comment-body markdown-content">
+        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+          {comment.content}
+        </ReactMarkdown>
+      </div>
+    </div>
+  );
+}
+
 /**
  * コメント一覧を表示するコンポーネント
  */
-export function DetailCommentGet({ comments }) {
+export function DetailCommentGet({ comments, type }) {
   if (!comments || comments.length === 0) {
     return <div className="comment-list-empty">コメントはまだありません。</div>;
   }
@@ -104,19 +188,7 @@ export function DetailCommentGet({ comments }) {
   return (
     <div className="comment-list-container">
       {comments.map((comment) => (
-        <div key={comment.id || comment.created_at} className="comment-item-black">
-          <div className="comment-header">
-            <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
-            <span className="comment-date">
-              {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
-            </span>
-          </div>
-          <div className="comment-body markdown-content">
-            <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
-              {comment.content}
-            </ReactMarkdown>
-          </div>
-        </div>
+        <CommentItem key={comment.id || comment.created_at} comment={comment} type={type} />
       ))}
     </div>
   );
