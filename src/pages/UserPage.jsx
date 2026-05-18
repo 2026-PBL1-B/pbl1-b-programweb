@@ -9,87 +9,39 @@ import { getProductLike } from '../api/productLike';// 制作物いいね情報�
 import { getQuestionsByUserId } from '../api/Question'; // 質問取得用API
 import { getQuestionsLike } from '../api/questionLike';// 質問のいいね取得用API
 
-
 import "../css/UserPage.css";
 
-//
-
 function UserPage() {
-  {/*}
-  // 仮データ
-  // 後でDBと紐づけ
-  const user = {
-    name: "山田 太郎",
-    userid: "@taro_creator",
-    bio: "ReactやUIデザインを中心に制作しています。シンプルで見やすいデザインが好きです。",
-    posts: 12,
-    likes: 245,
-    followers: 31,
-    grade: "",
-    department: "",
-    graduationYear: "",
-  };
-  // 仮データ
-  // 後でDBと紐づけ
-  const products = [
-    {
-      id: 1,
-      title: "ポートフォリオサイト",
-      likes: 32,
-      
-    },
-    {
-      id: 2,
-      title: "投稿アプリUI",
-      likes: 18,
-     
-    },
-    {
-      id: 3,
-      title: "SNSデザイン",
-      likes: 54,
-    
-    },
-    {
-      id: 4,
-      title: "商品紹介ページ",
-      likes: 21,
-     
-    },
-  ];
-  // 仮データ
-  // 後でDBと紐づけ
-  const questions = [
-    {
-      id: 1,
-      title: "Reactの状態管理について",
-      content: "useStateとuseRefの違いについて質問しました。",
-      likes:12,
-    },
-    {
-      id: 2,
-      title: "CSS Gridについて",
-      content: "レスポンシブ対応の方法について質問しました。",
-      likes:8,
-    }
-  ];
-  仮データ関連はここまで*/}
-  
 
-  /* DBと接続*/
   const [userArticles, setUserArticles] = useState([]);
   const [sortOrder, setSortOrder] = useState('desc');
   const [isLoading, setIsLoading] = useState(true);
   const { user_id } = useParams(); // 追加
   const [viewType, setViewType] = useState('products'); //表示の切り替え状態
- 
-
+  
+  // プロフィール情報の状態
+  const [profile, setProfile] = useState({
+    comment: "",
+    grade: "",
+    department: "",
+    graduation_year: ""
+  });
 
   useEffect(() => {
           const loadUserProducts = async () => {
               setIsLoading(true);
               try {
-                  
+                      // プロフィール情報の取得
+                      const profileResult = await getProfileForUserID(user_id);
+                      if (profileResult.success && profileResult.data) {
+                        setProfile({
+                          comment: profileResult.data.comment || "",
+                          grade: profileResult.data.grade || "",
+                          department: profileResult.data.department || "",
+                          graduation_year: profileResult.data.graduation_year || ""
+                        });
+                      }
+
                       if (viewType === 'products') {
                           const products = await getProductsByUserId(user_id);  // 投稿者のプロダクト一覧取得
                           
@@ -110,13 +62,18 @@ function UserPage() {
                       } else {
                           // 投稿者の質問一覧の取得処理
                           const questions = await getQuestionsByUserId(user_id);
-                          if (questions) {
-                              // 既存の表示項目(created_at)に合わせるためupdated_atを代入
-                              const formattedQuestions = questions.map(q => ({
-                                  ...q,
-                                  created_at: q.updated_at 
-                              }));
-                              setUserArticles(formattedQuestions);
+                          if (questions && questions.length > 0) {
+                              const questionsWithLikes = await Promise.all(
+                                questions.map(async (question) => {
+                                  const { count } = await getQuestionsLike(question.id);
+                                  return { 
+                                    ...question, 
+                                    created_at: question.updated_at || question.created_at,
+                                    likeCount: count || 0
+                                  };
+                                })
+                              );
+                              setUserArticles(questionsWithLikes);
                           } else {
                               setUserArticles([]);
                           }
@@ -128,7 +85,7 @@ function UserPage() {
               }
           };
           loadUserProducts();
-      }, [viewType]); // タブを切り替えた時に再実行されるように変更
+      }, [viewType, user_id]); // タブを切り替えた時やuser_idが変わった時に再実行されるように変更
      
 
   return (
@@ -143,7 +100,7 @@ function UserPage() {
           <div className="profile-info">
             <h1>{user_id}</h1>
            { /*<p className="userid">{user.userid}</p> */}
-            <p className="bio">{comment ? comment : "コメントはありません。"}</p>
+            <p className="bio">{profile.comment ? profile.comment : "コメントはありません。"}</p>
           </div>
         </div>
 
@@ -171,17 +128,17 @@ function UserPage() {
 
         <div className="school-card">
           <h2>学年</h2>
-          <p>{grade ? grade : "情報はありません。"}</p>
+          <p>{profile.grade ? profile.grade : "情報はありません。"}</p>
         </div>
 
         <div className="school-card">
           <h2>学科</h2>
-          <p>{department ? department : "情報はありません。"}</p>
+          <p>{profile.department ? profile.department : "情報はありません。"}</p>
         </div>
 
         <div className="school-card">
           <h2>卒業年</h2>
-          <p>{graduationYear ? graduationYear : "情報はありません。"}</p>
+          <p>{profile.graduation_year ? profile.graduation_year : "情報はありません。"}</p>
         </div>
 
       </section>
@@ -209,14 +166,14 @@ function UserPage() {
       <section className="tab-section">
 
         <button
-          className={`tab-button ${activeTab === "products" ? "active" : ""}`}
+          className={`tab-button ${viewType === "products" ? "active" : ""}`}
           onClick={() => setViewType("products")}
         >
           制作物一覧
         </button>
 
         <button
-          className={`tab-button ${activeTab === "questions" ? "active" : ""}`}
+          className={`tab-button ${viewType === "questions" ? "active" : ""}`}
           onClick={() => setViewType("questions")}
         >
           質問一覧
@@ -247,8 +204,10 @@ function UserPage() {
               
 
               <div className="product-content">
-                <h3>{product.title}</h3>
-                <p>❤️ {product.likes}</p>
+                <Link to={`/products/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <h3>{product.title}</h3>
+                </Link>
+                <p>❤️ {product.likeCount}</p>
               </div>
 
             </div>
@@ -268,8 +227,10 @@ function UserPage() {
               // userArticles
               userArticles.map((question) => (
                 <div key={question.id} className="question-card">
-                  <h3>{question.title}</h3>
-                  <p>❤️ {question.likes}</p>
+                  <Link to={`/questions/${question.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <h3>{question.title}</h3>
+                  </Link>
+                  <p>❤️ {question.likeCount}</p>
                 </div>
               ))
             )}
