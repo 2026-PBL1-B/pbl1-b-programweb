@@ -3,8 +3,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostForm from '../components/PostForm';
 import { postProduct } from '../api/product'; 
-// ↓ 新しく Tag.js の関数を読み込みます
 import { getOrCreateTags, postProductTags } from '../api/Tag'; 
+
+import Guideheader from '../components/Header.jsx';
 
 function ProductPost() {
   const [loading, setLoading] = useState(false);
@@ -48,20 +49,22 @@ function ProductPost() {
   };
 
   return (
-    <div>
-      <h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
-			制作物を投稿する
-		</h1>
+    // 🌟修正: 全体を <> と </> で囲み、Guideheaderを一番上に配置します
+    <>
+      <Guideheader />
+      
       <PostForm 
+        pageTitle="制作物を投稿する"
         titlePlaceholder="タイトルを入力してください"
         contentLabel="本文"
-        contentPlaceholder="本文を入力"
+        contentPlaceholder="本文を入力してください"
         submitButtonText="投稿する"
-        onSubmit={handleProductSubmit}
+        onSubmit={handleProductSubmit} // QuestionPostの場合は handleQuestionSubmit
         loading={loading}
-        showGradeDepartment={true}
+        showFinish={true}
+        showGradeDepartment={true} // もしあれば
       />
-    </div>
+    </>
   );
 }
 

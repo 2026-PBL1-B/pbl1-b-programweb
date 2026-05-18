@@ -83,7 +83,7 @@ function QuestionList() {
                         {/* 右側に投稿ボタン */}
                         <button 
                             className="primary-button"
-                            onClick={() => navigate('/questionpost')}
+                            onClick={() => navigate('/questionPost')}
                         >
                             質問を投稿する
                         </button>
