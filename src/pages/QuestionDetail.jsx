@@ -167,7 +167,7 @@ function QuestionDetail() {
                     {/* コメントエリア */}
                     <div className="comment-section">
                         <DetailCommentPost onSubmit={handleCommentSubmit} />
-                        <DetailCommentGet comments={comments} />
+                        <DetailCommentGet comments={comments} type="question" />
                     </div>
 
                 </div>

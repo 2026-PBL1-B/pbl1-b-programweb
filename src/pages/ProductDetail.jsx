@@ -164,7 +164,7 @@ function ProductDetail() {
           <div className="comment-section">
             <DetailCommentPost onSubmit={handleCommentSubmit} />
             {/* コメント一覧を表示する場合はコメントアウトを外してください */}
-            {/* <DetailCommentGet comments={comments} /> */}
+            <DetailCommentGet comments={comments} type="product" />
           </div>
 
         </div>
