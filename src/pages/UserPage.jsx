@@ -8,6 +8,7 @@ import { getProductLike } from '../api/productLike';// 制作物いいね情報�
 
 import { getQuestionsByUserId } from '../api/Question'; // 質問取得用API
 import { getQuestionsLike } from '../api/questionLike';// 質問のいいね取得用API
+import { getCurrentUserId } from '../api/Signin';
 
 import { getProductTagNames, getQuestionTagNames } from '../api/Tag';
 import { getUserName } from '../api/User';
@@ -23,6 +24,7 @@ function UserPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user_id } = useParams(); // 追加
   const [viewType, setViewType] = useState('products'); //表示の切り替え状態
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
   
   // プロフィール情報の状態
   const [profile, setProfile] = useState({
@@ -37,6 +39,10 @@ function UserPage() {
           const loadUserProducts = async () => {
               setIsLoading(true);
               try {
+                      // 自分のプロフィールかどうかをチェック
+                      const currentId = await getCurrentUserId();
+                      setIsOwnProfile(currentId === user_id);
+
                       // プロフィール情報とユーザー名の取得
                       const [profileResult, name] = await Promise.all([
                         getProfileForUserID(user_id),
@@ -164,6 +170,24 @@ function UserPage() {
         </div>
 
       </section>
+
+      {/* 編集ボタン */}
+      {isOwnProfile && (
+        <section className="edit-profile-section" style={{ textAlign: 'center', margin: '20px 0' }}>
+          <Link to="/myprofileedit" className="edit-button" style={{
+            display: 'inline-block',
+            padding: '10px 20px',
+            backgroundColor: '#007bff',
+            color: 'white',
+            textDecoration: 'none',
+            borderRadius: '5px',
+            fontWeight: 'bold'
+          }}>
+            プロフィールを編集する
+          </Link>
+        </section>
+      )}
+
       {/* 活動情報 */}
       <section className="stats-section">
         {/*
