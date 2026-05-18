@@ -7,7 +7,7 @@ import { getTags, getProductTagNames } from '../api/Tag';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
-
+import UserLink from '../components/UserLink';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -104,7 +104,7 @@ function ProductList() {
                                 <div className="card-meta">
                                     <div>
                                         <span className="author-name">
-                                            投稿者: {article.fetchedUserName || '不明なユーザー'}
+                                            投稿者: <UserLink userId={article.user_id} userName={article.fetchedUserName} />
                                         </span>
                                         <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
                                     </div>

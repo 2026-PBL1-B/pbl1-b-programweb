@@ -12,6 +12,7 @@ import LikeButton from '../components/LikeButton';
 import { getQuestionTagNames } from '../api/Tag';
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
+import UserLink from '../components/UserLink';
 
 import Guideheader from '../components/Header.jsx';
 
@@ -39,14 +40,13 @@ function QuestionDetail() {
 
             if (error) {
                 console.error('取得エラー:', error);
-            } else {
+            } else if (data) {
                 setQuestion(data);
-            }
-
-            // user_idを使ってユーザーネームを取得する処理
-            if (data.user_id) {
-                const name = await getUserName(data.user_id);
-                setUserName(name || '不明なユーザー');
+                // user_idを使ってユーザーネームを取得する処理
+                if (data.user_id) {
+                    const name = await getUserName(data.user_id);
+                    setUserName(name || '不明なユーザー');
+                }
             }
 
             await fetchComments();
@@ -129,7 +129,7 @@ function QuestionDetail() {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
                             {/* 1行目: ユーザーネーム */}
-                            <div>投稿者: {userName}</div>
+                            <div>投稿者: <UserLink userId={question.user_id} userName={userName} /></div>
                             
                             {/* 2行目: 学科・学年（こちらは横並び） */}
                             <div style={{ display: 'flex', gap: '8px' }}>
