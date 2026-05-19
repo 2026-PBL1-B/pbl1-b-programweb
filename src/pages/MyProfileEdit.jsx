@@ -49,13 +49,19 @@ function MyProfile() {
 
   // 保存ボタン
   const handleSave = async () => {
+    // 自己紹介の必須入力チェック
+    if (!profile.bio || profile.bio.trim() === "") {
+      alert("自己紹介は必須項目です。");
+      return;
+    }
+
     console.log("保存データ:", profile);
 
     const result = await updateProfile({
       grade: profile.grade ? Number(profile.grade) : null,
-      department: profile.department || null,
+      department: profile.department,
       graduation_year: profile.graduationYear ? Number(profile.graduationYear) : null,
-      comment: profile.bio || null,
+      comment: profile.bio,
     });
 
     if (result.success) {

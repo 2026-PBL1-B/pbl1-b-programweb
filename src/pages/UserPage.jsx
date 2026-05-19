@@ -158,13 +158,13 @@ function UserPage() {
       <section className="school-section">
 
         <div className="school-card">
-          <h2>学年</h2>
-          <p>{profile.grade ? profile.grade : "情報はありません。"}</p>
+          <h2>学科</h2>
+          <p>{profile.department ? profile.department : "情報はありません。"}</p>
         </div>
 
         <div className="school-card">
-          <h2>学科</h2>
-          <p>{profile.department ? profile.department : "情報はありません。"}</p>
+          <h2>学年</h2>
+          <p>{profile.grade ? profile.grade : "情報はありません。"}</p>
         </div>
 
         <div className="school-card">
@@ -241,9 +241,11 @@ function UserPage() {
           {isLoading ? (
             <p>読み込み中...</p>
           ) : userArticles.length === 0 ? (
-            <p className="empty-message">
-              {viewType === "products" ? "制作物はまだありません。" : "質問はまだありません。"}
-            </p>
+            <div className="item-card" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '150px' }}>
+              <p className="empty-message" style={{ background: 'none', boxShadow: 'none', border: 'none', padding: 0, margin: 0 }}>
+                {viewType === "products" ? "制作物はまだありません。" : "質問はまだありません。"}
+              </p>
+            </div>
           ) : (
             [...userArticles]
               .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
