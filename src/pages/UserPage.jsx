@@ -158,13 +158,13 @@ function UserPage() {
       <section className="school-section">
 
         <div className="school-card">
-          <h2>学年</h2>
-          <p>{profile.grade ? profile.grade : "情報はありません。"}</p>
+          <h2>学科</h2>
+          <p>{profile.department ? profile.department : "情報はありません。"}</p>
         </div>
 
         <div className="school-card">
-          <h2>学科</h2>
-          <p>{profile.department ? profile.department : "情報はありません。"}</p>
+          <h2>学年</h2>
+          <p>{profile.grade ? profile.grade : "情報はありません。"}</p>
         </div>
 
         <div className="school-card">
