@@ -18,6 +18,8 @@ import Guideheader from '../components/Header.jsx';
 import "../css/UserPage.css";
 import "../css/ListPage.css";
 
+import DraftList from '../components/DraftList';
+
 function UserPage() {
 
   const [userArticles, setUserArticles] = useState([]);
@@ -228,6 +230,14 @@ function UserPage() {
           質問一覧
         </button>
 
+        {/* 追加：下書きタブ */}
+        <button
+          className={`tab-button ${viewType === "drafts" ? "active" : ""}`}
+          onClick={() => setViewType("drafts")}
+        >
+          下書き一覧
+        </button>
+
       </section>          
 
       {/* 制作物一覧 */}
@@ -240,6 +250,9 @@ function UserPage() {
         <div className="main-column" style={{ width: '100%' }}>
           {isLoading ? (
             <p>読み込み中...</p>
+          ) :viewType === "drafts" ?(
+            <DraftList userId={user_id} />
+            
           ) : userArticles.length === 0 ? (
             <div className="item-card" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '150px' }}>
               <p className="empty-message" style={{ background: 'none', boxShadow: 'none', border: 'none', padding: 0, margin: 0 }}>

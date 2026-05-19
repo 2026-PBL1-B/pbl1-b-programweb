@@ -1,15 +1,11 @@
 // src/pages/QuestionPost.jsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
 import PostForm from '../components/PostForm';
 import { postQuestion } from '../api/Question'; 
 import { getOrCreateTags, postQuestionTags } from '../api/Tag'; 
 
-import Guideheader from '../components/Header.jsx';
-
 function QuestionPost() {
-	const { id } = useParams();
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 	const handleQuestionSubmit = async (formData) => {
@@ -49,11 +45,11 @@ function QuestionPost() {
 	};
 
 	return (
-		<>
-			<Guideheader />
-
+		<div>
+			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
+				質問を投稿する
+			</h1>
 			<PostForm 
-				pageTitle="質問を投稿する"
 				titlePlaceholder="質問のタイトルを入力してください"
 				contentLabel="質問内容"
 				contentPlaceholder="困っていることや試したことを詳しく入力してください"
@@ -63,7 +59,7 @@ function QuestionPost() {
 				showFinish={false}
 				showGradeDepartment={true}
 			/>
-		</>
+		</div>
 	);
 }
 
