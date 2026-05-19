@@ -98,10 +98,12 @@ function ProductDetail() {
   if (!product) return <p style={{ color: 'var(--text)', padding: '40px' }}>読み込み中...</p>;
 
   // 学年のラベル変換
-  let gradeLabel = '';
+  let gradeLabel = '情報なし';
   if (product.grade) {
     const foundGrade = grades.find(g => g.value === String(product.grade));
-    gradeLabel = foundGrade.label; 
+    if (foundGrade) {
+      gradeLabel = foundGrade.label;
+    }
   }
 
   return (
@@ -130,8 +132,8 @@ function ProductDetail() {
               
               {/* 2行目: 学科・学年（こちらは横並び） */}
               <div style={{ display: 'flex', gap: '8px' }}>
-                {product.department && <span>{product.department}</span>}
-                {gradeLabel && <span>{gradeLabel}</span>}
+                <span>{product.department ? product.department : '学科:情報なし'}</span>
+                <span>{product.grade ? gradeLabel : '学年:情報なし'}</span>
               </div>
 
               {/* 制作物タイトル */}

@@ -100,10 +100,12 @@ function QuestionDetail() {
     if (!question) return <p style={{ color: 'var(--text)', padding: '40px' }}>読み込み中...</p>;
 
     // 学年のラベル変換
-    let gradeLabel = '';
+    let gradeLabel = '情報なし';
     if (question.grade) {
         const foundGrade = grades.find(g => g.value === String(question.grade));
-        gradeLabel = foundGrade.label; 
+        if (foundGrade) {
+            gradeLabel = foundGrade.label;
+        }
     }
 
     return (
@@ -133,8 +135,8 @@ function QuestionDetail() {
                             
                             {/* 2行目: 学科・学年（こちらは横並び） */}
                             <div style={{ display: 'flex', gap: '8px' }}>
-                                {question.department && <span>{question.department}</span>}
-                                {gradeLabel && <span>{gradeLabel}</span>}
+                                <span>{question.department ? question.department : '学科:情報なし'}</span>
+                                <span>{question.grade ? gradeLabel : '学年:情報なし'}</span>
                             </div>
 
                             {/* 制作物タイトル */}
