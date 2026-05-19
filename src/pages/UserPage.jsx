@@ -13,6 +13,7 @@ import { getCurrentUserId } from '../api/Signin';
 import { getProductTagNames, getQuestionTagNames } from '../api/Tag';
 import { getUserName } from '../api/User';
 import UserLink from '../components/UserLink';
+import Guideheader from '../components/Header.jsx';
 
 import "../css/UserPage.css";
 import "../css/ListPage.css";
@@ -116,7 +117,9 @@ function UserPage() {
      
 
   return (
-    <div className="profile-container">
+    <section className="page-container">
+      <Guideheader />
+      <div className="profile-container">
 
       {/* プロフィールヘッダー */}
       <section className="profile-header">
@@ -285,7 +288,8 @@ function UserPage() {
         
       </section>
 
-    </div>
+      </div>
+    </section>
   );
 }
 export default UserPage;
