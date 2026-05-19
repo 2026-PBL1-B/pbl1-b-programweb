@@ -19,7 +19,8 @@ function PostForm({
     showFinish = true,
     showGradeDepartment = false,
     showGithubUrl = false,          // GithubのURL機能
-    showAdditionalUrls = false      // 任意のURL追加機能
+    showAdditionalUrls = false,      // 任意のURL追加機能
+    onDraftSubmit                   // 下書き保存用の関数を受け取るプロップス
 }) {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
@@ -156,6 +157,17 @@ const handleImageSelect = (e) => {
         onSubmit({ title, content: finalContent, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
     };
 
+    const handleDraftClick = (e) => {
+        if (e) e.preventDefault();
+            if (!title || !content) {
+            alert("タイトルと本文を入力してください。");
+            return;
+            }
+        if (onDraftSubmit) {
+            onDraftSubmit({ title, content, tags, githubUrl, additionalUrls, isFinish, grade, department });
+        }
+    };
+
     return (
         <div className="container">
             {pageTitle && (
@@ -163,7 +175,7 @@ const handleImageSelect = (e) => {
                     {pageTitle}
                 </h1>
             )}
-            <form onSubmit={handleSubmitClick}>
+            <form onSubmit={(e) => e.preventDefault()}>
                 <input
                     className="title"
                     type="text"
@@ -314,12 +326,30 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                <div style={{ display: 'flex',
-                        justifyContent: 'flex-end',
-                        marginTop: '20px',
-                        width: '100%' }}>
-                    <button type="submit" disabled={loading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
+                <div style={{ 
+                    display: 'flex', 
+                    gap: '20px', 
+                    alignItems: 'center', 
+                    justifyContent: 'flex-end', 
+                    marginTop: '20px', 
+                    width: '100%' 
+                }}>
+                    <button 
+                        type="button" 
+                        onClick={handleSubmitClick} 
+                        disabled={loading} 
+                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
                         {loading ? '送信中...' : submitButtonText}
+                    </button>
+                    <button 
+                        type="button" 
+                        className="draft-save-btn"
+                        disabled={loading} 
+                        onClick={handleDraftClick}
+                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
+                        {loading ? '保存中...' : '下書き保存'}
                     </button>
                 </div>
             </form>

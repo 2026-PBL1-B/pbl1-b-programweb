@@ -68,23 +68,80 @@ function ProductPost() {
     }
   };
 
+  // 下書き保存用の処理
+  // PostFormから現在の入力値を受け取り、公開フラグ(isPublic)を強制的に false にして保存
+  const handleDraftSubmit = async (formData) => {
+    setLoading(true);
+
+    try {
+      // 1. 公開フラグを false（下書き）にして送信
+      const newProduct = await postProduct(
+        formData.title, 
+        formData.content, 
+        false,
+        formData.isFinish,
+        formData.grade,
+        formData.department
+      );
+
+      // 2. 制作物が正常に作成された場合、紐づくデータ（タグとURL）を保存する
+      if (newProduct) {
+        
+        // --- タグの保存処理 ---
+        if (formData.tags && formData.tags.length > 0) {
+          const tagIds = await getOrCreateTags(formData.tags);
+          if (tagIds && tagIds.length > 0) {
+            await postProductTags(newProduct.id, tagIds);
+          }
+        }
+
+        // --- 🌟 URLの保存処理を追加 ---
+        const urlsToSave = [];
+        if (formData.githubUrl && formData.githubUrl.trim() !== '') {
+          urlsToSave.push(formData.githubUrl.trim());
+        }
+
+        if (formData.additionalUrls && formData.additionalUrls.length > 0) {
+          const validAdditionalUrls = formData.additionalUrls.filter(url => url && url.trim() !== '');
+          urlsToSave.push(...validAdditionalUrls);
+        }
+
+        if (urlsToSave.length > 0) {
+          await postProductLinks(newProduct.id, urlsToSave);
+        }
+      }
+
+      alert('下書きを保存しました！');
+      navigate('/productList');
+
+    } catch (error) {
+      alert('下書き保存中にエラーが発生しました。');
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <Guideheader />
       
-      <PostForm 
-        pageTitle="制作物を投稿する"
-        titlePlaceholder="タイトルを入力してください"
-        contentLabel="本文"
-        contentPlaceholder="本文を入力してください"
-        submitButtonText="投稿する"
-        onSubmit={handleProductSubmit}
-        loading={loading}
-        showFinish={true}
-        showGradeDepartment={true}
-        showGithubUrl={true}       // GithubのURL機能をオン
-        showAdditionalUrls={true}  // 追加URL機能をオン
-      />
+      <div className="post-form-wrapper">
+        <PostForm 
+          pageTitle="制作物を投稿する"
+          titlePlaceholder="タイトルを入力してください"
+          contentLabel="本文"
+          contentPlaceholder="本文を入力してください"
+          submitButtonText="投稿する"
+          onSubmit={handleProductSubmit}
+          loading={loading}
+          showFinish={true}
+          showGradeDepartment={true}
+          showGithubUrl={true}       // GithubのURL機能をオン
+          showAdditionalUrls={true}  // 追加URL機能をオン
+          onDraftSubmit={handleDraftSubmit} 
+        />
+      </div>
     </>
   );
 }
