@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { grades,departments } from "../domain/GradeDepartment";
+import { getProfileForUserID, updateProfile } from "../api/profile";
+import { getCurrentUserId } from "../api/Signin";
 
 
 import "../css/MyProfileEdit.css";
@@ -10,11 +12,30 @@ function MyProfile() {
   const [profile, setProfile] = useState({
     name: "山田 太郎",
     userid: "@taro_creator",
-    bio: "ReactやUIデザインを中心に制作しています。",
+    bio: "",
     grade: "",
     department: "",
     graduationYear: "",
   });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const userId = await getCurrentUserId();
+      if (userId) {
+        const { success, data } = await getProfileForUserID(userId);
+        if (success && data) {
+          setProfile((prev) => ({
+            ...prev,
+            bio: data.comment || "",
+            grade: data.grade || "",
+            department: data.department || "",
+            graduationYear: data.graduation_year || "",
+          }));
+        }
+      }
+    };
+    fetchProfile();
+  }, []);
 
   // 入力変更処理
   const handleChange = (e) => {
@@ -27,11 +48,21 @@ function MyProfile() {
   };
 
   // 保存ボタン
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log("保存データ:", profile);
 
-    // ここでSupabase更新など
-    alert("プロフィールを保存しました！");
+    const result = await updateProfile({
+      grade: profile.grade ? Number(profile.grade) : null,
+      department: profile.department || null,
+      graduation_year: profile.graduationYear ? Number(profile.graduationYear) : null,
+      comment: profile.bio || null,
+    });
+
+    if (result.success) {
+      alert("プロフィールを保存しました！");
+    } else {
+      alert("プロフィールの保存に失敗しました: " + result.error);
+    }
   };
 
   return (
@@ -110,10 +141,10 @@ function MyProfile() {
             onChange={handleChange}
           >
             <option value="">選択してください</option>
-            {grades.map((grade, index) => (
+            {grades.map((grade) => (
               <option
                 key={grade.value}
-                value={index.value}
+                value={grade.value}
               >
                 {grade.label}
             </option>
@@ -135,11 +166,11 @@ function MyProfile() {
               選択してください
             </option>
 
-            {departments.map((department, index) => (
+            {departments.map((department) => (
 
             <option
-                key={department.value}
-                value={index.value}
+                key={department}
+                value={department}
             >
               {department}
             </option>
