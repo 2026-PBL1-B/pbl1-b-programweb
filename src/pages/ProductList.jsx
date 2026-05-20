@@ -111,7 +111,15 @@ function ProductList() {
                                         <span className="author-name">
                                             投稿者: <UserLink userId={article.user_id} userName={article.fetchedUserName} />
                                         </span>
-                                        <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
+
+                                         {/*投稿日時表記：年月日、時分まで表記 */}
+                                        <span>{new Date(article.created_at).toLocaleDateString('ja-JP',{
+                                            year: 'numeric',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}</span>
                                     </div>
                                 </div>
                                 
