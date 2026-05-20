@@ -50,6 +50,9 @@ function QuestionList() {
     // --- 絞り込みと並び替えの部分 ---
     const filteredAndSortedQuestions = [...questions]
         .filter((question) => {
+            // 非公開は除外
+            if (!question.is_public) return false;
+
             // 何も選択されていない場合はすべて表示
             if (selectedTagNames.length === 0) return true;
             if (!question.tags) return false;
