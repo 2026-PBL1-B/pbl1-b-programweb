@@ -18,6 +18,8 @@ import Guideheader from '../components/Header.jsx';
 import "../css/UserPage.css";
 import "../css/ListPage.css";
 
+import DraftToggle from '../components/DraftToggle';  //下書き表示の切り替えボタンのコンポーネント
+
 function UserPage() {
 
   const [userArticles, setUserArticles] = useState([]);
@@ -25,6 +27,7 @@ function UserPage() {
   const [isLoading, setIsLoading] = useState(true);
   const { user_id } = useParams(); // 追加
   const [viewType, setViewType] = useState('products'); //表示の切り替え状態
+  const [showDrafts, setShowDrafts] = useState(false);  //下書き表示の切り替えを管理する
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   
   // プロフィール情報の状態
@@ -64,11 +67,18 @@ function UserPage() {
 
                       if (viewType === 'products') {
                           const products = await getProductsByUserId(user_id);  // 投稿者のプロダクト一覧取得
+
+
+                          const filteredProducts = products.filter(product =>
+                            showDrafts
+                              ? product.is_finish === false
+                              : product.is_finish === true
+                          );
                           
                           if (products && products.length > 0) {
                               // 全記事のいいね数とタグを並列で取得
                               const productsWithDetails = await Promise.all(
-                                  products.map(async (product) => {
+                                  filteredProducts.map(async (product) => {
                                       const [likeRes, tagNames] = await Promise.all([
                                         getProductLike(product.id),
                                         getProductTagNames(product.id)
@@ -87,9 +97,14 @@ function UserPage() {
                       } else {
                           // 投稿者の質問一覧の取得処理
                           const questions = await getQuestionsByUserId(user_id);
+                          const filteredquestions = questions.filter(question =>
+                            showDrafts
+                              ? question.is_finish === false
+                              : question.is_finish === true
+                          );
                           if (questions && questions.length > 0) {
                               const questionsWithDetails = await Promise.all(
-                                questions.map(async (question) => {
+                                filteredquestions.map(async (question) => {
                                   const [likeRes, tagNames] = await Promise.all([
                                     getQuestionsLike(question.id),
                                     getQuestionTagNames(question.id)
@@ -113,7 +128,7 @@ function UserPage() {
               }
           };
           loadUserProducts();
-      }, [viewType, user_id]); // タブを切り替えた時やuser_idが変わった時に再実行されるように変更
+      }, [viewType, user_id, showDrafts]); // タブを切り替えた時やuser_idが変わった時に再実行されるように変更
      
 
   return (
@@ -213,7 +228,7 @@ function UserPage() {
       
        {/* タブ切り替え */}
       <section className="tab-section">
-
+        <div className="tab-left">
         <button
           className={`tab-button ${viewType === "products" ? "active" : ""}`}
           onClick={() => setViewType("products")}
@@ -227,19 +242,47 @@ function UserPage() {
         >
           質問一覧
         </button>
+        </div>
 
-      </section>          
+        {/*ボタン押下で下書き表示の切り替え*/}
+        <div className="tab-right">
+
+          {/* 自分のuserpageでのみ表示 */}
+          {isOwnProfile && (
+            <>
+              <DraftToggle
+                showDrafts={showDrafts}
+                setShowDrafts={setShowDrafts}
+              />
+            </>
+          )}
+
+        </div>
+      </section>      
+
+    
 
       {/* 制作物一覧 */}
       <section className="products-section">
 
-        <h2 className="section-title">
-          {viewType === "products" ? "制作物一覧": "質問一覧"}
-        </h2>
+      {/* 下書き一覧の表示の追加 */}
+      <h2 className="section-title">
+      {
+        viewType === "products"
+          ? showDrafts
+            ? "制作物下書き一覧"
+            : "制作物一覧"
+          : showDrafts
+            ? "質問下書き一覧"
+            : "質問一覧"
+      }
+      </h2>
         
         <div className="main-column" style={{ width: '100%' }}>
           {isLoading ? (
+
             <p>読み込み中...</p>
+
           ) : userArticles.length === 0 ? (
             <div className="item-card" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '150px' }}>
               <p className="empty-message" style={{ background: 'none', boxShadow: 'none', border: 'none', padding: 0, margin: 0 }}>

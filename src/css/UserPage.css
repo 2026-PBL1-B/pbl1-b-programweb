@@ -149,6 +149,14 @@ body {
   color: white;
 }
 
+.tab-left{
+  display: flex;
+  gap: 16px;
+}
+.tab-right{
+  margin-left: auto;
+}
+
 /* 制作物 */
 .products-section {
   display: flex;

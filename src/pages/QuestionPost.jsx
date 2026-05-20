@@ -5,12 +5,11 @@ import PostForm from '../components/PostForm';
 import { postQuestion } from '../api/Question'; 
 import { getOrCreateTags, postQuestionTags } from '../api/Tag'; 
 
-import Guideheader from '../components/Header.jsx';
+import Guidheader from "../components/Header";
 
 function QuestionPost() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
-
 	const handleQuestionSubmit = async (formData) => {
 		setLoading(true);
 
@@ -49,10 +48,13 @@ function QuestionPost() {
 
 	return (
 		<>
-			<Guideheader />
+			<Guidheader />
 
+		<div>
+			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
+				質問を投稿する
+			</h1>
 			<PostForm 
-				pageTitle="質問を投稿する"
 				titlePlaceholder="質問のタイトルを入力してください"
 				contentLabel="質問内容"
 				contentPlaceholder="困っていることや試したことを詳しく入力してください"
@@ -62,6 +64,9 @@ function QuestionPost() {
 				showFinish={false}
 				showGradeDepartment={true}
 			/>
+
+	
+		</div>
 		</>
 	);
 }

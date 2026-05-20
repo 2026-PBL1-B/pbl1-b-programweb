@@ -100,34 +100,75 @@ function MyPage() {
             </div>
 
             {/* 投稿一覧表示 */}
-            <div className="article-list">
-                {isLoading ? (
-                    <p className="loading-text">読み込み中...</p>
-                ) : sortedArticles.length === 0 ? (
-                    <p className="empty-text">まだ{viewType === 'products' ? '投稿' : '質問'}がありません。</p>
-                ) : (
-                    sortedArticles.map((article) => (
-                        <div key={article.id} className="article-card">
-                            {/* 日付といいねの表示 */}
-                            <div className="article-info">
-                                <span>{new Date(article.created_at).toLocaleDateString('ja-JP')}</span>
-                               {/* いいね数の表示を追加 */}
-                                <span className="like-count" style={{ marginLeft: '12px', color: '#e0245e' }}>
-                                    ❤️ {article.likeCount}
-                                </span>
-                            </div>
-                            
-                            {/* リンク先を投稿か質問かで切り替え */}
-                            <Link 
-                                to={viewType === 'products' ? `/product/${article.id}` : `/question/${article.id}`} 
-                                className="article-link"
-                            >      
-                                <h2 className="article-title">{article.title}</h2>
-                            </Link>
-                        </div>
-                    ))
-                )}
-            </div>
+{/* 投稿一覧表示 */}
+<div className="article-list">
+
+    {viewType === 'drafts' ? (
+
+        <DraftList />
+
+    ) : (
+
+        isLoading ? (
+
+            <p className="loading-text">
+                読み込み中...
+            </p>
+
+        ) : sortedArticles.length === 0 ? (
+
+            <p className="empty-text">
+                まだ{viewType === 'products' ? '投稿' : '質問'}がありません。
+            </p>
+
+        ) : (
+
+            sortedArticles.map((article) => (
+
+                <div key={article.id} className="article-card">
+
+                    {/* 日付といいね */}
+                    <div className="article-info">
+
+                        <span>
+                            {new Date(article.created_at).toLocaleDateString('ja-JP')}
+                        </span>
+
+                        <span
+                            className="like-count"
+                            style={{
+                                marginLeft: '12px',
+                                color: '#e0245e'
+                            }}
+                        >
+                            ❤️ {article.likeCount}
+                        </span>
+
+                    </div>
+
+                    {/* タイトル */}
+                    <Link
+                        to={
+                            viewType === 'products'
+                                ? `/product/${article.id}`
+                                : `/question/${article.id}`
+                        }
+                        className="article-link"
+                    >
+                        <h2 className="article-title">
+                            {article.title}
+                        </h2>
+                    </Link>
+
+                </div>
+
+            ))
+
+        )
+
+    )}
+
+</div>
             
             {/* リンク(デバック用) */}
             <div className="back-link-container">
