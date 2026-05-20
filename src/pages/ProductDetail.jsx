@@ -12,8 +12,7 @@ import { postProductLike, deleteProductLike, getProductLike, getMyProductLike } 
 import LikeButton from '../components/LikeButton';
 import { getProductTagNames } from '../api/Tag';
 
-// 🌟追加: URLを取得する関数をインポート
-import { getProductLinks } from '../api/productLink'; 
+import { getProductLinks } from '../api/productLink';   // URLを取得する関数をインポート
 
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
@@ -28,9 +27,7 @@ function ProductDetail() {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [tags, setTags] = useState([]); 
-  
-  // 🌟追加: URLリストを管理する状態
-  const [links, setLinks] = useState([]); 
+  const [links, setLinks] = useState([]);   // URLリストを管理する状態
   
   const [userName, setUserName] = useState('');
 
@@ -67,8 +64,7 @@ function ProductDetail() {
       const tagNames = await getProductTagNames(id);
       setTags(tagNames || []);
 
-      // 🌟追加: 制作物に紐づくURLデータを取得してセットする
-      const productUrls = await getProductLinks(id);
+      const productUrls = await getProductLinks(id);  // 制作物に紐づくURLデータを取得してセットする
       setLinks(productUrls || []);
     };
 
@@ -161,7 +157,7 @@ function ProductDetail() {
               )}
             </div>
 
-            {/* 🌟追加: 関連リンク（URL）表示セクション */}
+            {/* 関連リンク（URL）表示セクション */}
             {links && links.length > 0 && (
               <div className="link-section" style={{ marginTop: '10px' }}>
                 <p className="section-label" style={{ marginBottom: '8px' }}>関連リンク</p>
