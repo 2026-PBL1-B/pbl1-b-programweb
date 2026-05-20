@@ -136,31 +136,3 @@ export async function getQuestionsByUserId(user_id) {
   
   return data;
 }
-
-/** 
- * ユーザーの下書き一覧を取得する関数
- * is_finishがfalseの質問のものだけ取得する
- */
-export async function getMyDraftQuestions() {
-  const user_id = await getCurrentUserId();
-
-  if (!user_id) {
-    console.warn('取得対象のユーザーIDがありません（未ログイン）');
-    return [];
-  }
-
-  const { data, error } = await supabase
-    .from('Question')
-    .select('title, id, created_at, is_finish')
-    .eq('user_id', user_id)
-    .eq('is_finish', false);
-
-  if (error) {
-    console.error('下書きの取得に失敗', error.message);
-    return [];
-  }
-
-  console.log('下書きの取得に成功しました。', data);
-
-  return data;
-}
