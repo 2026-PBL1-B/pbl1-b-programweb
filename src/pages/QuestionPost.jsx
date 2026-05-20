@@ -46,6 +46,40 @@ function QuestionPost() {
 		}
 	};
 
+	// 下書き保存用の処理
+const handleDraftSubmit = async (formData) => {
+	setLoading(true);
+
+	try {
+	  // 1. 公開フラグを false（下書き）にして送信
+	  const newQuestion = await postQuestion(
+		formData.title, 
+		formData.content, 
+		false,
+		formData.isFinish,
+		formData.grade,
+		formData.department
+	  );
+
+	  // 2. タグの紐付け
+	  if (newQuestion && formData.tags && formData.tags.length > 0) {
+		const tagIds = await getOrCreateTags(formData.tags);
+		if (tagIds && tagIds.length > 0) {
+		  await postQuestionTags(newQuestion.id, tagIds);
+		}
+	  }
+
+	  alert('下書きを保存しました！');
+	  navigate('/questionList');
+
+	} catch (error) {
+	  alert('下書き保存中にエラーが発生しました。');
+	  console.error(error);
+	} finally {
+	  setLoading(false);
+	}
+  };
+
 	return (
 		<>
 			<Guidheader />
@@ -63,6 +97,7 @@ function QuestionPost() {
 				loading={loading}
 				showFinish={false}
 				showGradeDepartment={true}
+				onDraftSubmit={handleDraftSubmit}
 			/>
 
 	
