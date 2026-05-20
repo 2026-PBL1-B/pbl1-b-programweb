@@ -5,6 +5,7 @@ import GradeDepartmentSelect from './GradeDepartmentSelect';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
+import { useRef } from "react";
 import '../css/Post.css';
 
 function PostForm({ 
@@ -47,6 +48,17 @@ function PostForm({
     const removeTag = (indexToRemove) => {
         setTags(tags.filter((_, index) => index !== indexToRemove));
     };
+
+const inputRef = useRef(null);
+
+const handleImageSelect = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const url = URL.createObjectURL(file);
+    const markdownImage = `![画像](${url})\n`;
+    setContent((prev) => prev + markdownImage);  // 本文に画像を追加
+  }
+};
 
     const handleSubmitClick = (e) => {
         if (e) e.preventDefault();
@@ -106,6 +118,8 @@ function PostForm({
                 <div className="content-header" style={{ marginTop: '20px' }}>
                     <h2>{contentLabel}</h2>
                     <div className="mode-buttons">
+                        <button type="button"  onClick={() => inputRef.current.click()}>画像</button>
+                        <input type="file" accept="image/*" ref={inputRef} onChange={handleImageSelect}  style={{ display: "none" }}/> //画像選択を刺せる画面の表示
                         <button type="button" onClick={() => setMode("edit")}>編集</button>
                         <button type="button" onClick={() => setMode("split")}>両方</button>
                         <button type="button" onClick={() => setMode("preview")}>プレビュー</button>
