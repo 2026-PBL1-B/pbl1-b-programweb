@@ -1,3 +1,4 @@
+// src/pages/QuestionDetail.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -32,7 +33,7 @@ function QuestionDetail() {
     }, [id]);
 
     useEffect(() => {
-        const fetchQuestion = async () => {
+        const initData = async () => {
             const { data, error } = await supabase
                 .from('Question')
                 .select('*')
@@ -40,10 +41,9 @@ function QuestionDetail() {
                 .single();
 
             if (error) {
-                console.error('取得エラー:', error);
+                console.error(error);
             } else if (data) {
                 setQuestion(data);
-                // user_idを使ってユーザーネームを取得する処理
                 if (data.user_id) {
                     const name = await getUserName(data.user_id);
                     setUserName(name || '不明なユーザー');
@@ -57,19 +57,17 @@ function QuestionDetail() {
             const isLiked = await getMyQuestionLike(id);
             setLiked(isLiked);
 
-            if (getQuestionTagNames) {
-                const tagNames = await getQuestionTagNames(id);
-                setTags(tagNames || []);
-            }
+            const tagNames = await getQuestionTagNames(id);
+            setTags(tagNames || []);
         };
 
-        fetchQuestion();
+        initData();
     }, [id, fetchComments]);
 
     const handleLikeToggle = async () => {
         const previousLiked = liked;
         const previousCount = likeCount;
-        
+
         setLiked(!previousLiked);
         setLikeCount(previousLiked ? previousCount - 1 : previousCount + 1);
 
@@ -111,21 +109,13 @@ function QuestionDetail() {
 
     return (
         <section className="page-container">
-            {/* Guideheaderは独立させて一番上に配置します */}
             <Guideheader />
 
-            {/* ヘッダー部分（リストページと同じ構造） */}
-            {/* <div className="page-header">
-                <h1 className="header-title">質問詳細ページ</h1>
-            </div> */}
-
-            {/* コンテンツレイアウト部分 */}
             <div className="content-layout">
                 <div className="main-column">
-                    
-                    {/* 詳細情報のカード */}
+
                     <div className="detail-card">
-                        
+
                         <div className="like-button-container">
                             <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
                         </div>
@@ -146,25 +136,25 @@ function QuestionDetail() {
                                 <span>{question.grade ? gradeLabel : '学年:情報なし'}</span>
                             </div>
 
-                            {/* 制作物タイトル */}
+                            {/* 質問タイトル */}
                             <h2 className="post-title">{question.title}</h2>
-                        </div>
 
-                        {/* タグリスト（リストページのスタイルを再利用） */}
-                        <div className="tag-list">
-                            {tags.length > 0 ? (
-                                tags.map((tag, index) => (
-                                    <span key={index} className="tag-badge">
-                                        {tag}
-                                    </span>
-                                ))
-                            ) : (
-                                <p className="item-content">タグはありません</p>
-                            )}
+                            {/* 🌟移動: タグリストをタイトルのすぐ下に配置 */}
+                            <div className="tag-list" style={{ marginTop: '12px' }}>
+                                {tags.length > 0 ? (
+                                    tags.map((tag, index) => (
+                                        <span key={index} className="tag-badge">
+                                            {tag}
+                                        </span>
+                                    ))
+                                ) : (
+                                    <p className="item-content" style={{ margin: 0 }}>タグはありません</p>
+                                )}
+                            </div>
                         </div>
 
                         <div>
-                            <p className="section-label">質問内容</p>
+                            <p className="section-label" style={{ marginTop: '16px' }}>質問内容</p>
                             <div className="post-content markdown-preview">
                                 <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                                     {question.content}
