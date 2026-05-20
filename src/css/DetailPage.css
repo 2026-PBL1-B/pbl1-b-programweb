@@ -90,6 +90,15 @@
     margin-bottom: 16px;  /* 次に来るいいねボタンとの間隔を指定 */
 }
 
+/* 本文内の画像がはみ出ないように調整 */
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
 /* --- タグ・ボタン系 --- */
 
 .tag-list {

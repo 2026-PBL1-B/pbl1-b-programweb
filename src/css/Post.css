@@ -122,6 +122,15 @@
     overflow-y: auto;
 }
 
+/* プレビュー内の画像がはみ出ないように調整 */
+.preview img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+    border-radius: 4px;
+}
+
 /* モード制御 */
 .content-area.edit .preview {
     display: none;
