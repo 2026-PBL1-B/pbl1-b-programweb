@@ -1,11 +1,10 @@
 // src/components/PostForm.jsx
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import GradeDepartmentSelect from './GradeDepartmentSelect';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { useRef } from "react";
 import '../css/Post.css';
 
 function PostForm({ 
@@ -119,7 +118,7 @@ const handleImageSelect = (e) => {
                     <h2>{contentLabel}</h2>
                     <div className="mode-buttons">
                         <button type="button"  onClick={() => inputRef.current.click()}>画像</button>
-                        <input type="file" accept="image/*" ref={inputRef} onChange={handleImageSelect}  style={{ display: "none" }}/> //画像選択を刺せる画面の表示
+                        <input type="file" accept="image/*" ref={inputRef} onChange={handleImageSelect}  style={{ display: "none" }}/> {/* 画像選択をさせる画面の表示 */}
                         <button type="button" onClick={() => setMode("edit")}>編集</button>
                         <button type="button" onClick={() => setMode("split")}>両方</button>
                         <button type="button" onClick={() => setMode("preview")}>プレビュー</button>
