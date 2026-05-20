@@ -136,29 +136,6 @@ function MyProfile() {
             rows="5"
           />
         </div>
-
-        {/* 学年 */}
-        <div className="form-group">
-          <label>学年</label>
-
-          <select
-            name="grade"
-            value={profile.grade}
-            onChange={handleChange}
-          >
-            <option value="">選択してください</option>
-            {grades.map((grade) => (
-              <option
-                key={grade.value}
-                value={grade.value}
-              >
-                {grade.label}
-            </option>
-               ))}
-          </select>
-
-        </div>
-
         {/* 学科 */}
         <div className="form-group">
           <label>学科</label>
@@ -184,6 +161,27 @@ function MyProfile() {
             ))}
 
         </select>
+        </div>
+        {/* 学年 */}
+        <div className="form-group">
+          <label>学年</label>
+
+          <select
+            name="grade"
+            value={profile.grade}
+            onChange={handleChange}
+          >
+            <option value="">選択してください</option>
+            {grades.map((grade) => (
+              <option
+                key={grade.value}
+                value={grade.value}
+              >
+                {grade.label}
+            </option>
+               ))}
+          </select>
+
         </div>
 
         {/* 卒業年 */}
