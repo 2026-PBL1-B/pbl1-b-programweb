@@ -29,9 +29,11 @@ function PostForm({
     const [content, setContent] = useState("");
     const [mode, setMode] = useState("edit");
 
+    // 公開,完成の変数
     const [isPublic, setIsPublic] = useState(true);
     const [isFinish, setIsFinish] = useState(false);
 
+    // 学年と学科の状態を管理する変数
     const [grade, setGrade] = useState(""); 
     const [department, setDepartment] = useState("");
 
@@ -51,7 +53,7 @@ function PostForm({
         setTags(tags.filter((_, index) => index !== indexToRemove));
     };
 
-
+    // 画像関連
     const inputRef = useRef(null);
     const handleImageSelect = (e) => {
         const file = e.target.files[0];
