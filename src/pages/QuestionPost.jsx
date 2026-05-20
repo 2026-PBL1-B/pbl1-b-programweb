@@ -5,6 +5,8 @@ import PostForm from '../components/PostForm';
 import { postQuestion } from '../api/Question'; 
 import { getOrCreateTags, postQuestionTags } from '../api/Tag'; 
 
+import Guidheader from "../components/Header";
+
 function QuestionPost() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
@@ -45,6 +47,9 @@ function QuestionPost() {
 	};
 
 	return (
+		<>
+			<Guidheader />
+
 		<div>
 			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
 				質問を投稿する
@@ -59,7 +64,10 @@ function QuestionPost() {
 				showFinish={false}
 				showGradeDepartment={true}
 			/>
+
+	
 		</div>
+		</>
 	);
 }
 
