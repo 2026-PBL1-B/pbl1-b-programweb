@@ -6,6 +6,7 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
+import { uploadImage } from '../api/image';
 
 function PostForm({ 
     pageTitle,
@@ -37,6 +38,9 @@ function PostForm({
     const [grade, setGrade] = useState(""); 
     const [department, setDepartment] = useState("");
 
+    // 画像アップロード中の状態
+    const [isUploading, setIsUploading] = useState(false);
+
     const handleKeyDown = (e) => {
         if (e.nativeEvent.isComposing) return;
         if (e.key === 'Enter') {
@@ -55,14 +59,6 @@ function PostForm({
 
     // 画像関連
     const inputRef = useRef(null);
-    const handleImageSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const url = URL.createObjectURL(file);
-            const markdownImage = `![画像](${url})\n`;
-            setContent((prev) => prev + markdownImage);  // 本文に画像を追加
-        }
-    };
 
     // 「＋」ボタンが押されたとき、配列の最後に空の入力欄を追加する
     const handleAddUrl = () => {
@@ -91,6 +87,31 @@ function PostForm({
             return false;
         }
     };
+
+const handleImageSelect = async (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    try {
+        setIsUploading(true); // アップロード中状態にする
+        const imageUrl = await uploadImage(file);
+        
+        if (imageUrl) {
+            const markdownImage = `![画像](${imageUrl})\n`;
+            setContent((prev) => prev + markdownImage);  // 本文に画像を追加
+        } else {
+            alert('画像のアップロードに失敗しました。');
+        }
+    } catch (error) {
+        console.error('画像アップロードエラー:', error);
+        alert('画像のアップロード中にエラーが発生しました。');
+    } finally {
+        setIsUploading(false); // アップロード中状態を解除
+        if (inputRef.current) {
+            inputRef.current.value = ''; // 同じ画像を連続して選べるようにリセット
+        }
+    }
+  }
+};
 
     const handleSubmitClick = (e) => {
         if (e) e.preventDefault();
@@ -201,7 +222,9 @@ function PostForm({
                 <div className="content-header" style={{ marginTop: '20px' }}>
                     <h2>{contentLabel}</h2>
                     <div className="mode-buttons">
-                        <button type="button"  onClick={() => inputRef.current.click()}>画像</button>
+                        <button type="button" onClick={() => inputRef.current.click()} disabled={isUploading}>
+                            {isUploading ? 'アップロード中...' : '画像'}
+                        </button>
                         <input type="file" accept="image/*" ref={inputRef} onChange={handleImageSelect}  style={{ display: "none" }}/> {/* 画像選択をさせる画面の表示 */}
                         <button type="button" onClick={() => setMode("edit")}>編集</button>
                         <button type="button" onClick={() => setMode("split")}>両方</button>
