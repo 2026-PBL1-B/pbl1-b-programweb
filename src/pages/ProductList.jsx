@@ -55,6 +55,11 @@ function ProductList() {
     // ★重要: ここで絞り込みと並び替えを行った新しい配列を作成します
     const filteredAndSortedArticles = [...articles]
         .filter((article) => {
+            // 非公開は除外
+            if (!article.is_public) return false;
+
+            // 未完成は除外
+            if (!article.is_finish) return false;
             // 選択されているタグがない場合はすべて表示
             if (selectedTagNames.length === 0) return true;
             if (!article.tags) return false;
