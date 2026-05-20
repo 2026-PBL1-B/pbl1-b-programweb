@@ -79,13 +79,41 @@ function PostForm({
         setAdditionalUrls(newUrls);
     };
 
+    // 文字列が正しいURLかチェックする関数
+    const isValidUrl = (urlString) => {
+        if (!urlString) return true; // 空欄の場合は任意項目なのでOKとする
+        try {
+            new URL(urlString); // 正しいURL形式でないとエラーになる性質を利用
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
     const handleSubmitClick = (e) => {
         if (e) e.preventDefault();
         if (!title || !content) {
             alert("タイトルと本文を入力してください。");
             return;
         }
-        // additionalUrls も一緒に送信できるように追加しておきます
+
+        // GitHub URLの形式チェック
+        if (showGithubUrl && githubUrl && !isValidUrl(githubUrl)) {
+            alert("GitHubのURLが正しい形式ではありません。（http:// または https:// から始めてください）");
+            return; // 送信をストップ
+        }
+
+        // 追加URLの形式チェック
+        if (showAdditionalUrls) {
+            for (let i = 0; i < additionalUrls.length; i++) {
+                const url = additionalUrls[i];
+                if (url && !isValidUrl(url)) {
+                    alert(`追加URLの ${i + 1} 番目が正しい形式ではありません。（http:// または https:// から始めてください）`);
+                    return; // 送信をストップ
+                }
+            }
+        }
+
         onSubmit({ title, content, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
     };
 
@@ -127,7 +155,7 @@ function PostForm({
                 {showGithubUrl && (
                     <input
                         className="github-url-input"
-                        type="url"
+                        type="url"  // URLチェック
                         placeholder="GitHubのURLを入力してください（任意）"
                         value={githubUrl}
                         onChange={(e) => setGithubUrl(e.target.value)}
