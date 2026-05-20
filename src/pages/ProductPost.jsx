@@ -135,7 +135,7 @@ function ProductPost() {
           submitButtonText="投稿する"
           onSubmit={handleProductSubmit}
           loading={loading}
-          showFinish={true}
+          showFinish={false}
           showGradeDepartment={true}
           showGithubUrl={true}       // GithubのURL機能をオン
           showAdditionalUrls={true}  // 追加URL機能をオン
