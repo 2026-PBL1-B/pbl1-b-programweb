@@ -1,3 +1,4 @@
+// src/pages/ProductDetail.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
@@ -10,6 +11,8 @@ import { postProductComment, getProductComment } from '../api/productcomment';
 import { postProductLike, deleteProductLike, getProductLike, getMyProductLike } from '../api/productLike';
 import LikeButton from '../components/LikeButton';
 import { getProductTagNames } from '../api/Tag';
+
+import { getProductLinks } from '../api/productLink';   // URLを取得する関数をインポート
 
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
@@ -24,6 +27,8 @@ function ProductDetail() {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [tags, setTags] = useState([]); 
+  const [links, setLinks] = useState([]);   // URLリストを管理する状態
+  
   const [userName, setUserName] = useState('');
 
   const fetchComments = useCallback(async () => {
@@ -58,6 +63,9 @@ function ProductDetail() {
 
       const tagNames = await getProductTagNames(id);
       setTags(tagNames || []);
+
+      const productUrls = await getProductLinks(id);  // 制作物に紐づくURLデータを取得してセットする
+      setLinks(productUrls || []);
     };
 
     initData();
@@ -110,10 +118,6 @@ function ProductDetail() {
     <section className="page-container">
       {/* Guideheaderは独立させて一番上に配置します */}
       <Guideheader />
-      {/* ヘッダー部分 */}
-      {/* <div className="page-header">
-        <h1 className="header-title">制作物詳細ページ</h1>
-      </div> */}
 
       {/* コンテンツレイアウト部分 */}
       <div className="content-layout">
@@ -140,6 +144,7 @@ function ProductDetail() {
               <h2 className="post-title">{product.title}</h2>
             </div>
 
+            {/* タグ表示セクション */}
             <div className="tag-list">
               {tags.length > 0 ? (
                 tags.map((tag, index) => (
@@ -152,8 +157,33 @@ function ProductDetail() {
               )}
             </div>
 
+            {/* 関連リンク（URL）表示セクション */}
+            {links && links.length > 0 && (
+              <div className="link-section" style={{ marginTop: '10px' }}>
+                <p className="section-label" style={{ marginBottom: '8px' }}>関連リンク</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {links.map((link, index) => (
+                    <a 
+                      key={index} 
+                      href={link} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      style={{
+                        wordBreak: 'break-all',
+                        color: 'var(--accent, #3b82f6)',
+                        textDecoration: 'underline',
+                        fontSize: '15px'
+                      }}
+                    >
+                      🔗 {link}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div>
-              <p className="section-label">制作物内容</p>
+              <p className="section-label" style={{ marginTop: '16px' }}>制作物内容</p>
               <div className="post-content markdown-preview">
                 <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                   {product.content}
