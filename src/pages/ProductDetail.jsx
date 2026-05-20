@@ -149,20 +149,21 @@ function ProductDetail() {
 
               {/* 制作物タイトル */}
               <h2 className="post-title">{product.title}</h2>
+
+              {/*  タグ表示 */}
+              <div className="tag-list" style={{ marginTop: '12px' }}>
+                {tags.length > 0 ? (
+                  tags.map((tag, index) => (
+                    <span key={index} className="tag-badge">
+                      {tag}
+                    </span>
+                  ))
+                ) : (
+                  <p className="item-content" style={{ margin: 0 }}>タグはありません</p>
+                )}
+              </div>
             </div>
 
-            {/* タグ表示セクション */}
-            <div className="tag-list">
-              {tags.length > 0 ? (
-                tags.map((tag, index) => (
-                  <span key={index} className="tag-badge">
-                    {tag}
-                  </span>
-                ))
-              ) : (
-                <p className="item-content">タグはありません</p>
-              )}
-            </div>
 
             {/* 関連リンク（URL）表示セクション */}
             {links && links.length > 0 && (
