@@ -145,3 +145,17 @@
     color: var(--accent); /* リンク色もサイトのアクセントカラーに統一 */
     font-weight: bold;
 }
+
+/* 🌟追加: GitHubリンク入力欄のスタイル */
+.github-url-input {
+    padding: 20px;
+    font-size: 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+    box-sizing: border-box;
+    /* タグ入力欄との間隔を空けるためのマージン */
+    margin-top: 5px; 
+}

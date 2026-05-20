@@ -8,7 +8,7 @@ import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
 
 function PostForm({ 
-    pageTitle, // 🌟追加: ページの一番上に表示するタイトルを受け取れるようにします
+    pageTitle, // ページの一番上に表示するタイトルを受け取れるようにします
     titlePlaceholder = "タイトルを入力してください",
     contentLabel = "本文",
     contentPlaceholder = "本文を入力してください",
@@ -16,13 +16,17 @@ function PostForm({
     onSubmit,
     loading = false,
     showFinish = true, // 完成済みチェックボックス
-    showGradeDepartment = false
+    showGradeDepartment = false,
+    showGithubUrl = false // デフォルトは非表示（false）に設定
 }) {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
     const [content, setContent] = useState("");
     const [mode, setMode] = useState("edit");
+
+    // GitHubリンクを管理する変数
+    const [githubUrl, setGithubUrl] = useState("");
 
     // 公開,完成の変数
     const [isPublic, setIsPublic] = useState(true);
@@ -65,7 +69,7 @@ const handleImageSelect = (e) => {
             alert("タイトルと本文を入力してください。");
             return;
         }
-        onSubmit({ title, content, tags, isPublic, isFinish , grade, department});
+        onSubmit({ title, content, tags, githubUrl, isPublic, isFinish , grade, department});
     };
 
     return (
@@ -103,6 +107,17 @@ const handleImageSelect = (e) => {
                         />
                     )}
                 </div>
+
+                {/* showGithubUrl が true のときだけ表示します */}
+                {showGithubUrl && (
+                    <input
+                        className="github-url-input"
+                        type="url"
+                        placeholder="GitHubのURLを入力してください（任意）"
+                        value={githubUrl}
+                        onChange={(e) => setGithubUrl(e.target.value)}
+                    />
+                )}
 
                 {/* 学年・学科選択コンポーネント */}
                 {showGradeDepartment && (
@@ -143,6 +158,14 @@ const handleImageSelect = (e) => {
                                     <span key={i} className="tag">#{tag}</span>
                                 ))}
                             </div>
+
+                            {/* 念のため表示フラグとURLの両方があるときだけプレビューに出すようにします */}
+                            {showGithubUrl && githubUrl && (
+                                <p style={{ wordBreak: 'break-all', color: 'var(--accent)' }}>
+                                    GitHub: <a href={githubUrl} target="_blank" rel="noopener noreferrer">{githubUrl}</a>
+                                </p>
+                            )}
+
                             <div className="markdown-preview">
                                 <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
                                     {content || "本文がここに表示されます"}

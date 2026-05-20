@@ -63,6 +63,7 @@ function ProductPost() {
         loading={loading}
         showFinish={true}
         showGradeDepartment={true} // もしあれば
+        showGithubUrl={true} // 制作物投稿画面ではGitHub URL入力欄を表示します
       />
     </>
   );
