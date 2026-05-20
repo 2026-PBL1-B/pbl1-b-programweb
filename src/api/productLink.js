@@ -37,3 +37,28 @@ export async function postProductLinks(product_id, links) {
     return data; // 挿入されたURLのデータを返す
   }
 }
+
+/**
+ * 指定された制作物IDに紐づくURLをProductLinkテーブルから取得する関数
+ * @parm {string} product_id - URLを取得したい制作物のID
+ * @return {Array<string>} その制作物に紐づくURLの配列。エラーがあれば空配列を返す。
+ */
+export async function getProductLinks(product_id) {
+  if (!product_id) {
+    console.error('URLを取得する制作物のIDがありません');
+    return [];
+  }
+
+  const { data, error } = await supabase
+    .from('ProductLink')
+    .select('url') // URLだけを取得する
+    .eq('product_id', product_id); // 指定された制作物IDに紐づくURLを取得
+
+    if (error) {
+    console.error('URLの取得に失敗:', error.message);
+    return [];
+  } else {
+    console.log('URLの取得に成功:', data);
+    return data.map(item => item.url); // URLの配列を返す
+  }
+}
