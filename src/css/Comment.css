@@ -32,9 +32,7 @@
   border-radius: 8px;
   box-sizing: border-box;
   outline: none;
-
-  background-color: #1a1a1a; /* ここに使いたい背景色（黒など）を指定 */
-  color: #ffffff;           /* テキストの色 */
+  background-color: var(--code-bg, #f9fafb); /*コメント入力欄の背景色を指定*/
   border: 1px solid #333;   /* 枠線を明示的に指定 */
   min-height: 44px;         /* 1行分の最低高さ */
   line-height: 1.5;         /* 行間を統一 */
@@ -134,7 +132,7 @@
 /* コメント本文 */
 .comment-body {
   font-size: 15px;
-  color: #444;
+  color: #f9fafb;
   line-height: 1.5;
   white-space: pre-wrap; /* 改行を反映する */
   word-wrap: break-word; /* 長い単語で折り返す */
@@ -145,7 +143,7 @@
    ========================================= */
 .comment-item-black {
   width: 80vw;
-  background-color: #1a1a1a;
+  background-color: #f9fafb;
   color: #ffffff;
   border-radius: 8px;
   padding: 16px;
