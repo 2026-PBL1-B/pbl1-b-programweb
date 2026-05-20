@@ -38,8 +38,9 @@ function PostForm({
     const [grade, setGrade] = useState(""); 
     const [department, setDepartment] = useState("");
 
-    // 画像アップロード中の状態
+    // 画像アップロード中の状態と、アップロード待ちの画像リスト
     const [isUploading, setIsUploading] = useState(false);
+    const [pendingImages, setPendingImages] = useState([]); // { objectUrl, file } の配列
 
     const handleKeyDown = (e) => {
         if (e.nativeEvent.isComposing) return;
@@ -88,32 +89,22 @@ function PostForm({
         }
     };
 
-const handleImageSelect = async (e) => {
+const handleImageSelect = (e) => {
   const file = e.target.files[0];
   if (file) {
-    try {
-        setIsUploading(true); // アップロード中状態にする
-        const imageUrl = await uploadImage(file);
-        
-        if (imageUrl) {
-            const markdownImage = `![画像](${imageUrl})\n`;
-            setContent((prev) => prev + markdownImage);  // 本文に画像を追加
-        } else {
-            alert('画像のアップロードに失敗しました。');
-        }
-    } catch (error) {
-        console.error('画像アップロードエラー:', error);
-        alert('画像のアップロード中にエラーが発生しました。');
-    } finally {
-        setIsUploading(false); // アップロード中状態を解除
-        if (inputRef.current) {
-            inputRef.current.value = ''; // 同じ画像を連続して選べるようにリセット
-        }
+    const objectUrl = URL.createObjectURL(file);
+    setPendingImages((prev) => [...prev, { objectUrl, file }]); // 後でアップロードするために保存
+    
+    const markdownImage = `![画像](${objectUrl})\n`;
+    setContent((prev) => prev + markdownImage);  // 本文に一時URLの画像を即座に追加
+
+    if (inputRef.current) {
+        inputRef.current.value = ''; // リセット
     }
   }
 };
 
-    const handleSubmitClick = (e) => {
+    const handleSubmitClick = async (e) => {
         if (e) e.preventDefault();
         if (!title || !content) {
             alert("タイトルと本文を入力してください。");
@@ -137,7 +128,32 @@ const handleImageSelect = async (e) => {
             }
         }
 
-        onSubmit({ title, content, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
+        setIsUploading(true); // 送信（アップロード）開始
+        let finalContent = content;
+
+        try {
+            // 投稿ボタンが押されたタイミングで、本文に含まれる画像だけをアップロードする
+            for (const img of pendingImages) {
+                // ユーザーが本文から画像を消していないかチェック
+                if (finalContent.includes(img.objectUrl)) {
+                    const publicUrl = await uploadImage(img.file);
+                    if (publicUrl) {
+                        // 一時URLを本物のURL（SupabaseのURL）に置換
+                        finalContent = finalContent.replace(img.objectUrl, publicUrl);
+                    } else {
+                        throw new Error("画像のアップロードに失敗しました");
+                    }
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            alert("画像のアップロード中にエラーが発生したため、投稿を中断しました。");
+            setIsUploading(false);
+            return;
+        }
+
+        setIsUploading(false); // アップロード完了
+        onSubmit({ title, content: finalContent, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
     };
 
     return (
@@ -291,8 +307,8 @@ const handleImageSelect = async (e) => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '20px' }}>
-                    <button type="submit" disabled={loading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
-                        {loading ? '送信中...' : submitButtonText}
+                    <button type="submit" disabled={loading || isUploading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
+                        {loading || isUploading ? '送信中...' : submitButtonText}
                     </button>
                 </div>
             </form>
