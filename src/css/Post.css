@@ -146,7 +146,7 @@
     font-weight: bold;
 }
 
-/* 🌟追加: GitHubリンク入力欄のスタイル */
+/* GitHubリンク入力欄のスタイル */
 .github-url-input {
     padding: 20px;
     font-size: 18px;
@@ -158,4 +158,90 @@
     box-sizing: border-box;
     /* タグ入力欄との間隔を空けるためのマージン */
     margin-top: 5px; 
+}
+
+/* 任意のURL追加セクションのスタイル */
+.additional-urls-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;       /* 縦に並ぶ要素同士の隙間 */
+    margin-top: 5px; /* GitHubボックスからの隙間 */
+}
+
+/* 入力ボックスと×ボタンを横並びにする */
+.url-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 任意のURL追加セクションのスタイル */
+.additional-urls-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;       /* 縦に並ぶ要素同士の隙間 */
+    
+    /* 🌟修正: GitHubボックスとの間隔を狭める（マイナスマージンで調整） */
+    margin-top: -0px; 
+}
+
+/* 入力ボックスと×ボタンを横並びにする */
+.url-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 追加URLの入力ボックス */
+.additional-url-input {
+    flex-grow: 1; /* 横幅を可能な限り広げる */
+    padding: 20px;
+    font-size: 18px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    box-sizing: border-box;
+}
+
+/* 追加URLボックスの ×ボタン（削除） */
+.remove-url-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 18px;
+    color: #888;
+    cursor: pointer;
+    width: 40px;      /* ボタンの幅を固定 */
+    height: 40px;     /* ボタンの高さを固定 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    transition: all 0.2s ease; /* マウスを乗せたときの動きを滑らかに */
+}
+
+/* ×ボタンのホバー時のスタイル */
+.remove-url-btn:hover {
+    color: #ff4d4d;
+    border-color: #ff4d4d;
+    background: #fff5f5; /* ほんのり赤みのある背景に変える */
+}
+
+/* 追加URLボックス ＋ボタン */
+.add-url-btn {
+    align-self: flex-start; /* 左寄せ */
+    background: var(--code-bg); /* 識別しやすいように背景色を適用 */
+    border: 1px dashed var(--border); 
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+/* ＋ボタンのホバー時のスタイル */
+.add-url-btn:hover {
+    background: var(--border); /* ホバー時は少し濃い背景色にする */
 }

@@ -37,7 +37,6 @@ function ProductPost() {
       }
 
       alert('制作物の投稿とタグの保存が完了しました！');
-      // ※投稿成功後の画面遷移（ページ移動）などをここに書くと良いでしょう
       navigate('/productList');
 
     } catch (error) {
@@ -49,7 +48,6 @@ function ProductPost() {
   };
 
   return (
-    // 🌟修正: 全体を <> と </> で囲み、Guideheaderを一番上に配置します
     <>
       <Guideheader />
       
@@ -62,8 +60,9 @@ function ProductPost() {
         onSubmit={handleProductSubmit} // QuestionPostの場合は handleQuestionSubmit
         loading={loading}
         showFinish={true}
-        showGradeDepartment={true} // もしあれば
-        showGithubUrl={true} // 制作物投稿画面ではGitHub URL入力欄を表示します
+        showGradeDepartment={true}  // もしあれば
+        showGithubUrl={true}        // 制作物投稿画面ではGitHub URL入力欄を表示します
+        showAdditionalUrls={true}   // 追加URL機能を表示する
       />
     </>
   );
