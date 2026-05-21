@@ -10,76 +10,44 @@ import Guidheader from "../components/Header";
 function QuestionPost() {
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
-	const handleQuestionSubmit = async (formData) => {
+
+	// 共通の保存処理
+	const saveQuestionData = async (formData, isDraft) => {
 		setLoading(true);
 
 		try {
-			// 1. 質問のメインデータを送信し、結果（newQuestion）を受け取る
-			const newQuestion = await postQuestion(
-				formData.title, 
-				formData.content, 
-				formData.isPublic, 
-				formData.isFinish,
-				formData.grade,
-				formData.department,
-				true,
-			);
+			// 1. 質問のメインデータを送信
+			const newQuestion = await postQuestion({
+				title: formData.title, 
+				content: formData.content, 
+				is_public: formData.isPublic,
+				is_finish: formData.isFinish,
+				grade: formData.grade,
+				department: formData.department
+			});
 			
 			// 2. 質問が正常に作成され、かつ入力されたタグがある場合
 			if (newQuestion && formData.tags && formData.tags.length > 0) {
-				// タグIDの配列を取得（なければ作成される）
 				const tagIds = await getOrCreateTags(formData.tags);
 				
-				// 3. 質問ID(newQuestion.id)とタグIDを紐付ける
 				if (tagIds && tagIds.length > 0) {
 					await postQuestionTags(newQuestion.id, tagIds);
 				}
 			}
 
-			alert('質問の投稿とタグの保存が完了しました！');
+			alert(isDraft ? '下書きを保存しました！' : '質問の投稿とタグの保存が完了しました！');
 			navigate('/questionList');
 
 		} catch (error) {
-			alert('投稿中にエラーが発生しました。');
+			alert(isDraft ? '下書き保存中にエラーが発生しました。' : '投稿中にエラーが発生しました。');
 			console.error(error);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	// 下書き保存用の処理
-const handleDraftSubmit = async (formData) => {
-	setLoading(true);
-
-	try {
-	  // 1. 公開フラグを false（下書き）にして送信
-	  const newQuestion = await postQuestion(
-		formData.title, 
-		formData.content, 
-		formData.isFinish,
-		formData.grade,
-		formData.department,
-		false
-	  );
-
-	  // 2. タグの紐付け
-	  if (newQuestion && formData.tags && formData.tags.length > 0) {
-		const tagIds = await getOrCreateTags(formData.tags);
-		if (tagIds && tagIds.length > 0) {
-		  await postQuestionTags(newQuestion.id, tagIds);
-		}
-	  }
-
-	  alert('下書きを保存しました！');
-	  navigate('/questionList');
-
-	} catch (error) {
-	  alert('下書き保存中にエラーが発生しました。');
-	  console.error(error);
-	} finally {
-	  setLoading(false);
-	}
-  };
+	const handleQuestionSubmit = (formData) => saveQuestionData(formData, false);
+	const handleDraftSubmit = (formData) => saveQuestionData(formData, true);
 
 	return (
 		<>
@@ -100,8 +68,6 @@ const handleDraftSubmit = async (formData) => {
 				showGradeDepartment={true}
 				onDraftSubmit={handleDraftSubmit}
 			/>
-
-	
 		</div>
 		</>
 	);

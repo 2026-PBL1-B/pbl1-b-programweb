@@ -20,7 +20,14 @@ function PostProductTest() {
 
     try {
       // API関数を呼び出す（user_idはSupabase側で自動付与される前提）
-      const newProduct = await postProduct(title, content, isPublic, isFinish, grade, department);
+      const newProduct = await postProduct({ 
+        title, 
+        content, 
+        is_public: isPublic, 
+        is_finish: isFinish, 
+        grade, 
+        department 
+      });
       
       if (newProduct && tagsInput.trim()) {
         const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
