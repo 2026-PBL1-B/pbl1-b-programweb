@@ -314,9 +314,12 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '20px' }}>
-                    <button type="submit" disabled={loading || isUploading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
-                        {loading || isUploading ? '送信中...' : submitButtonText}
+                <div style={{ display: 'flex',
+                        justifyContent: 'flex-end',
+                        marginTop: '20px',
+                        width: '100%' }}>
+                    <button type="submit" disabled={loading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
+                        {loading ? '送信中...' : submitButtonText}
                     </button>
                 </div>
             </form>
