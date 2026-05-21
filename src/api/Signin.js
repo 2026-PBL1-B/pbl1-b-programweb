@@ -36,3 +36,26 @@ export async function getCurrentUserId() {
 
     return user ? user.id : null // ユーザーが存在すればIDを返し、存在しなければnullを返す
 }
+
+/**
+ * Googleを使ってサインインする関数
+ * Googleからリダイレクトした時に戻ってくる場所が必要
+ * 現在spabaseのRedirect URLs に http://localhost:5173/home を登録しているので、そこにリダイレクトされるようにする
+ * @param {string} redirectTo - ログイン後のリダイレクト先URL
+ */
+export async function signInWithGoogle(redirectTo) {
+    // 認証を開始するタイミングで戻り先を教えておく必要がある
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: redirectTo,
+        },
+    })
+
+    if (error) {
+        console.error('Googleログインエラー:', error.message)
+        return null
+    }
+
+    return data
+}
