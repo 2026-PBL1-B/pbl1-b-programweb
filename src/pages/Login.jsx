@@ -21,9 +21,9 @@ function Login() {
             console.log('ログイン成功:', user);
             navigate('/home');  // ログイン成功したら'/home'へ遷移
         } else {
-            // トリガーからのカスタムエラーメッセージが含まれているか確認
-            if (error && error.message.includes('学校指定のメールアドレスでのみ登録可能です')) {
-                alert('学校指定のメールアドレスでのみ登録可能です。');
+            // トリガーからのカスタムエラーメッセージやDBエラーが含まれているか確認
+            if (error && (error.message.includes('学校指定のメールアドレス') || error.message.includes('Database error saving new user'))) {
+                alert('stメールでサインインしてください');
             } else {
                 alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
             }
@@ -38,8 +38,8 @@ function Login() {
         const { error } = await signInWithGoogle(redirectTo);
 
         if (error) {
-            if (error.message.includes('学校指定のメールアドレスでのみ登録可能です')) {
-                alert('学校指定のメールアドレスでのみ登録可能です。');
+            if (error.message.includes('学校指定のメールアドレス') || error.message.includes('Database error saving new user')) {
+                alert('stメールでログインしてください');
             } else {
                 alert('Googleログイン中にエラーが発生しました。');
             }

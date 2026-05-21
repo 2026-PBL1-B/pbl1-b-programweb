@@ -16,8 +16,13 @@ function Home() {
       const errorMsg = params.get('error_description');
 
       if (errorMsg) {
-        // エラーがある場合はアラートを出して即座にログイン画面へ
-        alert(decodeURIComponent(errorMsg).replace(/\+/g, ' '));
+        const decodedMsg = decodeURIComponent(errorMsg).replace(/\+/g, ' ');
+        // データベースエラーやドメイン制限のエラーを検知してメッセージを差し替える
+        if (decodedMsg.includes('Database error saving new user') || decodedMsg.includes('学校指定のメールアドレス')) {
+          alert('stメールでサインインしてください');
+        } else {
+          alert(decodedMsg);
+        }
         navigate('/'); 
         return;
       }
