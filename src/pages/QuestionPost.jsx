@@ -21,7 +21,8 @@ function QuestionPost() {
 				formData.isPublic, 
 				formData.isFinish,
 				formData.grade,
-				formData.department
+				formData.department,
+				true,
 			);
 			
 			// 2. 質問が正常に作成され、かつ入力されたタグがある場合
@@ -55,10 +56,10 @@ const handleDraftSubmit = async (formData) => {
 	  const newQuestion = await postQuestion(
 		formData.title, 
 		formData.content, 
-		false,
 		formData.isFinish,
 		formData.grade,
-		formData.department
+		formData.department,
+		false
 	  );
 
 	  // 2. タグの紐付け

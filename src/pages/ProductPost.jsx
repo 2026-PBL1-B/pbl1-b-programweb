@@ -21,9 +21,13 @@ function ProductPost() {
         formData.title, 
         formData.content, 
         formData.isPublic, 
-        formData.isFinish,
         formData.grade,
+<<<<<<< HEAD
         formData.department
+=======
+				formData.department,
+        true
+>>>>>>> 31563e9 (isFinishをtrueで投稿できるようにする)
       );
 
       // 2. 制作物が正常に作成された場合、紐づくデータ（タグとURL）を保存する
@@ -78,10 +82,10 @@ function ProductPost() {
       const newProduct = await postProduct(
         formData.title, 
         formData.content, 
-        false,
         formData.isFinish,
         formData.grade,
-        formData.department
+        formData.department,
+        false
       );
 
       // 2. 制作物が正常に作成された場合、紐づくデータ（タグとURL）を保存する
