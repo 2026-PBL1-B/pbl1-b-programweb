@@ -314,16 +314,22 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                <div className="post-options" style={{ marginTop: '20px', padding: '10px 0' }}>
-                    <label style={{ marginRight: '15px', cursor: 'pointer' }}>
-                        <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> 公開する
-                    </label>
-                    
+                <div className="post-options" style={{ 
+                    marginTop: '20px', 
+                    padding: '10px 0',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    gap: '20px'
+                }}>
                     {showFinish && (
                         <label style={{ cursor: 'pointer' }}>
                             <input type="checkbox" checked={isFinish} onChange={(e) => setIsFinish(e.target.checked)} /> 完成済み
                         </label>
                     )}
+
+                    <label style={{ cursor: 'pointer' }}>
+                        <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> 公開する
+                    </label>
                 </div>
 
                 <div style={{ 
@@ -336,20 +342,20 @@ const handleImageSelect = (e) => {
                 }}>
                     <button 
                         type="button" 
-                        onClick={handleSubmitClick} 
-                        disabled={loading} 
-                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
-                    >
-                        {loading ? '送信中...' : submitButtonText}
-                    </button>
-                    <button 
-                        type="button" 
                         className="draft-save-btn"
                         disabled={loading} 
                         onClick={handleDraftClick}
                         style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
                     >
                         {loading ? '保存中...' : '下書き保存'}
+                    </button>
+                    <button 
+                        type="button" 
+                        onClick={handleSubmitClick} 
+                        disabled={loading} 
+                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
+                        {loading ? '送信中...' : submitButtonText}
                     </button>
                 </div>
             </form>
