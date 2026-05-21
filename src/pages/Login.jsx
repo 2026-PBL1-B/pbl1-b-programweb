@@ -15,28 +15,35 @@ function Login() {
         e.preventDefault(); // 画面がリロードされるのを防ぐおまじないです
 
         // spabaseにサインインリクエスト
-        const user = await signInEmailandPassword(email, password);
+        const { user, error } = await signInEmailandPassword(email, password);
 
         if (user){
             console.log('ログイン成功:', user);
             navigate('/home');  // ログイン成功したら'/home'へ遷移
         } else {
-            alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
+            // トリガーからのカスタムエラーメッセージが含まれているか確認
+            if (error && error.message.includes('学校指定のメールアドレスでのみ登録可能です')) {
+                alert('学校指定のメールアドレスでのみ登録可能です。');
+            } else {
+                alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
+            }
             return; // ログイン失敗ならここで処理を終わらせる
         }
-
-        // ここで入力されたデータを確認します（後々、ここでサーバーにデータを送ります）
-        // console.log('入力されたメールアドレス:', email);
-        // console.log('入力されたパスワード:', password);
-        // alert(`「${email}」でログインを試みました！`);
-
     };
 
     // Googleログインボタンが押された時の処理
     const handleGoogleLogin = async () => {
         // フロントエンドの責務としてリダイレクト先を指定
         const redirectTo = `${window.location.origin}/home`;
-        await signInWithGoogle(redirectTo);
+        const { error } = await signInWithGoogle(redirectTo);
+
+        if (error) {
+            if (error.message.includes('学校指定のメールアドレスでのみ登録可能です')) {
+                alert('学校指定のメールアドレスでのみ登録可能です。');
+            } else {
+                alert('Googleログイン中にエラーが発生しました。');
+            }
+        }
     };
 
     return (
@@ -96,7 +103,7 @@ function Login() {
                     }}
                 >
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px', height: '18px' }} />
-                    Googleでログイン
+                    KDアカウントでサインイン
                 </button>
             </div>
         </section>
