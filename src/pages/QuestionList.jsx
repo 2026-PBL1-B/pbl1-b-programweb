@@ -103,7 +103,14 @@ function QuestionList() {
                                         <span className="author-name">
                                             投稿者: <UserLink userId={question.user_id} userName={question.fetchedUserName} />
                                         </span>
-                                        <span>{new Date(question.created_at).toLocaleDateString('ja-JP')}</span>
+                                         {/*投稿日時表記：年月日、時分まで表記 */}
+                                        <span>{new Date(question.created_at).toLocaleDateString('ja-JP',{
+                                            year: 'numeric',
+                                            month: '2-digit',
+                                            day: '2-digit',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })}</span>
                                     </div>
                                     
                                     {/* 状態によって色を切り替えるクラスを動的に付与します */}

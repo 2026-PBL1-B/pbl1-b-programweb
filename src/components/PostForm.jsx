@@ -2,25 +2,31 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import GradeDepartmentSelect from './GradeDepartmentSelect';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
+import { uploadImage } from '../api/image';
 
 function PostForm({ 
-    pageTitle, // 🌟追加: ページの一番上に表示するタイトルを受け取れるようにします
+    pageTitle,
     titlePlaceholder = "タイトルを入力してください",
     contentLabel = "本文",
     contentPlaceholder = "本文を入力してください",
     submitButtonText = "投稿する",
     onSubmit,
     loading = false,
-    showFinish = true, // 完成済みチェックボックス
-    showGradeDepartment = false
+    showFinish = true,
+    showGradeDepartment = false,
+    showGithubUrl = false,          // GithubのURL機能
+    showAdditionalUrls = false      // 任意のURL追加機能
 }) {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
+    const [githubUrl, setGithubUrl] = useState("");             // GithubURLを管理する変数
+    const [additionalUrls, setAdditionalUrls] = useState([]);   // 複数の追加URLを管理する配列（初期値は空）
+
     const [content, setContent] = useState("");
     const [mode, setMode] = useState("edit");
 
@@ -31,6 +37,10 @@ function PostForm({
     // 学年と学科の状態を管理する変数
     const [grade, setGrade] = useState(""); 
     const [department, setDepartment] = useState("");
+
+    // 画像アップロード中の状態と、アップロード待ちの画像リスト
+    const [isUploading, setIsUploading] = useState(false);
+    const [pendingImages, setPendingImages] = useState([]); // { objectUrl, file } の配列
 
     const handleKeyDown = (e) => {
         if (e.nativeEvent.isComposing) return;
@@ -48,29 +58,106 @@ function PostForm({
         setTags(tags.filter((_, index) => index !== indexToRemove));
     };
 
-const inputRef = useRef(null);
+    // 画像関連
+    const inputRef = useRef(null);
+
+    // 「＋」ボタンが押されたとき、配列の最後に空の入力欄を追加する
+    const handleAddUrl = () => {
+        setAdditionalUrls([...additionalUrls, ""]);
+    };
+
+    // 「×」ボタンが押されたとき、指定された位置（index）の入力欄を削除する
+    const handleRemoveUrl = (indexToRemove) => {
+        setAdditionalUrls(additionalUrls.filter((_, index) => index !== indexToRemove));
+    };
+
+    // 追加URLの文字が入力されたとき、配列の中身を更新する
+    const handleAdditionalUrlChange = (indexToChange, newValue) => {
+        const newUrls = [...additionalUrls];
+        newUrls[indexToChange] = newValue;
+        setAdditionalUrls(newUrls);
+    };
+
+    // 文字列が正しいURLかチェックする関数
+    const isValidUrl = (urlString) => {
+        if (!urlString) return true; // 空欄の場合は任意項目なのでOKとする
+        try {
+            new URL(urlString); // 正しいURL形式でないとエラーになる性質を利用
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
 
 const handleImageSelect = (e) => {
   const file = e.target.files[0];
   if (file) {
-    const url = URL.createObjectURL(file);
-    const markdownImage = `![画像](${url})\n`;
-    setContent((prev) => prev + markdownImage);  // 本文に画像を追加
+    const objectUrl = URL.createObjectURL(file);
+    setPendingImages((prev) => [...prev, { objectUrl, file }]); // 後でアップロードするために保存
+    
+    const markdownImage = `![画像](${objectUrl})\n`;
+    setContent((prev) => prev + markdownImage);  // 本文に一時URLの画像を即座に追加
+
+    if (inputRef.current) {
+        inputRef.current.value = ''; // リセット
+    }
   }
 };
 
-    const handleSubmitClick = (e) => {
+    const handleSubmitClick = async (e) => {
         if (e) e.preventDefault();
         if (!title || !content) {
             alert("タイトルと本文を入力してください。");
             return;
         }
-        onSubmit({ title, content, tags, isPublic, isFinish , grade, department});
+
+        // GitHub URLの形式チェック
+        if (showGithubUrl && githubUrl && !isValidUrl(githubUrl)) {
+            alert("GitHubのURLが正しい形式ではありません。（http:// または https:// から始めてください）");
+            return; // 送信をストップ
+        }
+
+        // 追加URLの形式チェック
+        if (showAdditionalUrls) {
+            for (let i = 0; i < additionalUrls.length; i++) {
+                const url = additionalUrls[i];
+                if (url && !isValidUrl(url)) {
+                    alert(`追加URLの ${i + 1} 番目が正しい形式ではありません。（http:// または https:// から始めてください）`);
+                    return; // 送信をストップ
+                }
+            }
+        }
+
+        setIsUploading(true); // 送信（アップロード）開始
+        let finalContent = content;
+
+        try {
+            // 投稿ボタンが押されたタイミングで、本文に含まれる画像だけをアップロードする
+            for (const img of pendingImages) {
+                // ユーザーが本文から画像を消していないかチェック
+                if (finalContent.includes(img.objectUrl)) {
+                    const publicUrl = await uploadImage(img.file);
+                    if (publicUrl) {
+                        // 一時URLを本物のURL（SupabaseのURL）に置換
+                        finalContent = finalContent.replace(img.objectUrl, publicUrl);
+                    } else {
+                        throw new Error("画像のアップロードに失敗しました");
+                    }
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            alert("画像のアップロード中にエラーが発生したため、投稿を中断しました。");
+            setIsUploading(false);
+            return;
+        }
+
+        setIsUploading(false); // アップロード完了
+        onSubmit({ title, content: finalContent, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
     };
 
     return (
         <div className="container">
-            {/* pageTitle が設定されている場合のみ、タイトルを表示します */}
             {pageTitle && (
                 <h1 style={{ margin: '0 0 20px 0', color: 'var(--text-h)', fontSize: '40px' }}>
                     {pageTitle}
@@ -104,7 +191,41 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                {/* 学年・学科選択コンポーネント */}
+                {showGithubUrl && (
+                    <input
+                        className="github-url-input"
+                        type="url"  // URLチェック
+                        placeholder="GitHubのURLを入力してください（任意）"
+                        value={githubUrl}
+                        onChange={(e) => setGithubUrl(e.target.value)}
+                    />
+                )}
+
+                {/* 任意のURL追加セクション */}
+                {showAdditionalUrls && (
+                    <div className="additional-urls-section">
+                        {/* 配列(additionalUrls)の数だけ入力ボックスと×ボタンを表示 */}
+                        {additionalUrls.map((url, index) => (
+                            <div key={index} className="url-input-row">
+                                <input
+                                    className="additional-url-input"
+                                    type="url"
+                                    placeholder="任意のURLを入力してください"
+                                    value={url}
+                                    onChange={(e) => handleAdditionalUrlChange(index, e.target.value)}
+                                />
+                                <button type="button" className="remove-url-btn" onClick={() => handleRemoveUrl(index)}>
+                                    ×
+                                </button>
+                            </div>
+                        ))}
+                        {/* ＋ボタン（最初はこれだけが表示されます） */}
+                        <button type="button" className="add-url-btn" onClick={handleAddUrl}>
+                            ＋ URLを追加
+                        </button>
+                    </div>
+                )}
+
                 {showGradeDepartment && (
                     <GradeDepartmentSelect 
                         grade={grade} 
@@ -117,7 +238,9 @@ const handleImageSelect = (e) => {
                 <div className="content-header" style={{ marginTop: '20px' }}>
                     <h2>{contentLabel}</h2>
                     <div className="mode-buttons">
-                        <button type="button"  onClick={() => inputRef.current.click()}>画像</button>
+                        <button type="button" onClick={() => inputRef.current.click()} disabled={isUploading}>
+                            {isUploading ? 'アップロード中...' : '画像'}
+                        </button>
                         <input type="file" accept="image/*" ref={inputRef} onChange={handleImageSelect}  style={{ display: "none" }}/> {/* 画像選択をさせる画面の表示 */}
                         <button type="button" onClick={() => setMode("edit")}>編集</button>
                         <button type="button" onClick={() => setMode("split")}>両方</button>
@@ -143,8 +266,35 @@ const handleImageSelect = (e) => {
                                     <span key={i} className="tag">#{tag}</span>
                                 ))}
                             </div>
+                            
+                            {/* Github用URL */}
+                            {showGithubUrl && githubUrl && (
+                                <p style={{ wordBreak: 'break-all', color: 'var(--accent)' }}>
+                                    GitHub: <a href={githubUrl} target="_blank" rel="noopener noreferrer">{githubUrl}</a>
+                                </p>
+                            )}
+
+                            {/* プレビューに追加URLも表示 */}
+                            {showAdditionalUrls && additionalUrls.length > 0 && (
+                                <div style={{ marginBottom: '15px' }}>
+                                    {additionalUrls.map((url, i) => url && (
+                                        <p key={i} style={{ wordBreak: 'break-all', margin: '5px 0' }}>
+                                            関連URL: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
+                                        </p>
+                                    ))}
+                                </div>
+                            )}
+
                             <div className="markdown-preview">
-                                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                                <ReactMarkdown 
+                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                    urlTransform={(url) => {
+                                        if (url.startsWith('blob:')) {
+                                            return url; // blob URL (ローカルプレビュー用) を許可する
+                                        }
+                                        return defaultUrlTransform(url);
+                                    }}
+                                >
                                     {content || "本文がここに表示されます"}
                                 </ReactMarkdown>
                             </div>
@@ -157,7 +307,6 @@ const handleImageSelect = (e) => {
                         <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> 公開する
                     </label>
                     
-                    {/* 完成済みチェックボックス */}
                     {showFinish && (
                         <label style={{ cursor: 'pointer' }}>
                             <input type="checkbox" checked={isFinish} onChange={(e) => setIsFinish(e.target.checked)} /> 完成済み
@@ -166,8 +315,8 @@ const handleImageSelect = (e) => {
                 </div>
 
                 <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '20px' }}>
-                    <button type="submit" disabled={loading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
-                        {loading ? '送信中...' : submitButtonText}
+                    <button type="submit" disabled={loading || isUploading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
+                        {loading || isUploading ? '送信中...' : submitButtonText}
                     </button>
                 </div>
             </form>

@@ -9,24 +9,19 @@ import { postProductCommentLike, deleteProductCommentLike, getProductCommentLike
 import { postQuestionCommentLike, deleteQuestionCommentLike, getQuestionCommentLike } from '../api/questioncommentLike';
 import { getCurrentUserId } from '../api/Signin';
 
-/**
- * コメントコンポーネント
- * - onSubmit: コメントが投稿されたときのコールバック関数。引数としてコメントの内容を受け取る。
- */
 export default function DetailCommentPost({ onSubmit }) {
   const [comment, setComment] = useState('');
   const [isPreview, setIsPreview] = useState(false);
-  const [height, setHeight] = useState('auto'); // 高さをStateで管理
+  const [height, setHeight] = useState('auto');
   const textareaRef = useRef(null);
 
-  // 入力内容が変わるたびに高さを計算し、Stateに保存
   useEffect(() => {
     if (!isPreview && textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       const scrollHeight = textareaRef.current.scrollHeight;
       const newHeight = `${scrollHeight}px`;
       textareaRef.current.style.height = newHeight;
-      setHeight(newHeight); // プレビュー側でも使えるように保存
+      setHeight(newHeight);
     }
   }, [comment, isPreview]);
 
@@ -38,7 +33,7 @@ export default function DetailCommentPost({ onSubmit }) {
     }
     setComment('');
     setIsPreview(false);
-    setHeight('auto'); // リセット
+    setHeight('auto');
   };
 
   return (
@@ -48,6 +43,7 @@ export default function DetailCommentPost({ onSubmit }) {
       </div>
       <form onSubmit={handleSubmit} className="comment-form-body">
         {!isPreview ? (
+          //  編集時：白背景
           <textarea
             ref={textareaRef}
             className="comment-input"
@@ -58,11 +54,18 @@ export default function DetailCommentPost({ onSubmit }) {
             style={{ overflow: 'hidden', resize: 'none' }}
           />
         ) : (
-          <div 
-            className="comment-input markdown-content" 
-            style={{ 
+          // プレビュー時：preview-containerクラスのみ（comment-inputは外す）
+          <div
+            className="preview-container markdown-content"
+            style={{
               minHeight: height,
-              overflowWrap: 'anywhere'
+              overflowWrap: 'anywhere',
+              padding: '12px',
+              borderRadius: '8px',
+              border: '1px solid #333',
+              fontSize: '16px',
+              lineHeight: '1.5',
+              boxSizing: 'border-box',
             }}
           >
             {comment.trim() ? (
@@ -74,7 +77,7 @@ export default function DetailCommentPost({ onSubmit }) {
             )}
           </div>
         )}
-        
+
         <div className="comment-form-footer">
           <button
             type="button"
@@ -84,9 +87,9 @@ export default function DetailCommentPost({ onSubmit }) {
           >
             {isPreview ? '編集' : 'プレビュー'}
           </button>
-          <button 
-            type="submit" 
-            className="comment-submit-button" 
+          <button
+            type="submit"
+            className="comment-submit-button"
             disabled={!comment.trim()}
           >
             投稿する
@@ -177,9 +180,6 @@ function CommentItem({ comment, type }) {
   );
 }
 
-/**
- * コメント一覧を表示するコンポーネント
- */
 export function DetailCommentGet({ comments, type }) {
   if (!comments || comments.length === 0) {
     return <div className="comment-list-empty">コメントはまだありません。</div>;
