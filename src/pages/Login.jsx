@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css'; // 既存のデザインを一部使い回します
-import { signInEmailandPassword } from '../api/Signin'; // サインインのAPI関数をインポート
+import { signInEmailandPassword, signInWithGoogle } from '../api/Signin'; // サインインのAPI関数をインポート
 
 function Login() {
     // 入力されたメールアドレスとパスワードを記憶するための準備
@@ -30,6 +30,13 @@ function Login() {
         // console.log('入力されたパスワード:', password);
         // alert(`「${email}」でログインを試みました！`);
 
+    };
+
+    // Googleログインボタンが押された時の処理
+    const handleGoogleLogin = async () => {
+        // フロントエンドの責務としてリダイレクト先を指定
+        const redirectTo = `${window.location.origin}/home`;
+        await signInWithGoogle(redirectTo);
     };
 
     return (
@@ -69,6 +76,29 @@ function Login() {
                 ログインする
                 </button>
             </form>
+
+            <div style={{ marginTop: '24px' }}>
+                <p>または</p>
+                <button 
+                    onClick={handleGoogleLogin} 
+                    className="counter" 
+                    style={{ 
+                        marginTop: '16px', 
+                        cursor: 'pointer', 
+                        backgroundColor: '#fff', 
+                        color: '#757575', 
+                        border: '1px solid #ddd',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        width: '300px'
+                    }}
+                >
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px', height: '18px' }} />
+                    Googleでログイン
+                </button>
+            </div>
         </section>
     );
 }
