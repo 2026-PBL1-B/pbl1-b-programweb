@@ -144,8 +144,8 @@
    ========================================= */
 .comment-item-black {
   width: 80vw;
-  background-color: #1a1a1a;
-  color: #ffffff;
+   background-color: var(--code-bg, #f9fafb);
+  color: #444;
   border-radius: 8px;
   padding: 16px;
   margin-bottom: 16px;
@@ -164,7 +164,7 @@
 
 .comment-item-black .comment-username {
   font-weight: bold;
-  color: #e0e0e0;
+  color: #444;
   font-size: 14px;
 }
 
@@ -175,7 +175,7 @@
 
 .comment-item-black .comment-body {
   font-size: 15px;
-  color: #eaeaea;
+  color: #444;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
