@@ -2,10 +2,11 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import GradeDepartmentSelect from './GradeDepartmentSelect';
-import ReactMarkdown from 'react-markdown';
+import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
+import { uploadImage } from '../api/image';
 
 function PostForm({ 
     pageTitle,
@@ -37,6 +38,10 @@ function PostForm({
     const [grade, setGrade] = useState(""); 
     const [department, setDepartment] = useState("");
 
+    // 画像アップロード中の状態と、アップロード待ちの画像リスト
+    const [isUploading, setIsUploading] = useState(false);
+    const [pendingImages, setPendingImages] = useState([]); // { objectUrl, file } の配列
+
     const handleKeyDown = (e) => {
         if (e.nativeEvent.isComposing) return;
         if (e.key === 'Enter') {
@@ -55,14 +60,6 @@ function PostForm({
 
     // 画像関連
     const inputRef = useRef(null);
-    const handleImageSelect = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const url = URL.createObjectURL(file);
-            const markdownImage = `![画像](${url})\n`;
-            setContent((prev) => prev + markdownImage);  // 本文に画像を追加
-        }
-    };
 
     // 「＋」ボタンが押されたとき、配列の最後に空の入力欄を追加する
     const handleAddUrl = () => {
@@ -92,7 +89,22 @@ function PostForm({
         }
     };
 
-    const handleSubmitClick = (e) => {
+const handleImageSelect = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const objectUrl = URL.createObjectURL(file);
+    setPendingImages((prev) => [...prev, { objectUrl, file }]); // 後でアップロードするために保存
+    
+    const markdownImage = `![画像](${objectUrl})\n`;
+    setContent((prev) => prev + markdownImage);  // 本文に一時URLの画像を即座に追加
+
+    if (inputRef.current) {
+        inputRef.current.value = ''; // リセット
+    }
+  }
+};
+
+    const handleSubmitClick = async (e) => {
         if (e) e.preventDefault();
         if (!title || !content) {
             alert("タイトルと本文を入力してください。");
@@ -116,7 +128,32 @@ function PostForm({
             }
         }
 
-        onSubmit({ title, content, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
+        setIsUploading(true); // 送信（アップロード）開始
+        let finalContent = content;
+
+        try {
+            // 投稿ボタンが押されたタイミングで、本文に含まれる画像だけをアップロードする
+            for (const img of pendingImages) {
+                // ユーザーが本文から画像を消していないかチェック
+                if (finalContent.includes(img.objectUrl)) {
+                    const publicUrl = await uploadImage(img.file);
+                    if (publicUrl) {
+                        // 一時URLを本物のURL（SupabaseのURL）に置換
+                        finalContent = finalContent.replace(img.objectUrl, publicUrl);
+                    } else {
+                        throw new Error("画像のアップロードに失敗しました");
+                    }
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            alert("画像のアップロード中にエラーが発生したため、投稿を中断しました。");
+            setIsUploading(false);
+            return;
+        }
+
+        setIsUploading(false); // アップロード完了
+        onSubmit({ title, content: finalContent, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
     };
 
     return (
@@ -201,7 +238,9 @@ function PostForm({
                 <div className="content-header" style={{ marginTop: '20px' }}>
                     <h2>{contentLabel}</h2>
                     <div className="mode-buttons">
-                        <button type="button"  onClick={() => inputRef.current.click()}>画像</button>
+                        <button type="button" onClick={() => inputRef.current.click()} disabled={isUploading}>
+                            {isUploading ? 'アップロード中...' : '画像'}
+                        </button>
                         <input type="file" accept="image/*" ref={inputRef} onChange={handleImageSelect}  style={{ display: "none" }}/> {/* 画像選択をさせる画面の表示 */}
                         <button type="button" onClick={() => setMode("edit")}>編集</button>
                         <button type="button" onClick={() => setMode("split")}>両方</button>
@@ -247,7 +286,15 @@ function PostForm({
                             )}
 
                             <div className="markdown-preview">
-                                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                                <ReactMarkdown 
+                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                    urlTransform={(url) => {
+                                        if (url.startsWith('blob:')) {
+                                            return url; // blob URL (ローカルプレビュー用) を許可する
+                                        }
+                                        return defaultUrlTransform(url);
+                                    }}
+                                >
                                     {content || "本文がここに表示されます"}
                                 </ReactMarkdown>
                             </div>
