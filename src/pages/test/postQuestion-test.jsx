@@ -17,7 +17,14 @@ function PostQuestionTest() {
     setLoading(true);
 
     try {
-      const newQuestion = await postQuestion(title, content, isPublic, isFinish, grade, department);
+      const newQuestion = await postQuestion({ 
+        title, 
+        content, 
+        is_public: isPublic, 
+        is_finish: isFinish, 
+        grade, 
+        department 
+      });
       
       if (newQuestion && tagsInput.trim()) {
         const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
