@@ -32,9 +32,7 @@
   border-radius: 8px;
   box-sizing: border-box;
   outline: none;
-
-  background-color: #1a1a1a; /* ここに使いたい背景色（黒など）を指定 */
-  color: #ffffff;           /* テキストの色 */
+  background-color: #ffffff;
   border: 1px solid #333;   /* 枠線を明示的に指定 */
   min-height: 44px;         /* 1行分の最低高さ */
   line-height: 1.5;         /* 行間を統一 */
@@ -45,6 +43,7 @@
   white-space: pre-wrap;    /* 改行を反映させる */
   word-break: break-all;    /* 長い文字列の折り返し */
   text-align: left;         /* 左寄せ */
+  background-color: var(--code-bg, #f9fafb);
 }
 
 /* Markdown内の余計な余白を消してtextareaに合わせる */
