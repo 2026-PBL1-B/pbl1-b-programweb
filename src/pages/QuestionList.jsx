@@ -135,11 +135,6 @@ function QuestionList() {
                                     </div>
                                 )}
 
-                                {question.content && (
-                                    <p className="item-content">
-                                        {question.content}
-                                    </p>
-                                )}
                             </div>
                         ))
                     )}

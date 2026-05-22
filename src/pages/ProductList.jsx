@@ -139,11 +139,6 @@ function ProductList() {
                                     </div>
                                 )}
 
-                                {article.content && (
-                                    <p className="item-content">
-                                        {article.content}
-                                    </p>
-                                )}
                             </div>
                         ))
                     )}
