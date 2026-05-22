@@ -15,6 +15,11 @@ export default function Header() {
 
   useEffect(() => {
     const fetchAvatar = async () => {
+      // すでにセッションにデータがある場合はAPIを叩かない
+      if (sessionStorage.getItem("userAvatarUrl")) {
+        return;
+      }
+
       const userId = await getCurrentUserId();
       if (userId) {
         const url = await getProfileAvatarUrl(userId);
