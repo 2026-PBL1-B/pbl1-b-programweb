@@ -8,6 +8,7 @@ import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
 import UserLink from '../components/UserLink';
+import AvatarIcon from '../components/AvatarIcon';
 
 function QuestionList() {
     const [questions, setQuestions] = useState([]);
@@ -99,7 +100,8 @@ function QuestionList() {
                         filteredAndSortedQuestions.map((question) => (
                             <div key={question.id} className="item-card">
                                 <div className="card-meta">
-                                    <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <AvatarIcon userId={question.user_id} />
                                         <span className="author-name">
                                             投稿者: <UserLink userId={question.user_id} userName={question.fetchedUserName} />
                                         </span>

@@ -8,6 +8,7 @@ import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
 import UserLink from '../components/UserLink';
+import AvatarIcon from '../components/AvatarIcon';
 
 function ProductList() {
     const [articles, setArticles] = useState([]);
@@ -107,7 +108,8 @@ function ProductList() {
                         filteredAndSortedArticles.map((article) => (
                             <div key={article.id} className="item-card">
                                 <div className="card-meta">
-                                    <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <AvatarIcon userId={article.user_id} />
                                         <span className="author-name">
                                             投稿者: <UserLink userId={article.user_id} userName={article.fetchedUserName} />
                                         </span>
