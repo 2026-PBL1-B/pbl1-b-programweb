@@ -35,7 +35,7 @@ function QuestionPost() {
 				}
 			}
 
-			alert(isDraft ? '下書きを保存しました！' : '質問の投稿とタグの保存が完了しました！');
+			alert(isDraft ? '下書きを保存しました！' : '質問の投稿が完了しました！');
 			navigate('/questionList');
 
 		} catch (error) {
