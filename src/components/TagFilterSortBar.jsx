@@ -11,21 +11,7 @@ function TagFilterSortBar({
 }) {
 
     const [isModalOpen, setIsModalOpen] = useState(false);  //モーダルの開閉状態を管理
-    // const [isOpen, setIsOpen] = useState(false); // メニューの開閉状態を管理 
-    // const dropdownRef = useRef(null); // メニューの外側をクリックしたか判定するため
-
-    // メニューの外側をクリックしたら閉じる処理
-    // useEffect(() => {
-        // function handleClickOutside(event) {
-            // if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                // setIsOpen(false);
-            // }
-        // }
-        // document.addEventListener("mousedown", handleClickOutside);
-        // return () => {
-            // document.removeEventListener("mousedown", handleClickOutside);
-        // };
-    // }, [dropdownRef]);
+    const [currentPage, setCurrentPage] = useState(1); // 現在のページ数の管理
 
     // チェックボックスがクリックされた時の処理
     const handleTagChange = (tagName) => {
@@ -43,33 +29,19 @@ function TagFilterSortBar({
         ? "すべてのタグ" 
         : `${selectedTagNames.length}個のタグを選択中`;
 
+    const tagsPerPage = 10; //1ページに表示される数の設定
+
+    const sortedTags = [...availableTags].sort((a, b) => a.name.localeCompare(b.name, 'ja')); //タグを日本語順でソート
+
+    const totalPages = Math.ceil(sortedTags.length / tagsPerPage); //総ページ数の計算
+
+    const startIndex = (currentPage - 1) * tagsPerPage; //現在のページの開始インデックス
+    const endIndex = startIndex + tagsPerPage; //現在のページの終了インデックス
+
+    const currentTags = sortedTags.slice(startIndex, endIndex); //現在のページに表示するタグの配列
     return (
         <div className="filter-sort-bar">
-            {/* カスタムドロップダウンメニュー */}
-            {/* <div className="custom-dropdown" ref={dropdownRef}> 
-                    <button 
-                        className="dropdown-toggle" 
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        {displayText} ▼
-                    </button>
-                    
-                    {isOpen && (
-                        <div className="dropdown-menu">
-                            {availableTags.map(tag => (
-                                <label key={tag.id} className="dropdown-item">
-                                    <input 
-                                        type="checkbox" 
-                                        checked={selectedTagNames.includes(tag.name)}
-                                        onChange={() => handleTagChange(tag.name)}
-                                    />
-                                    {tag.name}
-                                </label>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            */}
+            
             {/* タグモーダルを開くボタン */}
             <button
                 className="tag-open-button"
@@ -95,9 +67,7 @@ function TagFilterSortBar({
                         </div>
 
                         <div className="tag-list">
-                            {[...availableTags]
-                                .sort((a, b) => a.name.localeCompare(b.name, 'ja'))
-                                .map((tag) => (
+                            {currentTags.map((tag) => (
                                     <button
                                         key={tag.id}
                                         className={
@@ -111,7 +81,28 @@ function TagFilterSortBar({
                                     </button>
                             ))}
                         </div>
+                        {/* ページネーション */}
+                        <div className="pagination">
+                            <button
+                                className="page-arrow"
+                                disabled={currentPage === 1}
+                                onClick={() => setCurrentPage(currentPage -1)}
+                                >
+                                    {'<'}
+                            </button>
 
+                            <span>
+                                {currentPage} / {totalPages}
+                            </span>
+
+                            <button
+                                className="page-arrow"
+                                disabled={currentPage === totalPages}
+                                onClick={() => setCurrentPage(currentPage + 1)}
+                            >
+                                {'>'}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

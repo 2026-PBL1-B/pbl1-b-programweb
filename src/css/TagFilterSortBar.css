@@ -6,70 +6,8 @@
     gap: 12px;
     align-self: flex-end;
 }
-.filter-select {
-    padding: 8px 12px;
-    background-color: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--text);
-    font-size: 14px;
-}
 
-/* --- カスタムドロップダウン用 --- */
-.custom-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-toggle {
-    background-color: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 12px;
-    cursor: pointer;
-    color: var(--text);
-    font-size: 14px;
-    min-width: 180px;
-    text-align: left;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    margin-top: 4px;
-    background-color: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    z-index: 10;
-    min-width: 200px;
-    max-height: 300px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-}
-
-.dropdown-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    cursor: pointer;
-    font-size: 14px;
-    color: var(--text);
-}
-
-.dropdown-item:hover {
-    background-color: var(--code-bg);
-}
-
-.dropdown-item input[type="checkbox"] {
-    cursor: pointer;
-}
-/* ===== モーダル用 ===== */
-
+/* モーダル用 */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -141,4 +79,31 @@
     color: var(--text);
 
     cursor: pointer;
+}
+/* ページネーションのデザイン */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.page-arrow {
+    all: unset;
+
+    font-size: 20px;
+    cursor: pointer;
+
+    color: var(--text);
+}
+
+.page-arrow:disabled {
+    opacity: 0.3;
+    cursor: default;
+}
+
+.page-number {
+    font-size: 14px;
 }
