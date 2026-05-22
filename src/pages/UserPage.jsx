@@ -31,41 +31,49 @@ function UserPage() {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   
   // プロフィール情報の状態
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState(() => ({
     name: "",
     comment: "",
     grade: "",
     department: "",
     graduation_year: "",
-    avatar_url: ""
-  });
+    avatar_url: sessionStorage.getItem(`userAvatarUrl_${user_id}`) || ""
+  }));
 
   useEffect(() => {
           const loadUserProducts = async () => {
               setIsLoading(true);
+              // 画面遷移時のチラつきを防ぐため、セッションから初期値をセット
+              setProfile(prev => ({ ...prev, avatar_url: sessionStorage.getItem(`userAvatarUrl_${user_id}`) || "" }));
               try {
                       // 自分のプロフィールかどうかをチェック
                       const currentId = await getCurrentUserId();
                       setIsOwnProfile(currentId === user_id);
 
-                      // プロフィール情報、ユーザー名、アバターURLの取得
-                      const [profileResult, name, avatarUrl] = await Promise.all([
+                      // プロフィール情報とユーザー名の取得
+                      const [profileResult, name] = await Promise.all([
                         getProfileForUserID(user_id),
-                        getUserName(user_id),
-                        getProfileAvatarUrl(user_id)
+                        getUserName(user_id)
                       ]);
 
                       if (profileResult.success && profileResult.data) {
+                        const avatarUrl = profileResult.data.avatar_url || "";
+                        if (avatarUrl) {
+                          sessionStorage.setItem(`userAvatarUrl_${user_id}`, avatarUrl);
+                          if (currentId === user_id) {
+                            sessionStorage.setItem("userAvatarUrl", avatarUrl);
+                          }
+                        }
                         setProfile({
                           name: name || "不明なユーザー",
                           comment: profileResult.data.comment || "",
                           grade: profileResult.data.grade || "",
                           department: profileResult.data.department || "",
                           graduation_year: profileResult.data.graduation_year || "",
-                          avatar_url: avatarUrl || ""
+                          avatar_url: avatarUrl
                         });
                       } else {
-                        setProfile(prev => ({ ...prev, name: name || "不明なユーザー", avatar_url: avatarUrl || "" }));
+                        setProfile(prev => ({ ...prev, name: name || "不明なユーザー" }));
                       }
 
                       if (viewType === 'products') {
