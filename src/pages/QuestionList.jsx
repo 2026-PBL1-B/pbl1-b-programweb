@@ -114,8 +114,8 @@ function QuestionList() {
                                     </div>
                                     
                                     {/* 状態によって色を切り替えるクラスを動的に付与します */}
-                                    <div className={`status-badge ${question.is_finish ? 'status-resolved' : 'status-open'}`}>
-                                        {question.is_finish ? '解決済み' : '受付中'}
+                                    <div className={`status-badge ${question.is_Open ? 'status-resolved' : 'status-open'}`}>
+                                        {question.is_Open ? '解決済み' : '受付中'}
                                     </div>
                                 </div>
                                 
