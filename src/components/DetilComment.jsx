@@ -5,6 +5,7 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import UserLink from './UserLink';
 import LikeButton from './LikeButton';
+import AvatarIcon from './AvatarIcon';
 import { postProductCommentLike, deleteProductCommentLike, getProductCommentLike } from '../api/productcommentLike';
 import { postQuestionCommentLike, deleteQuestionCommentLike, getQuestionCommentLike } from '../api/questioncommentLike';
 import { getCurrentUserId } from '../api/Signin';
@@ -164,7 +165,10 @@ function CommentItem({ comment, type }) {
     <div className="comment-item-black">
       <div className="comment-header" style={{ alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AvatarIcon userId={comment.user_id} size={30} />
+            <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
+          </div>
           <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} />
         </div>
         <span className="comment-date">
