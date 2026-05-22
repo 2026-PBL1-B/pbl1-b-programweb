@@ -8,14 +8,20 @@ import '../css/Header.css';
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [avatarUrl, setAvatarUrl] = useState("");
+  // 初期値をsessionStorageから取得し、画面遷移時のチラつきを防ぐ
+  const [avatarUrl, setAvatarUrl] = useState(() => {
+    return sessionStorage.getItem("userAvatarUrl") || "";
+  });
 
   useEffect(() => {
     const fetchAvatar = async () => {
       const userId = await getCurrentUserId();
       if (userId) {
         const url = await getProfileAvatarUrl(userId);
-        setAvatarUrl(url);
+        if (url) {
+          setAvatarUrl(url);
+          sessionStorage.setItem("userAvatarUrl", url); // 取得したURLをセッションに保存
+        }
       }
     };
     fetchAvatar();
