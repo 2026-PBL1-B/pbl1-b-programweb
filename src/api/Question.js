@@ -43,12 +43,13 @@ export async function getQuestions(tagIds) {
  * @param {string} questionData.title - 質問のタイトル
  * @param {string} questionData.content - 質問の内容
  * @param {boolean} questionData.is_public - 公開フラグ(falseで非公開)
- * @param {boolean} questionData.is_finish - 終了フラグ(trueで完了)
+ * @param {boolean} questionData.is_finish - 下書きのフラグ(falseで下書き、非公開)
+ * @param {boolean} questionData.is_Open - 質問状況フラグ(trueで受付中、falseで解決済み)
  * @param {number|string|null} questionData.grade - 学年
  * @param {string} questionData.department - 学科
  * @return {Object|null} 追加された質問のデータ
  */
-export async function postQuestion({ title, content, is_public, is_finish, grade, department }) {
+export async function postQuestion({ title, content, is_public, is_finish,is_open, grade, department }) {
   // departmentがnullやundefinedの場合は空文字にする
   const safeDepartment = department ?? '';
   // gradeを数値に変換（nullの場合はnullのままにする）
@@ -61,7 +62,8 @@ export async function postQuestion({ title, content, is_public, is_finish, grade
         title: title, 
         content: content, 
         is_public: is_public, 
-        is_finish: is_finish, 
+        is_finish: is_finish ??false,
+        is_Open: is_open ?? true,
         grade: safeGrade, 
         department: safeDepartment 
       },
@@ -94,7 +96,7 @@ export async function getMyQuestions() {
     // 2. Supabaseの 'Question' テーブルからデータを取ってくる
     const { data, error } = await supabase
         .from('Question')              // 'Question' という名前のテーブルを指定
-        .select('title, id, created_at, is_finish')    // 取得したいカラムを指定
+        .select('title, id, created_at, is_finish,is_open')    // 取得したいカラムを指定
         .eq('user_id', user_id);       // 条件：user_idカラムの値が、自分のIDと一致するもの
 
     // データベース操作に失敗した場合（テーブル名ミスや権限エラーなど）
@@ -123,7 +125,7 @@ export async function getQuestionsByUserId(user_id) {
 
   const { data, error } = await supabase
     .from('Question')
-    .select('title, id, created_at, is_finish')
+    .select('title, id, created_at, is_finish,is_open')
     .eq('user_id', user_id);
 
   if (error) {

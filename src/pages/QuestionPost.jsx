@@ -21,7 +21,8 @@ function QuestionPost() {
 				title: formData.title, 
 				content: formData.content, 
 				is_public: formData.isPublic,
-				is_Open: formData.isOpen,
+				is_finish: false,
+				is_open: false,
 				grade: formData.grade,
 				department: formData.department
 			});
