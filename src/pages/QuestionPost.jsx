@@ -21,7 +21,7 @@ function QuestionPost() {
 				title: formData.title, 
 				content: formData.content, 
 				is_public: formData.isPublic,
-				is_finish: formData.isFinish,
+				is_finish: isDraft ? false : true,
 				grade: formData.grade,
 				department: formData.department
 			});
@@ -35,7 +35,7 @@ function QuestionPost() {
 				}
 			}
 
-			alert(isDraft ? '下書きを保存しました！' : '質問の投稿とタグの保存が完了しました！');
+			alert(isDraft ? '下書きを保存しました！' : '質問の投稿が完了しました！');
 			navigate('/questionList');
 
 		} catch (error) {
@@ -55,13 +55,13 @@ function QuestionPost() {
 
 		<div>
 			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
-				質問を投稿する
+				投稿する
 			</h1>
 			<PostForm 
 				titlePlaceholder="質問のタイトルを入力してください"
 				contentLabel="質問内容"
 				contentPlaceholder="困っていることや試したことを詳しく入力してください"
-				submitButtonText="質問を投稿する"
+				submitButtonText="投稿する"
 				onSubmit={handleQuestionSubmit}
 				loading={loading}
 				showFinish={false}
