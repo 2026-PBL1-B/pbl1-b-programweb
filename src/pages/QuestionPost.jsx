@@ -55,13 +55,13 @@ function QuestionPost() {
 
 		<div>
 			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
-				質問を投稿する
+				投稿する
 			</h1>
 			<PostForm 
 				titlePlaceholder="質問のタイトルを入力してください"
 				contentLabel="質問内容"
 				contentPlaceholder="困っていることや試したことを詳しく入力してください"
-				submitButtonText="質問を投稿する"
+				submitButtonText="投稿する"
 				onSubmit={handleQuestionSubmit}
 				loading={loading}
 				showFinish={false}
