@@ -111,7 +111,7 @@ function ProductList() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <AvatarIcon userId={article.user_id} />
                                         <span className="author-name">
-                                            投稿者: <UserLink userId={article.user_id} userName={article.fetchedUserName} />
+                                            <UserLink userId={article.user_id} userName={article.fetchedUserName} prefix="投稿者: " />
                                         </span>
 
                                          {/*投稿日時表記：年月日、時分まで表記 */}

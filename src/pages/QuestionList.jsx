@@ -103,7 +103,7 @@ function QuestionList() {
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <AvatarIcon userId={question.user_id} />
                                         <span className="author-name">
-                                            投稿者: <UserLink userId={question.user_id} userName={question.fetchedUserName} />
+                                            <UserLink userId={question.user_id} userName={question.fetchedUserName} prefix="投稿者: " />
                                         </span>
                                          {/*投稿日時表記：年月日、時分まで表記 */}
                                         <span>{new Date(question.created_at).toLocaleDateString('ja-JP',{
