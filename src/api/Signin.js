@@ -13,13 +13,13 @@ export async function signInEmailandPassword(email, password) {
         password,
     })
 
-    // エラーがあればコンソールに出力してnullを返す
+    // エラーがあればエラー情報を返す
     if (error) {
         console.error('ログインエラー:', error.message)
-        return null
+        return { user: null, error }
     }
 
-    return data.user // サインインに成功したユーザー情報を返す
+    return { user: data.user, error: null } // 成功
 }
 
 /**
@@ -35,4 +35,30 @@ export async function getCurrentUserId() {
     }
 
     return user ? user.id : null // ユーザーが存在すればIDを返し、存在しなければnullを返す
+}
+
+/**
+ * Googleを使ってサインインする関数
+ * Googleからリダイレクトした時に戻ってくる場所が必要
+ * 現在spabaseのRedirect URLs に http://localhost:5173/home を登録しているので、そこにリダイレクトされるようにする
+ * @param {string} redirectTo - ログイン後のリダイレクト先URL
+ */
+export async function signInWithGoogle(redirectTo) {
+    // 認証を開始するタイミングで戻り先を教えておく必要がある
+    const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: redirectTo,
+            queryParams: {
+                hd: import.meta.env.VITE_DOMAIN_KD_EMAIL , // KDでドメイン制限
+            },
+        },
+    })
+
+    if (error) {
+        console.error('Googleログインエラー:', error.message)
+        return { data: null, error }
+    }
+
+    return { data, error: null }
 }

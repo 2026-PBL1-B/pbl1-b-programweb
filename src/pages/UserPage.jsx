@@ -144,7 +144,7 @@ function UserPage() {
           {/* <div className="profile-icon"></div> */}
 
           <div className="profile-info">
-            <h1>{profile.name || user_id}</h1>
+            <h1>{profile.name}</h1>
            { /*<p className="userid">{user.userid}</p> */}
             <p className="bio">{profile.comment ? profile.comment : "コメントはありません。"}</p>
           </div>
