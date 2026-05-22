@@ -1,11 +1,25 @@
 // src/components/Header.jsx
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUserId } from "../api/Signin"
+import { getProfileAvatarUrl } from "../api/profile";
 import '../css/Header.css';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      const userId = await getCurrentUserId();
+      if (userId) {
+        const url = await getProfileAvatarUrl(userId);
+        setAvatarUrl(url);
+      }
+    };
+    fetchAvatar();
+  }, []);
 
   const handleAccountClick = async () => {
     try {
@@ -28,7 +42,11 @@ export default function Header() {
         className="account-button"
         onClick={handleAccountClick}
       >
-        👤
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="Account" className="avatar-image" />
+        ) : (
+          "👤"
+        )}
       </button>
 
       <div className="nav-bar">
