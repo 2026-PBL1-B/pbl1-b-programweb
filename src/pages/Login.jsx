@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../App.css'; // 既存のデザインを一部使い回します
-import { signInEmailandPassword } from '../api/Signin'; // サインインのAPI関数をインポート
+import { signInEmailandPassword, signInWithGoogle } from '../api/Signin'; // サインインのAPI関数をインポート
 
 function Login() {
     // 入力されたメールアドレスとパスワードを記憶するための準備
@@ -15,21 +15,35 @@ function Login() {
         e.preventDefault(); // 画面がリロードされるのを防ぐおまじないです
 
         // spabaseにサインインリクエスト
-        const user = await signInEmailandPassword(email, password);
+        const { user, error } = await signInEmailandPassword(email, password);
 
         if (user){
             console.log('ログイン成功:', user);
             navigate('/home');  // ログイン成功したら'/home'へ遷移
         } else {
-            alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
+            // トリガーからのカスタムエラーメッセージやDBエラーが含まれているか確認
+            if (error && (error.message.includes('学校指定のメールアドレス') || error.message.includes('Database error saving new user'))) {
+                alert('stメールでサインインしてください');
+            } else {
+                alert('ログインに失敗しました。メールアドレスとパスワードを確認してください。');
+            }
             return; // ログイン失敗ならここで処理を終わらせる
         }
+    };
 
-        // ここで入力されたデータを確認します（後々、ここでサーバーにデータを送ります）
-        // console.log('入力されたメールアドレス:', email);
-        // console.log('入力されたパスワード:', password);
-        // alert(`「${email}」でログインを試みました！`);
+    // Googleログインボタンが押された時の処理
+    const handleGoogleLogin = async () => {
+        // フロントエンドの責務としてリダイレクト先を指定
+        const redirectTo = `${window.location.origin}/home`;
+        const { error } = await signInWithGoogle(redirectTo);
 
+        if (error) {
+            if (error.message.includes('学校指定のメールアドレス') || error.message.includes('Database error saving new user')) {
+                alert('stメールでログインしてください');
+            } else {
+                alert('Googleログイン中にエラーが発生しました。');
+            }
+        }
     };
 
     return (
@@ -69,6 +83,29 @@ function Login() {
                 ログインする
                 </button>
             </form>
+
+            <div style={{ marginTop: '24px' }}>
+                <p>または</p>
+                <button 
+                    onClick={handleGoogleLogin} 
+                    className="counter" 
+                    style={{ 
+                        marginTop: '16px', 
+                        cursor: 'pointer', 
+                        backgroundColor: '#fff', 
+                        color: '#757575', 
+                        border: '1px solid #ddd',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '8px',
+                        width: '300px'
+                    }}
+                >
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style={{ width: '18px', height: '18px' }} />
+                    KDアカウントでサインイン
+                </button>
+            </div>
         </section>
     );
 }

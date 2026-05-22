@@ -19,7 +19,8 @@ function PostForm({
     showFinish = true,
     showGradeDepartment = false,
     showGithubUrl = false,          // GithubのURL機能
-    showAdditionalUrls = false      // 任意のURL追加機能
+    showAdditionalUrls = false,      // 任意のURL追加機能
+    onDraftSubmit                   // 下書き保存用の関数を受け取るプロップス
 }) {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
@@ -156,6 +157,17 @@ const handleImageSelect = (e) => {
         onSubmit({ title, content: finalContent, tags, githubUrl, additionalUrls, isPublic, isFinish , grade, department});
     };
 
+    const handleDraftClick = (e) => {
+        if (e) e.preventDefault();
+            if (!title || !content) {
+            alert("タイトルと本文を入力してください。");
+            return;
+            }
+        if (onDraftSubmit) {
+            onDraftSubmit({ title, content, tags, githubUrl, additionalUrls, isFinish, grade, department });
+        }
+    };
+
     return (
         <div className="container">
             {pageTitle && (
@@ -163,7 +175,7 @@ const handleImageSelect = (e) => {
                     {pageTitle}
                 </h1>
             )}
-            <form onSubmit={handleSubmitClick}>
+            <form onSubmit={(e) => e.preventDefault()}>
                 <input
                     className="title"
                     type="text"
@@ -302,21 +314,48 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                <div className="post-options" style={{ marginTop: '20px', padding: '10px 0' }}>
-                    <label style={{ marginRight: '15px', cursor: 'pointer' }}>
-                        <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> 公開する
-                    </label>
-                    
+                <div className="post-options" style={{ 
+                    marginTop: '20px', 
+                    padding: '10px 0',
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    gap: '20px'
+                }}>
                     {showFinish && (
                         <label style={{ cursor: 'pointer' }}>
                             <input type="checkbox" checked={isFinish} onChange={(e) => setIsFinish(e.target.checked)} /> 完成済み
                         </label>
                     )}
+
+                    <label style={{ cursor: 'pointer' }}>
+                        <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> 公開する
+                    </label>
                 </div>
 
-                <div style={{ display: 'flex', gap: '20px', alignItems: 'center', marginTop: '20px' }}>
-                    <button type="submit" disabled={loading || isUploading} style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}>
-                        {loading || isUploading ? '送信中...' : submitButtonText}
+                <div style={{ 
+                    display: 'flex', 
+                    gap: '20px', 
+                    alignItems: 'center', 
+                    justifyContent: 'flex-end', 
+                    marginTop: '20px', 
+                    width: '100%' 
+                }}>
+                    <button 
+                        type="button" 
+                        className="draft-save-btn"
+                        disabled={loading} 
+                        onClick={handleDraftClick}
+                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
+                        {loading ? '保存中...' : '下書き保存'}
+                    </button>
+                    <button 
+                        type="button" 
+                        onClick={handleSubmitClick} 
+                        disabled={loading} 
+                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
+                    >
+                        {loading ? '送信中...' : submitButtonText}
                     </button>
                 </div>
             </form>
