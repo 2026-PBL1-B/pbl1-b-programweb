@@ -29,6 +29,18 @@
   font-size: 24px;
   cursor: pointer;
   z-index: 9999;
+  overflow: hidden; /* 画像がはみ出ないように追加 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0; /* paddingをリセット */
+}
+
+/* アバター画像 */
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* ナビゲーションバー */

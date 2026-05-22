@@ -1,11 +1,31 @@
 // src/components/Header.jsx
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getCurrentUserId } from "../api/Signin"
+import { getProfileAvatarUrl } from "../api/profile";
 import '../css/Header.css';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
+  // 初期値をsessionStorageから取得し、画面遷移時のチラつきを防ぐ
+  const [avatarUrl, setAvatarUrl] = useState(() => {
+    return sessionStorage.getItem("userAvatarUrl") || "";
+  });
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      const userId = await getCurrentUserId();
+      if (userId) {
+        const url = await getProfileAvatarUrl(userId);
+        if (url) {
+          setAvatarUrl(url);
+          sessionStorage.setItem("userAvatarUrl", url); // 取得したURLをセッションに保存
+        }
+      }
+    };
+    fetchAvatar();
+  }, []);
 
   const handleAccountClick = async () => {
     try {
@@ -28,7 +48,11 @@ export default function Header() {
         className="account-button"
         onClick={handleAccountClick}
       >
-        👤
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="Account" className="avatar-image" />
+        ) : (
+          "👤"
+        )}
       </button>
 
       <div className="nav-bar">

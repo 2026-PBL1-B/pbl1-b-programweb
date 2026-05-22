@@ -104,3 +104,26 @@ export async function updateProfile({ avatar_url, grade, department, graduation_
     return { success: false, error: error.message };
   }
 }
+
+/**
+ * ユーザーIDを指定してプロフィールのアバターURLを取得する関数
+ * @param {string} user_id - 取得したいユーザーのID
+ * @returns {Promise<string>} アバターURL。存在しない場合やエラー時は空文字を返す。
+ */
+export async function getProfileAvatarUrl(user_id) {
+  try {
+    const { data, error } = await supabase
+      .from('Profile')
+      .select('avatar_url')
+      .eq('user_id', user_id)
+      .single();
+
+    if (error) throw error;
+
+    return data.avatar_url || ""; // avatar_urlが存在しない場合は空文字を返す
+
+  } catch (error) {
+    console.error('プロフィールのアバターURLの取得に失敗:', error.message);
+    return ""; // エラーが発生した場合も空文字を返す
+  }
+}
