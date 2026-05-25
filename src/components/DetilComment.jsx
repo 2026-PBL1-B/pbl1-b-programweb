@@ -5,10 +5,10 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import UserLink from './UserLink';
 import LikeButton from './LikeButton';
+import AvatarIcon from './AvatarIcon';
 import { postProductCommentLike, deleteProductCommentLike, getProductCommentLike } from '../api/productcommentLike';
 import { postQuestionCommentLike, deleteQuestionCommentLike, getQuestionCommentLike } from '../api/questioncommentLike';
 import { getCurrentUserId } from '../api/Signin';
-import UserAvatar from './UserAvatar';
 
 export default function DetailCommentPost({ onSubmit }) {
   const [comment, setComment] = useState('');
@@ -164,26 +164,13 @@ function CommentItem({ comment, type }) {
   return (
     <div className="comment-item-black">
       <div className="comment-header" style={{ alignItems: 'flex-start' }}>
-      <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-
-        <UserAvatar userId={comment.user_id} size={30
-        } />
-
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-          <UserLink
-            userId={comment.user_id}
-            className="comment-username"
-            prefix="@"
-          />
-
-          <LikeButton
-            liked={isLiked}
-            count={likeCount}
-            onClick={toggleLike}
-          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <AvatarIcon userId={comment.user_id} size={30} />
+            <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
+          </div>
+          <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} />
         </div>
-
-      </div>
         <span className="comment-date">
           {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
         </span>
