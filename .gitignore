@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+
+my-react-router-app
+router-article-app

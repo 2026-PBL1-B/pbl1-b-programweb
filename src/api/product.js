@@ -138,3 +138,46 @@ export async function getProductsByUserId(user_id) {
     return data;
   }
 }
+
+// 
+/**
+ * IDを指定して1件だけ取得する関数
+ * @param {string} id 
+ * @returns dataとかerror
+ */
+// export async function getProductById(id) {
+//   const { data, error } = await supabase
+//     .from('Product')
+//     .select('*')
+//     .eq('id', id)
+//     .single();
+
+//   if (error) return { success: false, error };
+//   return { success: true, data };
+// }
+
+/**
+ * IDを指定して単一の制作物を取得する関数
+ * @param {string} product_id - 取得したい制作物のID
+ * @returns 制作物データ。エラーがあればnullを返す。
+ */
+export async function getProductById(product_id) {
+  if (!product_id) {
+    console.error('存在しない作品IDです');
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from('Product')
+    .select('*') // 作品の全カラムを取得する例
+    .eq('id', product_id)
+    .single(); // IDはユニークなので、単一のレコードを期待している場合は single() を使うと便利
+
+  if (error) {
+    console.error('制作物の取得に失敗:', error.message);
+    return null;
+  } else {
+    console.log('制作物の取得に成功:', data);
+    return data; // 単一の作品データを返す
+  }
+}
