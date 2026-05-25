@@ -257,3 +257,22 @@
 .add-url-btn:hover {
     background: var(--border); /* ホバー時は少し濃い背景色にする */
 }
+
+.tag-suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.tag-suggestion-item {
+    border: none;
+    background: #eee;
+    border-radius: 999px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.tag-suggestion-item:hover {
+    background: #ddd;
+}
