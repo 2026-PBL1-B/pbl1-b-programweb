@@ -74,6 +74,8 @@
     color: var(--text-h, #111);
     margin: 0;
     padding-bottom: 0px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 /* 🌟追加: タイトルとタグを包むヘッダー全体の下に横線を引く */
@@ -89,6 +91,8 @@
     line-height: 2;
     color: var(--text, #374151);
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
     padding: 24px;
     background-color: var(--code-bg, #f9fafb);
     border-radius: 8px;
