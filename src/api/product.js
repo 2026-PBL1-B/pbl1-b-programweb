@@ -46,41 +46,47 @@ export const getProducts = async (tagIds) => {
 
 
 /**
- * SupabaseのProductテーブルに新しい制作物情報を追加する関数
+ * SupabaseのProductテーブルに新しい制作物情報を追加または更新する関数
  * @param {Object} productData - 制作物データ
+ * @param {string} [productData.id] - 制作物のID (更新時に指定)
  * @param {string} productData.title - 制作物タイトル
  * @param {string} productData.content - 制作物本文テキスト
  * @param {boolean} productData.is_public - 制作物が公開状態(falseで非公開)
  * @param {boolean} productData.is_finish - 制作物が完成状態(trueで完成)
  * @param {number|string|null} productData.grade - 学年
  * @param {string} productData.department - 学科
- * @return {Object|null} 追加された制作物のデータ
+ * @return {Object|null} 保存された制作物のデータ
  */
-export async function postProduct({ title, content, is_public, is_finish, grade, department }) {
+export async function postProduct({ id, title, content, is_public, is_finish, grade, department }) {
   // departmentがnullやundefinedの場合は空文字にする
   const safeDepartment = department ?? '';
   // gradeを数値に変換（nullの場合はnullのままにする）
   const safeGrade = (grade === null || grade === '') ? null : Number(grade);
 
+  const productData = { 
+    title: title, 
+    content: content, 
+    is_public: is_public, 
+    is_finish: is_finish, 
+    grade: safeGrade, 
+    department: safeDepartment 
+  };
+
+  // idがある場合はオブジェクトに追加（upsert用）
+  if (id) {
+    productData.id = id;
+  }
+
   const { data, error } = await supabase
     .from('Product')
-    .insert([
-      { 
-        title: title, 
-        content: content, 
-        is_public: is_public, 
-        is_finish: is_finish, 
-        grade: safeGrade, 
-        department: safeDepartment 
-      },
-    ])
+    .upsert([productData])
     .select();
 
   if (error) {
-    console.error('制作物の追加に失敗:', error.message);
+    console.error('制作物の保存に失敗:', error.message);
     return null;
   } else {
-    console.log('制作物が追加に成功:', data);
+    console.log('制作物の保存に成功:', data);
     return data[0];
   }
 }
