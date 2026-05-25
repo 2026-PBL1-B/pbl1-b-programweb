@@ -19,6 +19,7 @@ import { grades } from '../domain/GradeDepartment';
 
 import Guideheader from '../components/Header.jsx';
 import UserLink from '../components/UserLink';
+import AvatarIcon from '../components/AvatarIcon';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -131,8 +132,14 @@ function ProductDetail() {
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
-              {/* 1行目: ユーザーネーム */}
-              <div>投稿者: <UserLink userId={product.user_id} userName={userName} /></div>
+              {/* 1行目: アイコンとユーザーネーム */}
+              <div className="detail-meta" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <AvatarIcon userId={product.user_id} />
+                  <UserLink userId={product.user_id} userName={userName} prefix="投稿者: " />
+                </div>
+                <span style={{ fontSize: '12px', fontWeight: 'normal' }}>投稿日: {new Date(product.created_at).toLocaleDateString('ja-JP')}</span>
+              </div>
               
               {/* 2行目: 学科・学年（こちらは横並び） */}
               <div style={{ display: 'flex', gap: '8px' }}>
