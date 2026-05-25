@@ -77,6 +77,7 @@ function PostForm({
         !tags.includes(tag.name)
     )
     .sort((a, b) => a.name.localeCompare(b.name, 'ja')) //タグ名を日本語順にソート
+    
     .slice(0, 5);   //上位5件だけ表示するように制限
 
     // タグが選択されたときの処理
