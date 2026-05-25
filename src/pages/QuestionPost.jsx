@@ -22,7 +22,7 @@ function QuestionPost() {
 				content: formData.content, 
 				is_public: formData.isPublic,
 				is_finish: isDraft ? false : true,
-				is_open: false,
+				is_open: true,
 				grade: formData.grade,
 				department: formData.department
 			});

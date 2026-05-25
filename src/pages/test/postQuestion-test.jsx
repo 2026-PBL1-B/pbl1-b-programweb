@@ -3,6 +3,7 @@ import { postQuestion } from '../../api/Question';
 import { getOrCreateTags, postQuestionTags } from '../../api/Tag';
 
 function PostQuestionTest() {
+  const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
@@ -17,14 +18,19 @@ function PostQuestionTest() {
     setLoading(true);
 
     try {
-      const newQuestion = await postQuestion({ 
+      const payload = { 
         title, 
         content, 
         is_public: isPublic, 
         is_finish: isFinish, 
         grade, 
         department 
-      });
+      };
+      if (id.trim()) {
+        payload.id = id.trim();
+      }
+
+      const newQuestion = await postQuestion(payload);
       
       if (newQuestion && tagsInput.trim()) {
         const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
@@ -34,7 +40,8 @@ function PostQuestionTest() {
         }
       }
       
-      alert('質問を投稿し、タグを紐づけました（コンソールも確認してください）。');
+      alert(payload.id ? '質問を更新しました（コンソールも確認してください）。' : '質問を投稿し、タグを紐づけました（コンソールも確認してください）。');
+      setId('');
       setTitle('');
       setContent('');
       setGrade('');
@@ -52,6 +59,16 @@ function PostQuestionTest() {
     <section style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
       <h1>質問投稿テスト</h1>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div>
+          <label>ID (任意・更新用):</label><br />
+          <input
+            type="text"
+            value={id}
+            onChange={(e) => setId(e.target.value)}
+            placeholder="更新したい場合はIDを入力"
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
         <div>
           <label>タイトル:</label><br />
           <input

@@ -5,6 +5,7 @@ import { postProduct } from '../../api/product';
 import { getOrCreateTags, postProductTags } from '../../api/Tag';
 
 function PostProductTest() {
+  const [id, setId] = useState('');
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [isPublic, setIsPublic] = useState(true);
@@ -20,14 +21,20 @@ function PostProductTest() {
 
     try {
       // API関数を呼び出す（user_idはSupabase側で自動付与される前提）
-      const newProduct = await postProduct({ 
+      // idが入力されている場合は含める（更新処理になる）
+      const payload = { 
         title, 
         content, 
         is_public: isPublic, 
         is_finish: isFinish, 
         grade, 
         department 
-      });
+      };
+      if (id.trim()) {
+        payload.id = id.trim();
+      }
+
+      const newProduct = await postProduct(payload);
       
       if (newProduct && tagsInput.trim()) {
         const tagNames = tagsInput.split(',').map(t => t.trim()).filter(t => t);
@@ -37,8 +44,9 @@ function PostProductTest() {
         }
       }
 
-      alert('投稿とタグの紐付けが完了しました！コンソールを確認してください。');
+      alert(payload.id ? '更新とタグの紐付けが完了しました！' : '投稿とタグの紐付けが完了しました！コンソールを確認してください。');
       // 入力欄をクリア
+      setId('');
       setTitle('');
       setContent('');
       setGrade('');
@@ -56,6 +64,17 @@ function PostProductTest() {
     <section style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
       <h1>制作物投稿テスト</h1>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div>
+          <label>ID (任意・更新用):</label><br />
+          <input 
+            type="text" 
+            value={id} 
+            onChange={(e) => setId(e.target.value)} 
+            placeholder="更新したい場合はIDを入力"
+            style={{ width: '100%' }}
+          />
+        </div>
+
         <div>
           <label>タイトル:</label><br />
           <input 

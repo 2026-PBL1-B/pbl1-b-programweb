@@ -38,8 +38,9 @@ export async function getQuestions(tagIds) {
 }
 
 /**
- * SupabaseのQuestionテーブルに新しい質問を投稿する関数
+ * SupabaseのQuestionテーブルに新しい質問を投稿または更新する関数
  * @param {Object} questionData - 質問データ
+ * @param {string} [questionData.id] - 質問のID (更新時に指定)
  * @param {string} questionData.title - 質問のタイトル
  * @param {string} questionData.content - 質問の内容
  * @param {boolean} questionData.is_public - 公開フラグ(falseで非公開)
@@ -47,34 +48,39 @@ export async function getQuestions(tagIds) {
  * @param {boolean} questionData.is_open - 質問状況フラグ(trueで受付中、falseで解決済み)
  * @param {number|string|null} questionData.grade - 学年
  * @param {string} questionData.department - 学科
- * @return {Object|null} 追加された質問のデータ
+ * @return {Object|null} 保存された質問のデータ
  */
-export async function postQuestion({ title, content, is_public, is_finish,is_open, grade, department }) {
+export async function postQuestion({ id, title, content, is_public, is_finish, is_open, grade, department }) {
   // departmentがnullやundefinedの場合は空文字にする
   const safeDepartment = department ?? '';
   // gradeを数値に変換（nullの場合はnullのままにする）
   const safeGrade = (grade === null || grade === '') ? null : Number(grade);
 
+  const questionData = { 
+    title: title, 
+    content: content, 
+    is_public: is_public, 
+    is_finish: is_finish ?? false,
+    is_open: is_open ?? true,
+    grade: safeGrade, 
+    department: safeDepartment 
+  };
+
+  // idがある場合はオブジェクトに追加（upsert用）
+  if (id) {
+    questionData.id = id;
+  }
+
   const { data, error } = await supabase
     .from('Question')
-    .insert([
-      { 
-        title: title, 
-        content: content, 
-        is_public: is_public, 
-        is_finish: is_finish ??false,
-        is_open: is_open ?? true,
-        grade: safeGrade, 
-        department: safeDepartment 
-      },
-    ])
+    .upsert([questionData])
     .select();
 
   if (error) {
-    console.error('質問の追加に失敗:', error.message);
+    console.error('質問の保存に失敗:', error.message);
     return null;
   } else {
-    console.log('質問が追加に成功:', data);
+    console.log('質問の保存に成功:', data);
     return data[0];
   }
 }
