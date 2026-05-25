@@ -8,6 +8,7 @@ import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
 import UserLink from '../components/UserLink';
+import AvatarIcon from '../components/AvatarIcon';
 
 function QuestionList() {
     const [questions, setQuestions] = useState([]);
@@ -52,6 +53,8 @@ function QuestionList() {
         .filter((question) => {
             // 非公開は除外
             if (!question.is_public) return false;
+            // 下書きは非公開
+            if (!question.is_finish) return false;
 
             // 何も選択されていない場合はすべて表示
             if (selectedTagNames.length === 0) return true;
@@ -99,9 +102,10 @@ function QuestionList() {
                         filteredAndSortedQuestions.map((question) => (
                             <div key={question.id} className="item-card">
                                 <div className="card-meta">
-                                    <div>
+                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <AvatarIcon userId={question.user_id} />
                                         <span className="author-name">
-                                            投稿者: <UserLink userId={question.user_id} userName={question.fetchedUserName} />
+                                            <UserLink userId={question.user_id} userName={question.fetchedUserName} prefix="投稿者: " />
                                         </span>
                                          {/*投稿日時表記：年月日、時分まで表記 */}
                                         <span>{new Date(question.created_at).toLocaleDateString('ja-JP',{
@@ -114,8 +118,8 @@ function QuestionList() {
                                     </div>
                                     
                                     {/* 状態によって色を切り替えるクラスを動的に付与します */}
-                                    <div className={`status-badge ${question.is_finish ? 'status-resolved' : 'status-open'}`}>
-                                        {question.is_finish ? '解決済み' : '受付中'}
+                                    <div className={`status-badge ${question.is_open ? 'status-resolved' : 'status-open'}`}>
+                                        {question.is_open ? '受付中' : '解決済み'}
                                     </div>
                                 </div>
                                 

@@ -1,7 +1,7 @@
 import { useState,useEffect } from 'react';
 import { Link,useParams } from 'react-router-dom';// useParams追加
 
-import { getProfileForUserID} from '../api/profile';// プロフィール情報取得用API
+import { getProfileForUserID } from '../api/profile';// プロフィール情報取得用API
 
 import { getProductsByUserId } from '../api/product';// 制作物情報取得用API
 import { getProductLike } from '../api/productLike';// 制作物いいね情報取得用API
@@ -31,17 +31,20 @@ function UserPage() {
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   
   // プロフィール情報の状態
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState(() => ({
     name: "",
     comment: "",
     grade: "",
     department: "",
-    graduation_year: ""
-  });
+    graduation_year: "",
+    avatar_url: sessionStorage.getItem(`userAvatarUrl_${user_id}`) || ""
+  }));
 
   useEffect(() => {
           const loadUserProducts = async () => {
               setIsLoading(true);
+              // 画面遷移時のチラつきを防ぐため、セッションから初期値をセット
+              setProfile(prev => ({ ...prev, avatar_url: sessionStorage.getItem(`userAvatarUrl_${user_id}`) || "" }));
               try {
                       // 自分のプロフィールかどうかをチェック
                       const currentId = await getCurrentUserId();
@@ -54,12 +57,20 @@ function UserPage() {
                       ]);
 
                       if (profileResult.success && profileResult.data) {
+                        const avatarUrl = profileResult.data.avatar_url || "";
+                        if (avatarUrl) {
+                          sessionStorage.setItem(`userAvatarUrl_${user_id}`, avatarUrl);
+                          if (currentId === user_id) {
+                            sessionStorage.setItem("userAvatarUrl", avatarUrl);
+                          }
+                        }
                         setProfile({
                           name: name || "不明なユーザー",
                           comment: profileResult.data.comment || "",
                           grade: profileResult.data.grade || "",
                           department: profileResult.data.department || "",
-                          graduation_year: profileResult.data.graduation_year || ""
+                          graduation_year: profileResult.data.graduation_year || "",
+                          avatar_url: avatarUrl
                         });
                       } else {
                         setProfile(prev => ({ ...prev, name: name || "不明なユーザー" }));
@@ -140,8 +151,17 @@ function UserPage() {
       <section className="profile-header">
 
         <div className="profile-left">
-            {/* ここにプロフィールアイコンを入れる予定 スプリント3では不要 */}
-          {/* <div className="profile-icon"></div> */}
+          <div className="profile-icon">
+            {profile.avatar_url ? (
+              <img 
+                src={profile.avatar_url} 
+                alt="Profile Icon" 
+                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} 
+              />
+            ) : (
+              "👤"
+            )}
+          </div>
 
           <div className="profile-info">
             <h1>{profile.name}</h1>
