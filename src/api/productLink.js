@@ -13,6 +13,12 @@ export async function postProductLinks(product_id, links) {
     return null;
   }
 
+  // まず既存のURL紐づけを削除する（更新時の重複を防ぐため）
+  await supabase
+    .from('ProductLink')
+    .delete()
+    .eq('product_id', product_id);
+
   if (!Array.isArray(links) || links.length === 0) {
     console.warn('保存するURLがありません');
     return null;
