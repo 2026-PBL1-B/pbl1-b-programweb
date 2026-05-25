@@ -145,10 +145,10 @@ export async function getQuestionsByUserId(user_id) {
  */
 export async function getQuestionById(id) {
   const { data, error } = await supabase
-    .from('Product')
+    .from('Question')
     .select('*')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
   if (error) return { success: false, error };
   return { success: true, data };

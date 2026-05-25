@@ -164,20 +164,20 @@ export async function getProductsByUserId(user_id) {
 export async function getProductById(product_id) {
   if (!product_id) {
     console.error('存在しない作品IDです');
-    return null;
+    return { success: false, error: '作品IDが指定されていません' };
   }
 
   const { data, error } = await supabase
     .from('Product')
     .select('*') // 作品の全カラムを取得する例
     .eq('id', product_id)
-    .single(); // IDはユニークなので、単一のレコードを期待している場合は single() を使うと便利
+    .maybeSingle(); // 406エラー回避のため maybeSingle() を使用
 
   if (error) {
     console.error('制作物の取得に失敗:', error.message);
-    return null;
+    return { success: false, error };
   } else {
     console.log('制作物の取得に成功:', data);
-    return data; // 単一の作品データを返す
+    return { success: true, data }; // { success: true, data: data } の形式で返す
   }
 }
