@@ -21,30 +21,31 @@ function PostForm({
     showGradeDepartment = false,
     showGithubUrl = false,          // GithubのURL機能
     showAdditionalUrls = false,      // 任意のURL追加機能
-    onDraftSubmit                   // 下書き保存用の関数を受け取るプロップス
+    onDraftSubmit,                   // 下書き保存用の関数を受け取るプロップス
+    initialData = null               // 初期データを受け取るプロップス
 }) {
-    const [title, setTitle] = useState("");
-    const [tags, setTags] = useState([]);
+    const [title, setTitle] = useState(initialData?.title || "");
+    const [tags, setTags] = useState(initialData?.tags || []);
     const [tagInput, setTagInput] = useState("");
     const [availableTags, setAvailableTags] = useState([]); //既存のタグ一覧の状態を管理する追加
-    const [githubUrl, setGithubUrl] = useState("");             // GithubURLを管理する変数
-    const [additionalUrls, setAdditionalUrls] = useState([]);   // 複数の追加URLを管理する配列（初期値は空）
+    const [githubUrl, setGithubUrl] = useState(initialData?.githubUrl || "");             // GithubURLを管理する変数
+    const [additionalUrls, setAdditionalUrls] = useState(initialData?.additionalUrls || []);   // 複数の追加URLを管理する配列（初期値は空）
 
-    const [content, setContent] = useState("");
+    const [content, setContent] = useState(initialData?.content || "");
     const [mode, setMode] = useState("edit");
 
     // 公開,完成の変数
-    const [isPublic, setIsPublic] = useState(true);
-    const [isFinish, setIsFinish] = useState(false);
+    const [isPublic, setIsPublic] = useState(initialData?.isPublic ?? true);
+    const [isFinish, setIsFinish] = useState(initialData?.isFinish || false);
 
     // 学年と学科の状態を管理する変数
-    const [grade, setGrade] = useState(""); 
-    const [department, setDepartment] = useState("");
+    const [grade, setGrade] = useState(initialData?.grade || ""); 
+    const [department, setDepartment] = useState(initialData?.department || "");
 
     // 画像アップロード中の状態と、アップロード待ちの画像リスト
     const [isUploading, setIsUploading] = useState(false);
     const [pendingImages, setPendingImages] = useState([]); // { objectUrl, file } の配列
-    
+
     // タグ一覧を取得する処理
     useEffect(() => {
         const loadTags = async () => {

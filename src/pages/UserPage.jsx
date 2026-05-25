@@ -329,7 +329,14 @@ function UserPage() {
                   </div>
                 </div>
 
-                <Link to={`/${viewType === "products" ? "product" : "question"}/${article.id}`} className="title-link">
+                <Link 
+                  to={
+                    article.is_finish === false 
+                      ? `/${viewType === "products" ? "productpost" : "questionPost"}/${article.id}` 
+                      : `/${viewType === "products" ? "product" : "question"}/${article.id}`
+                  } 
+                  className="title-link"
+                >
                   <h2 className="item-title">{article.title}</h2>
                 </Link>
 

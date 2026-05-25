@@ -27,6 +27,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home count={count} setCount={setCount} />} />
         <Route path="/productpost" element={<ProductPost count={count} setCount={setCount} />} />
+        <Route path="/productpost/:id" element={<ProductPost count={count} setCount={setCount} />} />
         <Route path="/productList" element={<ProductList />} />
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/questionList" element={<QuestionList />} />

@@ -74,6 +74,12 @@ export async function getOrCreateTags(tagNames) {
  * @param {string[]} tagIds - 紐づけるタグIDの配列
  */
 export async function postQuestionTags(questionId, tagIds) {
+  // まず既存のタグ紐づけを削除する（更新時の重複を防ぐため）
+  await supabase
+    .from('QuestionTag')
+    .delete()
+    .eq('question_id', questionId);
+
   if (!tagIds || tagIds.length === 0) return;
   const insertData = tagIds.map(tagId => ({
     question_id: questionId,
@@ -97,6 +103,12 @@ export async function postQuestionTags(questionId, tagIds) {
  * @param {string[]} tagIds - 紐づけるタグIDの配列
  */
 export async function postProductTags(productId, tagIds) {
+  // まず既存のタグ紐づけを削除する（更新時の重複を防ぐため）
+  await supabase
+    .from('ProductTag')
+    .delete()
+    .eq('product_id', productId);
+
   if (!tagIds || tagIds.length === 0) return;
 
   const insertData = tagIds.map(tagId => ({
