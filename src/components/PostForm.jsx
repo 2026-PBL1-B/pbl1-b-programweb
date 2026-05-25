@@ -1,5 +1,5 @@
 // src/components/PostForm.jsx
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import GradeDepartmentSelect from './GradeDepartmentSelect';
 import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
 import '../css/Post.css';
 import { uploadImage } from '../api/image';
+import { getTags } from '../api/Tag';
 
 function PostForm({ 
     pageTitle,
@@ -25,6 +26,7 @@ function PostForm({
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
     const [tagInput, setTagInput] = useState("");
+    const [availableTags, setAvailableTags] = useState([]); //既存のタグ一覧の状態を管理する追加
     const [githubUrl, setGithubUrl] = useState("");             // GithubURLを管理する変数
     const [additionalUrls, setAdditionalUrls] = useState([]);   // 複数の追加URLを管理する配列（初期値は空）
 
@@ -42,6 +44,16 @@ function PostForm({
     // 画像アップロード中の状態と、アップロード待ちの画像リスト
     const [isUploading, setIsUploading] = useState(false);
     const [pendingImages, setPendingImages] = useState([]); // { objectUrl, file } の配列
+    
+    // タグ一覧を取得する処理
+    useEffect(() => {
+        const loadTags = async () => {
+            const tagsData = await getTags();
+            setAvailableTags(tagsData || []);
+        };
+
+        loadTags();
+    }, []);
 
     const handleKeyDown = (e) => {
         if (e.nativeEvent.isComposing) return;
@@ -57,6 +69,23 @@ function PostForm({
 
     const removeTag = (indexToRemove) => {
         setTags(tags.filter((_, index) => index !== indexToRemove));
+    };
+
+    // タグ入力から既存タグを絞り込む
+    const filteredTags = availableTags.filter(tag =>
+        tag.name.toLowerCase().includes(tagInput.toLowerCase())&&
+        !tags.includes(tag.name)
+    )
+    .sort((a, b) => a.name.localeCompare(b.name, 'ja')) //タグ名を日本語順にソート
+    
+    .slice(0, 5);   //上位5件だけ表示するように制限
+
+    // タグが選択されたときの処理
+    const handleTagSelect = (tagName) => {
+        if (tags.length < 5){
+            setTags([...tags, tagName]);
+            setTagInput("");
+        }
     };
 
     // 画像関連
@@ -192,6 +221,7 @@ const handleImageSelect = (e) => {
                         </span>
                     ))}
                     {tags.length < 5 && (
+                        <>
                         <input
                             className="tag-input"
                             type="text"
@@ -200,6 +230,23 @@ const handleImageSelect = (e) => {
                             onChange={(e) => setTagInput(e.target.value)}
                             onKeyDown={handleKeyDown}
                         />
+
+                        {/* タグ入力中、候補一覧を表示する処理 */}
+                        {tagInput.trim() !== "" && filteredTags.length > 0 && (
+                            <div className="tag-suggestions">
+                                {filteredTags.map((tag) => (
+                                    <button
+                                        key={tag.id}
+                                        type="button"
+                                        className="tag-suggestion-item"
+                                        onClick={() => handleTagSelect(tag.name)}
+                                    >
+                                        #{tag.name}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                        </>
                     )}
                 </div>
 
