@@ -73,8 +73,15 @@
     line-height: 1.4;
     color: var(--text-h, #111);
     margin: 0;
-    padding-bottom: 20px;
+    padding-bottom: 0px;
+}
+
+/* 🌟追加: タイトルとタグを包むヘッダー全体の下に横線を引く */
+.detail-header {
+    width: 100%;
+    padding-bottom: 0px;
     border-bottom: 1px solid var(--border, #e5e7eb);
+    margin-bottom: 0px; /* 横線と、その下の関連リンク・本文との間隔 */
 }
 
 .post-content {
