@@ -21,7 +21,8 @@ function PostForm({
     showGradeDepartment = false,
     showGithubUrl = false,          // GithubのURL機能
     showAdditionalUrls = false,      // 任意のURL追加機能
-    onDraftSubmit                   // 下書き保存用の関数を受け取るプロップス
+    onDraftSubmit,                   // 下書き保存用の関数を受け取るプロップス
+    initialData = null               // 初期データを受け取るプロップス
 }) {
     const [title, setTitle] = useState("");
     const [tags, setTags] = useState([]);
@@ -45,6 +46,21 @@ function PostForm({
     const [isUploading, setIsUploading] = useState(false);
     const [pendingImages, setPendingImages] = useState([]); // { objectUrl, file } の配列
     
+    // 初期データのセットアップ
+    useEffect(() => {
+        if (initialData) {
+            setTitle(initialData.title || "");
+            setContent(initialData.content || "");
+            setTags(initialData.tags || []);
+            setGithubUrl(initialData.githubUrl || "");
+            setAdditionalUrls(initialData.additionalUrls || []);
+            setIsPublic(initialData.isPublic !== undefined ? initialData.isPublic : true);
+            setIsFinish(initialData.isFinish || false);
+            setGrade(initialData.grade || "");
+            setDepartment(initialData.department || "");
+        }
+    }, [initialData]);
+
     // タグ一覧を取得する処理
     useEffect(() => {
         const loadTags = async () => {
