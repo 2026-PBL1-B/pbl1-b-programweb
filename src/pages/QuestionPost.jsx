@@ -10,9 +10,9 @@ import Guidheader from "../components/Header";
 function QuestionPost() {
 	const [loading, setLoading] = useState(false);
 	const [initialData, setInitialData] = useState(null);
-	const [isInitialDataLoading, setIsInitialDataLoading] = useState(!!id);
 	const navigate = useNavigate();
 	const { id } = useParams();
+	const [isInitialDataLoading, setIsInitialDataLoading] = useState(!!id);
 
 	useEffect(() => {
 		const loadDraft = async () => {
