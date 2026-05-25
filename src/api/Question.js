@@ -137,3 +137,19 @@ export async function getQuestionsByUserId(user_id) {
   
   return data;
 }
+
+/**
+ * 質問をIDを指定して1件だけ取得する関数
+ * @param {string} id 
+ * @returns dataとかerror
+ */
+export async function getQuestionById(id) {
+  const { data, error } = await supabase
+    .from('Product')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error) return { success: false, error };
+  return { success: true, data };
+}

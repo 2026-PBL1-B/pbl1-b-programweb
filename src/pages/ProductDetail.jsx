@@ -4,7 +4,6 @@ import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { supabase } from '../spabase';
 import "../css/DetailPage.css";
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postProductComment, getProductComment } from '../api/productcomment';
@@ -13,6 +12,7 @@ import LikeButton from '../components/LikeButton';
 import { getProductTagNames } from '../api/Tag';
 
 import { getProductLinks } from '../api/productLink';   // URLを取得する関数をインポート
+import { getProductById } from '../api/product';
 
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
@@ -37,40 +37,40 @@ function ProductDetail() {
     setComments(data || []);
   }, [id]);
 
-  useEffect(() => {
-    const initData = async () => {
-      const { data, error } = await supabase
-        .from('Product')
-        .select('*')
-        .eq('id', id)
-        .single();
+  //*spabaseから直接引っ張ってくる形式から変更*//
+useEffect(() => {
+  const initData = async () => {
 
-      if (error) {
-        console.error(error);
-      } else if (data) {
-        setProduct(data);
-        if (data.user_id) {
-          const name = await getUserName(data.user_id);
-          setUserName(name || '不明なユーザー');
-        }
+    const { success, data } = await getProductById(id);
+
+    if (success && data) {
+
+      setProduct(data);
+
+      if (data.user_id) {
+        const name = await getUserName(data.user_id);
+        setUserName(name || "不明なユーザー");
       }
 
       await fetchComments();
 
       const { count } = await getProductLike(id);
       setLikeCount(count);
+
       const isLiked = await getMyProductLike(id);
       setLiked(isLiked);
 
       const tagNames = await getProductTagNames(id);
       setTags(tagNames || []);
 
-      const productUrls = await getProductLinks(id);  // 制作物に紐づくURLデータを取得してセットする
+      const productUrls = await getProductLinks(id);
       setLinks(productUrls || []);
-    };
+    }
+  };
 
-    initData();
-  }, [id, fetchComments]);
+  initData();
+
+}, [id, fetchComments]);
 
   const handleLikeToggle = async () => {
     const previousLiked = liked;

@@ -4,13 +4,13 @@ import { useParams } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
-import { supabase } from '../spabase';
 import "../css/DetailPage.css"; // 詳細独自のスタイルを読み込む
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postQuestionComment, getQuestionComments } from '../api/questioncomment';
 import { postQuestionLike, deleteQuestionLike, getQuestionsLike, getMyQuestionLike } from '../api/questionLike';
 import LikeButton from '../components/LikeButton';
 import { getQuestionTagNames } from '../api/Tag';
+import { getQuestionById } from '../api/Question';
 import { getUserName } from '../api/User'; 
 import { grades } from '../domain/GradeDepartment';
 import UserLink from '../components/UserLink';
@@ -31,38 +31,36 @@ function QuestionDetail() {
         const data = await getQuestionComments(id);
         setComments(data || []);
     }, [id]);
+//*spabaseから直接引っ張ってくる形式から変更*//
+useEffect(() => {
+  const initData = async () => {
+    const { success, data } = await getQuestionById(id);
 
-    useEffect(() => {
-        const initData = async () => {
-            const { data, error } = await supabase
-                .from('Question')
-                .select('*')
-                .eq('id', id)
-                .single();
+    if (success && data) {
+      setQuestion(data);
 
-            if (error) {
-                console.error(error);
-            } else if (data) {
-                setQuestion(data);
-                if (data.user_id) {
-                    const name = await getUserName(data.user_id);
-                    setUserName(name || '不明なユーザー');
-                }
-            }
+      if (data.user_id) {
+        const name = await getUserName(data.user_id);
+        setUserName(name || '不明なユーザー');
+      }
 
-            await fetchComments();
+      await fetchComments();
 
-            const { count } = await getQuestionsLike(id);
-            setLikeCount(count);
-            const isLiked = await getMyQuestionLike(id);
-            setLiked(isLiked);
+      const { count } = await getQuestionsLike(id);
+      setLikeCount(count);
 
-            const tagNames = await getQuestionTagNames(id);
-            setTags(tagNames || []);
-        };
+      const isLiked = await getMyQuestionLike(id);
+      setLiked(isLiked);
 
-        initData();
-    }, [id, fetchComments]);
+      if (getQuestionTagNames) {
+        const tagNames = await getQuestionTagNames(id);
+        setTags(tagNames || []);
+      }
+    }
+  };
+
+  initData();
+}, [id, fetchComments]);
 
     const handleLikeToggle = async () => {
         const previousLiked = liked;
