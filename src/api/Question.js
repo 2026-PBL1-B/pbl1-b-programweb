@@ -44,7 +44,7 @@ export async function getQuestions(tagIds) {
  * @param {string} questionData.content - 質問の内容
  * @param {boolean} questionData.is_public - 公開フラグ(falseで非公開)
  * @param {boolean} questionData.is_finish - 下書きのフラグ(falseで下書き、非公開)
- * @param {boolean} questionData.is_Open - 質問状況フラグ(trueで受付中、falseで解決済み)
+ * @param {boolean} questionData.is_open - 質問状況フラグ(trueで受付中、falseで解決済み)
  * @param {number|string|null} questionData.grade - 学年
  * @param {string} questionData.department - 学科
  * @return {Object|null} 追加された質問のデータ
@@ -63,7 +63,7 @@ export async function postQuestion({ title, content, is_public, is_finish,is_ope
         content: content, 
         is_public: is_public, 
         is_finish: is_finish ??false,
-        is_Open: is_open ?? true,
+        is_open: is_open ?? true,
         grade: safeGrade, 
         department: safeDepartment 
       },
