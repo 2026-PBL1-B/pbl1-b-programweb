@@ -138,7 +138,7 @@ function ProductDetail() {
                   <AvatarIcon userId={product.user_id} />
                   <UserLink userId={product.user_id} userName={userName} prefix="投稿者: " />
                 </div>
-                <span style={{ fontSize: '12px', fontWeight: 'normal' }}>{new Date(product.created_at).toLocaleDateString('ja-JP')}</span>
+                <span style={{ fontSize: '12px', fontWeight: 'normal' }}>投稿日: {new Date(product.created_at).toLocaleDateString('ja-JP')}</span>
               </div>
               
               {/* 2行目: 学科・学年（こちらは横並び） */}
