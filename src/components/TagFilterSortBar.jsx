@@ -13,6 +13,8 @@ function TagFilterSortBar({
     const [isModalOpen, setIsModalOpen] = useState(false);  //モーダルの開閉状態を管理
     const [currentPage, setCurrentPage] = useState(1); // 現在のページ数の管理
 
+    const [searchText, setSearchText] = useState(""); // ユーザーが入力した検索文字
+
     // チェックボックスがクリックされた時の処理
     const handleTagChange = (tagName) => {
         if (selectedTagNames.includes(tagName)) {
@@ -31,7 +33,23 @@ function TagFilterSortBar({
 
     const tagsPerPage = 10; //1ページに表示される数の設定
 
-    const sortedTags = [...availableTags].sort((a, b) => a.name.localeCompare(b.name, 'ja')); //タグを日本語順でソート
+    // const sortedTags = [...availableTags].sort((a, b) => a.name.localeCompare(b.name, 'ja')); //タグを日本語順でソート
+    
+    const filteredTags = availableTags.filter((tag) =>
+        tag.name.toLowerCase().includes(
+            searchText.toLowerCase()
+        )
+    );
+
+    const sortedTags =
+        [...filteredTags]
+            .sort((a, b) =>
+            a.name.localeCompare(
+                b.name,
+                'ja'
+            )
+    );
+
 
     const totalPages = Math.ceil(sortedTags.length / tagsPerPage); //総ページ数の計算
 
@@ -64,6 +82,19 @@ function TagFilterSortBar({
                             >
                                 ×
                             </button>
+                        </div>
+
+                        <div className="search-area">
+                            <input
+                                type="text"
+                                placeholder="タグ名で検索"
+                                value={searchText}
+                                onChange={(e) => {
+                                    setSearchText(e.target.value);
+                                    setCurrentPage(1);
+                                }}
+                                className="tag-search-input"
+                            />
                         </div>
 
                         <div className="tag-list">
