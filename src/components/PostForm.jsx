@@ -164,7 +164,7 @@ const handleImageSelect = (e) => {
             return;
             }
         if (onDraftSubmit) {
-            onDraftSubmit({ title, content, tags, githubUrl, additionalUrls, isFinish, grade, department });
+            onDraftSubmit({ title, content, tags, githubUrl, additionalUrls, isPublic, isFinish, grade, department });
         }
     };
 
