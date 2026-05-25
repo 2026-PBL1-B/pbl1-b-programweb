@@ -10,12 +10,14 @@ import Guidheader from "../components/Header";
 function QuestionPost() {
 	const [loading, setLoading] = useState(false);
 	const [initialData, setInitialData] = useState(null);
+	const [isInitialDataLoading, setIsInitialDataLoading] = useState(!!id);
 	const navigate = useNavigate();
 	const { id } = useParams();
 
 	useEffect(() => {
 		const loadDraft = async () => {
 			if (id) {
+				setIsInitialDataLoading(true);
 				const res = await getQuestionById(id);
 				if (res.success && res.data) {
 					const tags = await getQuestionTagNames(id);
@@ -29,6 +31,7 @@ function QuestionPost() {
 						tags: tags || []
 					});
 				}
+				setIsInitialDataLoading(false);
 			}
 		};
 		loadDraft();
@@ -86,18 +89,23 @@ function QuestionPost() {
 			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
 				投稿する
 			</h1>
-			<PostForm 
-				titlePlaceholder="質問のタイトルを入力してください"
-				contentLabel="質問内容"
-				contentPlaceholder="困っていることや試したことを詳しく入力してください"
-				submitButtonText="投稿する"
-				onSubmit={handleQuestionSubmit}
-				loading={loading}
-				showFinish={false}
-				showGradeDepartment={true}
-				onDraftSubmit={handleDraftSubmit}
-				initialData={initialData}
-			/>
+			{isInitialDataLoading ? (
+				<p style={{ padding: '0 40px' }}>読み込み中...</p>
+			) : (
+				<PostForm 
+					key={id || "new"}
+					titlePlaceholder="質問のタイトルを入力してください"
+					contentLabel="質問内容"
+					contentPlaceholder="困っていることや試したことを詳しく入力してください"
+					submitButtonText="投稿する"
+					onSubmit={handleQuestionSubmit}
+					loading={loading}
+					showFinish={false}
+					showGradeDepartment={true}
+					onDraftSubmit={handleDraftSubmit}
+					initialData={initialData}
+				/>
+			)}
 		</div>
 		</>
 	);

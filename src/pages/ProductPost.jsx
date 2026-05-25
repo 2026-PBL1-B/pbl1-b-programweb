@@ -14,9 +14,13 @@ function ProductPost() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // 初期データのローディング状態を管理
+  const [isInitialDataLoading, setIsInitialDataLoading] = useState(!!id);
+
   useEffect(() => {
     const loadDraft = async () => {
       if (id) {
+        setIsInitialDataLoading(true);
         const res = await getProductById(id);
         if (res.success && res.data) {
           const tags = await getProductTagNames(id);
@@ -48,6 +52,7 @@ function ProductPost() {
             additionalUrls
           });
         }
+        setIsInitialDataLoading(false);
       }
     };
     loadDraft();
@@ -120,21 +125,26 @@ function ProductPost() {
       <Guideheader />
       
       <div className="post-form-wrapper">
-        <PostForm 
-          pageTitle="制作物を投稿する"
-          titlePlaceholder="タイトルを入力してください"
-          contentLabel="本文"
-          contentPlaceholder="本文を入力してください"
-          submitButtonText="投稿する"
-          onSubmit={handleProductSubmit}
-          loading={loading}
-          showFinish={false}
-          showGradeDepartment={true}
-          showGithubUrl={true}
-          showAdditionalUrls={true}
-          onDraftSubmit={handleDraftSubmit} 
-          initialData={initialData}
-        />
+        {isInitialDataLoading ? (
+          <p>読み込み中...</p>
+        ) : (
+          <PostForm 
+            key={id || "new"}
+            pageTitle="制作物を投稿する"
+            titlePlaceholder="タイトルを入力してください"
+            contentLabel="本文"
+            contentPlaceholder="本文を入力してください"
+            submitButtonText="投稿する"
+            onSubmit={handleProductSubmit}
+            loading={loading}
+            showFinish={false}
+            showGradeDepartment={true}
+            showGithubUrl={true}
+            showAdditionalUrls={true}
+            onDraftSubmit={handleDraftSubmit} 
+            initialData={initialData}
+          />
+        )}
       </div>
     </>
   );
