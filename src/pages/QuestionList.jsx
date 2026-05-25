@@ -52,6 +52,8 @@ function QuestionList() {
         .filter((question) => {
             // 非公開は除外
             if (!question.is_public) return false;
+            // 下書きは非公開
+            if (!question.is_finish) return false;
 
             // 何も選択されていない場合はすべて表示
             if (selectedTagNames.length === 0) return true;
@@ -114,8 +116,8 @@ function QuestionList() {
                                     </div>
                                     
                                     {/* 状態によって色を切り替えるクラスを動的に付与します */}
-                                    <div className={`status-badge ${question.is_finish ? 'status-resolved' : 'status-open'}`}>
-                                        {question.is_finish ? '解決済み' : '受付中'}
+                                    <div className={`status-badge ${question.is_open ? 'status-resolved' : 'status-open'}`}>
+                                        {question.is_open ? '受付中' : '解決済み'}
                                     </div>
                                 </div>
                                 

@@ -85,11 +85,11 @@
     font-weight: bold;
     font-size: 12px;
 }
-.status-resolved {
+.status-open{
     background-color: #e0f2f1;
     color: #00695c;
 }
-.status-open {
+.status-resolved  {
     background-color: #ffebee;
     color: #c62828;
 }
