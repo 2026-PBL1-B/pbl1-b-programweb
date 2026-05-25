@@ -1,16 +1,57 @@
 // src/pages/ProductPost.jsx
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import PostForm from '../components/PostForm';
-import { postProduct } from '../api/product'; 
-import { getOrCreateTags, postProductTags } from '../api/Tag'; 
-import { postProductLinks } from '../api/productLink';
+import { postProduct, getProductById } from '../api/product'; 
+import { getOrCreateTags, postProductTags, getProductTagNames } from '../api/Tag'; 
+import { postProductLinks, getProductLinks } from '../api/productLink';
 
 import Guideheader from '../components/Header.jsx';
 
 function ProductPost() {
   const [loading, setLoading] = useState(false);
+  const [initialData, setInitialData] = useState(null);
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const loadDraft = async () => {
+      if (id) {
+        const res = await getProductById(id);
+        if (res.success && res.data) {
+          const tags = await getProductTagNames(id);
+          const links = await getProductLinks(id);
+          
+          let githubUrl = "";
+          let additionalUrls = [];
+          
+          if (links && links.length > 0) {
+            // Assume the first github.com link is githubUrl, others are additional
+            const githubIndex = links.findIndex(url => url.includes('github.com'));
+            if (githubIndex !== -1) {
+              githubUrl = links[githubIndex];
+              additionalUrls = links.filter((_, i) => i !== githubIndex);
+            } else {
+              additionalUrls = links;
+            }
+          }
+
+          setInitialData({
+            title: res.data.title || "",
+            content: res.data.content || "",
+            isPublic: res.data.is_public !== false,
+            isFinish: res.data.is_finish || false,
+            grade: res.data.grade || "",
+            department: res.data.department || "",
+            tags: tags || [],
+            githubUrl,
+            additionalUrls
+          });
+        }
+      }
+    };
+    loadDraft();
+  }, [id]);
 
   // 共通の保存処理
   const saveProductData = async (formData, isDraft) => {
@@ -19,6 +60,7 @@ function ProductPost() {
     try {
       // 1. 制作物のメインデータを送信
       const newProduct = await postProduct({
+        id: id || undefined,
         title: formData.title, 
         content: formData.content, 
         is_public: formData.isPublic,
@@ -36,6 +78,9 @@ function ProductPost() {
           if (tagIds && tagIds.length > 0) {
             await postProductTags(newProduct.id, tagIds);
           }
+        } else {
+          // タグが空になった場合も既存のタグを消去するよう呼び出す
+          await postProductTags(newProduct.id, []);
         }
 
         // --- URLの保存処理 ---
@@ -52,9 +97,8 @@ function ProductPost() {
           urlsToSave.push(...validAdditionalUrls);
         }
 
-        if (urlsToSave.length > 0) {
-          await postProductLinks(newProduct.id, urlsToSave);
-        }
+        // URLが空の場合も呼び出して削除させる
+        await postProductLinks(newProduct.id, urlsToSave);
       }
 
       alert(isDraft ? '下書きを保存しました！' : '制作物の投稿が完了しました！');
@@ -89,6 +133,7 @@ function ProductPost() {
           showGithubUrl={true}
           showAdditionalUrls={true}
           onDraftSubmit={handleDraftSubmit} 
+          initialData={initialData}
         />
       </div>
     </>
