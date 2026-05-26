@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getQuestions } from '../api/Question';
 import { getUserName } from '../api/User';
 import { getTags, getQuestionTagNames } from '../api/Tag';
+import { getQuestionsLike } from '../api/questionLike';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
@@ -31,9 +32,18 @@ function QuestionList() {
                 
                 const dataWithNamesAndTags = await Promise.all(
                     (data || []).map(async (question) => {
-                        const userName = await getUserName(question.user_id);
-                        const tagNames = await getQuestionTagNames(question.id);
-                        return { ...question, fetchedUserName: userName, tags: tagNames };
+                        // 並列でユーザー名、タグ、いいねを取得
+                        const [userName, tagNames, likeRes] = await Promise.all([
+                            getUserName(question.user_id),
+                            getQuestionTagNames(question.id),
+                            getQuestionsLike(question.id)
+                        ]);
+                        return { 
+                            ...question, 
+                            fetchedUserName: userName, 
+                            tags: tagNames,
+                            likeCount: likeRes.count || 0
+                        };
                     })
                 );
                 
@@ -139,6 +149,11 @@ function QuestionList() {
                                     </div>
                                 )}
 
+                                {/* いいね数表示 */}
+                                <div className="card-footer" style={{ marginTop: '10px' }}>
+                                    <p>❤️ {question.likeCount}</p>
+                                </div>
+                                
                             </div>
                         ))
                     )}
