@@ -3,21 +3,22 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../spabase';
 import Header from '../components/Header.jsx';
+import EventCountdown from '../components/EventCountdown.jsx'; //
+import { SITE_PHILOSOPHY } from '../domain/HomeInfo'; //
+import '../css/Home.css'; //
 
 function Home() { 
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true); // 認証チェック中かどうかの状態
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const checkAuth = async () => {
-      // 1. URLのハッシュ（#以降）からエラー情報を取得
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
       const errorMsg = params.get('error_description');
 
       if (errorMsg) {
         const decodedMsg = decodeURIComponent(errorMsg).replace(/\+/g, ' ');
-        // データベースエラーやドメイン制限のエラーを検知してメッセージを差し替える
         if (decodedMsg.includes('Database error saving new user') || decodedMsg.includes('学校指定のメールアドレス')) {
           alert('stメールでサインインしてください');
         } else {
@@ -27,13 +28,10 @@ function Home() {
         return;
       }
 
-      // 2. セッション情報の確認
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        // セッションがない場合も即座にログイン画面へ
         navigate('/');
       } else {
-        // 認証が確認できた場合のみ、コンテンツを表示する
         setLoading(false);
       }
     };
@@ -41,15 +39,31 @@ function Home() {
     checkAuth();
   }, [navigate]);
 
-  // チェックが終わるまでは何も表示しない（一瞬Homeが見えるのを防ぐ）
   if (loading) {
     return null;
   }
 
   return (
-    <div>
-          <Header />
-    </div>
+    <section className="home-container">
+      <Header />
+      
+      <div className="home-content">
+        {/* 1. イベントカードを上に表示 */}
+        <EventCountdown />
+        
+        {/* 2. その下に理念を表示 */}
+        <div className="philosophy-card">
+          <h2 className="philosophy-title">{SITE_PHILOSOPHY.title}</h2>
+          <div className="philosophy-content">
+            {SITE_PHILOSOPHY.messages.map((text, index) => (
+              <p key={index} className="philosophy-text">
+                {text}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
