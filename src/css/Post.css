@@ -116,6 +116,13 @@
 
 .preview {
     overflow-y: auto;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.preview pre {
+    white-space: pre-wrap;
+    word-break: break-all;
 }
 
 /* プレビュー内の画像がはみ出ないように調整 */
