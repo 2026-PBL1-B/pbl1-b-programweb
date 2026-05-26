@@ -320,31 +320,6 @@ const handleImageSelect = (e) => {
 
                     {(mode === "preview" || mode === "split") && (
                         <div className="preview">
-                            <h3>{title || "タイトル"}</h3>
-                            <div className="tag-list">
-                                {tags.map((tag, i) => (
-                                    <span key={i} className="tag">#{tag}</span>
-                                ))}
-                            </div>
-                            
-                            {/* Github用URL */}
-                            {showGithubUrl && githubUrl && (
-                                <p style={{ wordBreak: 'break-all', color: 'var(--accent)' }}>
-                                    GitHub: <a href={githubUrl} target="_blank" rel="noopener noreferrer">{githubUrl}</a>
-                                </p>
-                            )}
-
-                            {/* プレビューに追加URLも表示 */}
-                            {showAdditionalUrls && additionalUrls.length > 0 && (
-                                <div style={{ marginBottom: '15px' }}>
-                                    {additionalUrls.map((url, i) => url && (
-                                        <p key={i} style={{ wordBreak: 'break-all', margin: '5px 0' }}>
-                                            関連URL: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
-                                        </p>
-                                    ))}
-                                </div>
-                            )}
-
                             <div className="markdown-preview">
                                 <ReactMarkdown 
                                     remarkPlugins={[remarkGfm, remarkBreaks]}

@@ -97,36 +97,46 @@
     gap: 20px;
 }
 
-/* エディタとプレビューの共通 */
+/* エディタとプレビューの共通構造 */
 .editor, .preview {
     width: 100%;
     height: 400px;
-    padding: 20px;
-    background: var(--bg);           /* 白などの固定色ではなく変数を使用 */
-    border: 1px solid var(--border); /* 本文とプレビューにも枠線を追加 */
     border-radius: 8px;              /* 角を丸く */
     color: var(--text);              /* 文字色 */
     box-sizing: border-box;
 }
 
 .editor {
+    background: var(--bg);           /* 編集エリアは元の背景色 */
+    border: 1px solid var(--border); /* エディタの枠線 */
+    padding: 20px;
     resize: none;
     font-family: inherit;
 }
 
 .preview {
+    background: var(--bg);           /* プレビューの外枠(白いカード) */
+    border: 1px solid var(--border); /* プレビューの外枠線 */
+    padding: 20px;                   /* カード内の余白 */
     overflow-y: auto;
     overflow-wrap: anywhere;
     word-break: break-word;
 }
 
-.preview pre {
-    white-space: pre-wrap;
-    word-break: break-all;
+/* 詳細ページの .post-content スタイルを再現（白いカードの中に配置されるグレーの箱） */
+.markdown-preview {
+    background-color: var(--code-bg); 
+    border: none;                    /* 修正: 本文ブロック自体の枠線を消して、枠が3つに見えるのを防ぐ */
+    border-radius: 8px;
+    padding: 24px;
+    font-size: 17px;
+    line-height: 2;
+    min-height: 100%;
+    box-sizing: border-box;
 }
 
 /* プレビュー内の画像がはみ出ないように調整 */
-.preview img {
+.markdown-preview img {
     max-width: 100%;
     height: auto;
     display: block;
