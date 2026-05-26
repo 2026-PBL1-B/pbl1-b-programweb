@@ -142,6 +142,11 @@
   word-break: break-word;
 }
 
+.comment-body pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 /* =========================================
    黒いコメントカード（新デザイン）
    ========================================= */
@@ -185,6 +190,11 @@
   word-break: break-word;
 }
 
+.comment-item-black .comment-body pre {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
 /* =========================================
    Markdownコンテンツ内の見出しサイズ制限
    ========================================= */
@@ -208,4 +218,9 @@
 .markdown-content h6 {
   font-size: 1rem;
   margin: 5px 0 2px;
+}
+
+.markdown-content pre {
+  white-space: pre-wrap;
+  word-break: break-all;
 }

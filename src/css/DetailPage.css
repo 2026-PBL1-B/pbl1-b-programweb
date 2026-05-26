@@ -101,6 +101,11 @@
     margin-bottom: 16px;  /* 次に来るいいねボタンとの間隔を指定 */
 }
 
+.post-content pre {
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
 /* 本文内の画像がはみ出ないように調整 */
 .post-content img {
     max-width: 100%;
