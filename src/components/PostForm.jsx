@@ -2,9 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import GradeDepartmentSelect from './GradeDepartmentSelect';
-import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
+import MarkdownRenderer from './MarkdownRenderer';
+import { defaultUrlTransform } from 'react-markdown';
 import '../css/Post.css';
 import { uploadImage } from '../api/image';
 import { getTags } from '../api/Tag';
@@ -321,8 +320,7 @@ const handleImageSelect = (e) => {
                     {(mode === "preview" || mode === "split") && (
                         <div className="preview">
                             <div className="markdown-preview">
-                                <ReactMarkdown 
-                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                <MarkdownRenderer 
                                     urlTransform={(url) => {
                                         if (url.startsWith('blob:')) {
                                             return url; // blob URL (ローカルプレビュー用) を許可する
@@ -331,7 +329,7 @@ const handleImageSelect = (e) => {
                                     }}
                                 >
                                     {content || "本文がここに表示されます"}
-                                </ReactMarkdown>
+                                </MarkdownRenderer>
                             </div>
                         </div>
                     )}

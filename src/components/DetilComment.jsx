@@ -1,8 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import "../css/Comment.css";
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
+import MarkdownRenderer from './MarkdownRenderer';
 import UserLink from './UserLink';
 import LikeButton from './LikeButton';
 import AvatarIcon from './AvatarIcon';
@@ -70,9 +68,9 @@ export default function DetailCommentPost({ onSubmit }) {
             }}
           >
             {comment.trim() ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+              <MarkdownRenderer>
                 {comment}
-              </ReactMarkdown>
+              </MarkdownRenderer>
             ) : (
               <span style={{ color: '#999' }}>プレビューする内容がありません</span>
             )}
@@ -176,9 +174,9 @@ function CommentItem({ comment, type }) {
         </span>
       </div>
       <div className="comment-body markdown-content">
-        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+        <MarkdownRenderer>
           {comment.content}
-        </ReactMarkdown>
+        </MarkdownRenderer>
       </div>
     </div>
   );

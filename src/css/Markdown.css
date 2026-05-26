@@ -1,0 +1,94 @@
+/* src/css/Markdown.css */
+
+.markdown-container {
+  line-height: 1.6;
+  color: var(--text);
+}
+
+.markdown-container h1,
+.markdown-container h2,
+.markdown-container h3,
+.markdown-container h4 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.markdown-container p {
+  margin-bottom: 16px;
+}
+
+/* Code block wrapper */
+.code-block-wrapper {
+  position: relative;
+  background-color: #1e1e1e; /* Dark background */
+  border-radius: 8px;
+  margin: 16px 0;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+/* Header for code block */
+.code-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #2d2d2d;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: #aaa;
+  font-family: var(--mono);
+}
+
+.code-lang {
+  text-transform: lowercase;
+}
+
+/* Copy button */
+.copy-button {
+  background: transparent;
+  border: 1px solid #444;
+  color: #ccc;
+  padding: 2px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+  background-color: #444;
+  color: #fff;
+}
+
+.copy-button.copied {
+  background-color: #4caf50;
+  color: white;
+  border-color: #4caf50;
+}
+
+/* Pre styling within wrapper */
+.code-block-wrapper pre {
+  margin: 0 !important;
+  background-color: transparent !important;
+  padding: 16px !important;
+  overflow-x: auto;
+}
+
+.code-block-wrapper code {
+  background-color: transparent !important;
+  color: #e6edf3 !important;
+  padding: 0 !important;
+  font-family: var(--mono);
+  font-size: 14px;
+  display: block;
+}
+
+/* Inline code styling */
+.markdown-container :not(pre) > code {
+  background-color: var(--code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 85%;
+}
