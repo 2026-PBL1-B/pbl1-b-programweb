@@ -1,4 +1,20 @@
 /* src/css/Header.css */
+/* サービス名 */
+.service-name {
+  position: fixed;
+  top: 0;
+  left: 16px;
+  height: 48px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-size: 30px;
+  font-weight: 10000;
+  color: #4A90E2;
+  cursor: pointer;
+  z-index: 9999;
+}
+
 /* アクティブなナビゲーションリンク */
 .nav-link.active {
   text-decoration: underline;
