@@ -14,6 +14,7 @@ import { getProductTagNames, getQuestionTagNames } from '../api/Tag';
 import { getUserName } from '../api/User';
 import UserLink from '../components/UserLink';
 import Guideheader from '../components/Header.jsx';
+import AvatarIcon from '../components/AvatarIcon';
 
 import "../css/UserPage.css";
 import "../css/ListPage.css";
@@ -58,11 +59,9 @@ function UserPage() {
 
                       if (profileResult.success && profileResult.data) {
                         const avatarUrl = profileResult.data.avatar_url || "";
-                        if (avatarUrl) {
-                          sessionStorage.setItem(`userAvatarUrl_${user_id}`, avatarUrl);
-                          if (currentId === user_id) {
-                            sessionStorage.setItem("userAvatarUrl", avatarUrl);
-                          }
+                        sessionStorage.setItem(`userAvatarUrl_${user_id}`, avatarUrl);
+                        if (currentId === user_id) {
+                          sessionStorage.setItem("userAvatarUrl", avatarUrl);
                         }
                         setProfile({
                           name: name || "不明なユーザー",
@@ -73,7 +72,12 @@ function UserPage() {
                           avatar_url: avatarUrl
                         });
                       } else {
-                        setProfile(prev => ({ ...prev, name: name || "不明なユーザー" }));
+                        setProfile(prev => ({ 
+                          ...prev, 
+                          name: name || "不明なユーザー",
+                          avatar_url: ""
+                        }));
+                        sessionStorage.removeItem(`userAvatarUrl_${user_id}`);
                       }
 
                       if (viewType === 'products') {
@@ -151,17 +155,7 @@ function UserPage() {
       <section className="profile-header">
 
         <div className="profile-left">
-          <div className="profile-icon">
-            {profile.avatar_url ? (
-              <img 
-                src={profile.avatar_url} 
-                alt="Profile Icon" 
-                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} 
-              />
-            ) : (
-              "👤"
-            )}
-          </div>
+          <AvatarIcon userId={user_id} size={120} className="profile-icon" />
 
           <div className="profile-info">
             <h1>{profile.name}</h1>
