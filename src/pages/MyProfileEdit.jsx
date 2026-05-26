@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import { grades,departments } from "../domain/GradeDepartment";
 import { getProfileForUserID, updateProfile } from "../api/profile";
 import { getCurrentUserId } from "../api/Signin";
-
+import { useNavigate } from "react-router-dom";
 
 import "../css/MyProfileEdit.css";
 
 function MyProfile() {
+  const navigate = useNavigate();
 
   // 仮プロフィールデータ
   const [profile, setProfile] = useState({
@@ -66,6 +67,11 @@ function MyProfile() {
 
     if (result.success) {
       alert("プロフィールを保存しました！");
+            // 現在ユーザーID取得
+      const userId = await getCurrentUserId();
+
+      // ユーザーページへ遷移
+      navigate(`/userpage/${userId}`);
     } else {
       alert("プロフィールの保存に失敗しました: " + result.error);
     }
