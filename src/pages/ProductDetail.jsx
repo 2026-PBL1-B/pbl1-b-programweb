@@ -1,9 +1,7 @@
 // src/pages/ProductDetail.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 import "../css/DetailPage.css";
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postProductComment, getProductComment } from '../api/productcomment';
@@ -193,9 +191,9 @@ useEffect(() => {
             <div>
               <p className="section-label" style={{ marginTop: '16px' }}>制作物内容</p>
               <div className="post-content markdown-preview">
-                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                <MarkdownRenderer>
                   {product.content}
-                </ReactMarkdown>
+                </MarkdownRenderer>
               </div>
             </div>
           </div>

@@ -1,9 +1,7 @@
 // src/pages/QuestionDetail.jsx
 import { useEffect, useState, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
+import MarkdownRenderer from '../components/MarkdownRenderer';
 import "../css/DetailPage.css"; // 詳細独自のスタイルを読み込む
 import DetailCommentPost, { DetailCommentGet } from '../components/DetilComment';
 import { postQuestionComment, getQuestionComments } from '../api/questioncomment';
@@ -154,9 +152,9 @@ useEffect(() => {
                         <div>
                             <p className="section-label" style={{ marginTop: '16px' }}>質問内容</p>
                             <div className="post-content markdown-preview">
-                                <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
+                                <MarkdownRenderer>
                                     {question.content}
-                                </ReactMarkdown>
+                                </MarkdownRenderer>
                             </div>
                         </div>
                     </div>

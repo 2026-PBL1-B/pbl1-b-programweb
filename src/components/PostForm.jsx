@@ -2,9 +2,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import GradeDepartmentSelect from './GradeDepartmentSelect';
-import ReactMarkdown, { defaultUrlTransform } from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import remarkBreaks from 'remark-breaks';
+import MarkdownRenderer from './MarkdownRenderer';
+import { defaultUrlTransform } from 'react-markdown';
 import '../css/Post.css';
 import { uploadImage } from '../api/image';
 import { getTags } from '../api/Tag';
@@ -320,34 +319,8 @@ const handleImageSelect = (e) => {
 
                     {(mode === "preview" || mode === "split") && (
                         <div className="preview">
-                            <h3>{title || "タイトル"}</h3>
-                            <div className="tag-list">
-                                {tags.map((tag, i) => (
-                                    <span key={i} className="tag">#{tag}</span>
-                                ))}
-                            </div>
-                            
-                            {/* Github用URL */}
-                            {showGithubUrl && githubUrl && (
-                                <p style={{ wordBreak: 'break-all', color: 'var(--accent)' }}>
-                                    GitHub: <a href={githubUrl} target="_blank" rel="noopener noreferrer">{githubUrl}</a>
-                                </p>
-                            )}
-
-                            {/* プレビューに追加URLも表示 */}
-                            {showAdditionalUrls && additionalUrls.length > 0 && (
-                                <div style={{ marginBottom: '15px' }}>
-                                    {additionalUrls.map((url, i) => url && (
-                                        <p key={i} style={{ wordBreak: 'break-all', margin: '5px 0' }}>
-                                            関連URL: <a href={url} target="_blank" rel="noopener noreferrer">{url}</a>
-                                        </p>
-                                    ))}
-                                </div>
-                            )}
-
                             <div className="markdown-preview">
-                                <ReactMarkdown 
-                                    remarkPlugins={[remarkGfm, remarkBreaks]}
+                                <MarkdownRenderer 
                                     urlTransform={(url) => {
                                         if (url.startsWith('blob:')) {
                                             return url; // blob URL (ローカルプレビュー用) を許可する
@@ -356,7 +329,7 @@ const handleImageSelect = (e) => {
                                     }}
                                 >
                                     {content || "本文がここに表示されます"}
-                                </ReactMarkdown>
+                                </MarkdownRenderer>
                             </div>
                         </div>
                     )}
