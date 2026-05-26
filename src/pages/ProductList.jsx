@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getProducts } from '../api/product';
 import { getUserName } from '../api/User';
 import { getTags, getProductTagNames } from '../api/Tag';
+import { getProductLike } from '../api/productLike';
 import TagFilterSortBar from '../components/TagFilterSortBar';
 import '../css/ListPage.css';
 import Guideheader from '../components/Header.jsx';
@@ -33,12 +34,21 @@ function ProductList() {
                 const data = await getProducts();
                 console.log('取得データ確認:', data); // デバッグ用
                 
-                // 3. 各制作物にユーザー名と紐づくタグ名リストを追加
+                /// 3. 各制作物にユーザー名と紐づくタグ名リスト、いいね数を追加
                 const dataWithNamesAndTags = await Promise.all(
                     (data || []).map(async (article) => {
-                        const userName = await getUserName(article.user_id);
-                        const tagNames = await getProductTagNames(article.id);
-                        return { ...article, fetchedUserName: userName, tags: tagNames };
+                        // 並列でユーザー名、タグ、いいねを取得して高速化
+                        const [userName, tagNames, likeRes] = await Promise.all([
+                            getUserName(article.user_id),
+                            getProductTagNames(article.id),
+                            getProductLike(article.id) // ← 追加
+                        ]);
+                        return { 
+                            ...article, 
+                            fetchedUserName: userName, 
+                            tags: tagNames,
+                            likeCount: likeRes.count || 0 // ← 追加
+                        };
                     })
                 );
                 
@@ -140,6 +150,11 @@ function ProductList() {
                                         ))}
                                     </div>
                                 )}
+
+                                {/* いいね数表示 */}
+                                <div className="card-footer" style={{ marginTop: '10px' }}>
+                                    <p>❤️ {article.likeCount}</p>
+                                </div>
 
                             </div>
                         ))
