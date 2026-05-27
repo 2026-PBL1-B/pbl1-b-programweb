@@ -49,6 +49,9 @@ export default function Header() {
   return (
     <header className="header-wrapper">
       <div className="header-top" />
+      <h1 className="service-name" onClick={() => navigate("/home")}>
+        KD-Board
+      </h1>
       <button
         className="account-button"
         onClick={handleAccountClick}
