@@ -3,66 +3,104 @@
 .container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    /* 上に140pxの余白を取り、左右と下は40pxにします */
-    padding: 140px 40px 40px 40px;
-    /* 背景色もテーマに合わせるか、不要であれば削除できます */
+    gap: 24px;
+    padding: 140px 20px 80px;
     min-height: 100vh;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+}
+
+.container::before {
+    content: '';
+    position: fixed;
+    top: 20%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: rgba(170, 59, 255, 0.05);
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* 入力欄（タイトル） */
 .title {
-    padding: 20px;
-    font-size: 18px;
-    border: 1px solid var(--border); /* 追加: サイト共通の枠線 */
-    border-radius: 8px;              /* 追加: 角を少し丸く */
-    background: var(--bg);           /* 変更: サイト共通の背景色 */
-    color: var(--text);              /* 追加: サイト共通の文字色 */
+    padding: 20px 24px;
+    font-size: 24px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: var(--text-h);
     width: 100%;
     box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
 }
 
-/* タグ入力コンテナ（Qiita風） */
+.title:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-bg);
+}
+
+/* タグ入力コンテナ */
 .tags-container {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
-    background: var(--bg);           /* サイト共通の背景色 */
-    border: 1px solid var(--border); /* サイト共通の枠線 */
-    border-radius: 8px;              /* 角を少し丸く */
-    min-height: 60px;
+    padding: 12px 24px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    min-height: 70px;
     box-sizing: border-box;
+    box-shadow: var(--shadow-soft);
+    transition: all 0.3s ease;
+}
 
-    /* タイトルとの間隔を広げる設定 */
-    margin-top: 5px;
+.tags-container:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-bg);
 }
 
 /* 確定したタグ */
 .tag-badge {
     display: flex;
     align-items: center;
-    background: var(--code-bg);      /* 少し異なる背景色でタグを目立たせる */
-    border: 1px solid var(--border); /* タグ自体にも枠線を付与 */
-    padding: 6px 12px;
+    background: var(--gradient-primary);
+    border: none;
+    padding: 6px 14px;
     border-radius: 20px;
     font-size: 14px;
-    color: var(--text);
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
-/* タグ削除ボタン */
 .tag-badge button {
     background: none;
     border: none;
-    margin-left: 6px;
+    margin-left: 8px;
     cursor: pointer;
-    color: #888;
+    color: rgba(255,255,255,0.8);
     font-weight: bold;
     padding: 0;
+    transition: color 0.2s;
 }
 
-/* タグ入力欄 */
+.tag-badge button:hover {
+    color: white;
+}
+
 .tag-input {
     border: none;
     background: transparent;
@@ -70,262 +108,225 @@
     flex-grow: 1;
     font-size: 18px;
     min-width: 200px;
-    color: var(--text); /* 入力中の文字色もテーマに合わせる */
+    color: var(--text-h);
 }
 
-/* ヘッダー */
 .content-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: var(--text-h); /* 見出しの色 */
+    color: var(--text-h);
+    margin-top: 16px;
 }
 
 .mode-buttons button {
-    margin-left: 10px;
-    padding: 6px 12px;
+    margin-left: 12px;
+    padding: 8px 16px;
     cursor: pointer;
-    background: var(--code-bg);
+    background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text);
-    border-radius: 4px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.mode-buttons button:hover,
+.mode-buttons button.active {
+    background: var(--code-bg);
+    color: var(--accent);
+    border-color: var(--accent);
 }
 
 /* 本文エリア */
 .content-area {
     display: flex;
-    gap: 20px;
+    gap: 24px;
 }
 
-/* エディタとプレビューの共通構造 */
 .editor, .preview {
     width: 100%;
-    height: 400px;
-    border-radius: 8px;              /* 角を丸く */
-    color: var(--text);              /* 文字色 */
+    height: 500px;
+    border-radius: 16px;
+    color: var(--text);
     box-sizing: border-box;
+    box-shadow: var(--shadow-soft);
 }
 
 .editor {
-    background: var(--bg);           /* 編集エリアは元の背景色 */
-    border: 1px solid var(--border); /* エディタの枠線 */
-    padding: 20px;
-    resize: none;
-    font-family: inherit;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    padding: 24px;
+    resize: vertical;
+    font-size: 16px;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+.editor:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-bg);
 }
 
 .preview {
-    background: var(--bg);           /* プレビューの外枠(白いカード) */
-    border: 1px solid var(--border); /* プレビューの外枠線 */
-    padding: 20px;                   /* カード内の余白 */
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    padding: 0;
     overflow-y: auto;
     overflow-wrap: anywhere;
     word-break: break-word;
 }
 
-/* 詳細ページの .post-content スタイルを再現（白いカードの中に配置されるグレーの箱） */
 .markdown-preview {
-    background-color: var(--code-bg); 
-    border: none;                    /* 修正: 本文ブロック自体の枠線を消して、枠が3つに見えるのを防ぐ */
-    border-radius: 8px;
-    padding: 24px;
+    background: transparent;
+    border: none;
+    border-radius: 16px;
+    padding: 32px;
     font-size: 17px;
-    line-height: 2;
+    line-height: 1.8;
     min-height: 100%;
     box-sizing: border-box;
 }
 
-/* プレビュー内の画像がはみ出ないように調整 */
 .markdown-preview img {
     max-width: 100%;
     height: auto;
     display: block;
-    margin: 10px 0;
-    border-radius: 4px;
+    margin: 16px 0;
+    border-radius: 8px;
 }
 
-/* モード制御 */
-.content-area.edit .preview {
-    display: none;
-}
-
-.content-area.preview .editor {
-    display: none;
-}
-
+.content-area.edit .preview { display: none; }
+.content-area.preview .editor { display: none; }
 .content-area.split .editor,
-.content-area.split .preview {
-    width: 50%;
-}
+.content-area.split .preview { width: 50%; }
 
-/* プレビュー内のタグ表示 */
-.tag-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.tag {
-    color: var(--accent); /* リンク色もサイトのアクセントカラーに統一 */
-    font-weight: bold;
-}
-
-/* GitHubリンク入力欄のスタイル */
 .github-url-input {
-    padding: 20px;
+    padding: 20px 24px;
     font-size: 18px;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    color: var(--text-h);
     width: 100%;
     box-sizing: border-box;
-    /* タグ入力欄との間隔を空けるためのマージン */
-    margin-top: 5px; 
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-soft);
 }
 
-/* 任意のURL追加セクションのスタイル */
+.github-url-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-bg);
+}
+
 .additional-urls-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;       /* 縦に並ぶ要素同士の隙間 */
-    margin-top: 5px; /* GitHubボックスからの隙間 */
+    gap: 16px;
 }
 
-/* 入力ボックスと×ボタンを横並びにする */
 .url-input-row {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 16px;
 }
 
-/* 任意のURL追加セクションのスタイル */
-.additional-urls-section {
-    display: flex;
-    flex-direction: column;
-    gap: 0px;       /* 縦に並ぶ要素同士の隙間 */
-    
-    /* 🌟修正: GitHubボックスとの間隔を狭める（マイナスマージンで調整） */
-    margin-top: -0px; 
-}
-
-/* 入力ボックスと×ボタンを横並びにする */
-.url-input-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* 追加URLの入力ボックス */
 .additional-url-input {
-    flex-grow: 1; /* 横幅を可能な限り広げる */
-    padding: 20px;
+    flex-grow: 1;
+    padding: 20px 24px;
     font-size: 18px;
     border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
-    color: var(--text);
+    border-radius: 16px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    color: var(--text-h);
     box-sizing: border-box;
+    transition: all 0.3s ease;
 }
 
-/* 追加URLボックスの ×ボタン（削除） */
+.additional-url-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-bg);
+}
+
 .remove-url-btn {
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    font-size: 18px;
-    color: #888;
+    border-radius: 12px;
+    font-size: 20px;
+    color: #9ca3af;
     cursor: pointer;
-    width: 40px;      /* ボタンの幅を固定 */
-    height: 40px;     /* ボタンの高さを固定 */
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    transition: all 0.2s ease; /* マウスを乗せたときの動きを滑らかに */
+    transition: all 0.2s ease;
 }
 
-/* ×ボタンのホバー時のスタイル */
 .remove-url-btn:hover {
-    color: #ff4d4d;
-    border-color: #ff4d4d;
-    background: #fff5f5; /* ほんのり赤みのある背景に変える */
+    color: #ef4444;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
 }
 
-/* 追加URLボックス ＋ボタン */
 .add-url-btn {
-    align-self: flex-start; /* 左寄せ */
-    background: var(--code-bg); /* 識別しやすいように背景色を適用 */
-    border: 1px dashed var(--border); 
+    align-self: flex-start;
+    background: transparent;
+    border: 2px dashed var(--border);
     color: var(--text);
-    padding: 10px 20px;
-    border-radius: 8px;
+    padding: 12px 24px;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: bold;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.add-url-btn:hover {
+    background: var(--code-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.tag-suggestions {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 240px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 100;
+    box-shadow: var(--shadow-hover);
+}
+
+.tag-suggestion-item {
+    padding: 14px 20px;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-h);
+    text-align: left;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
     transition: background 0.2s ease;
 }
 
-/* ＋ボタンのホバー時のスタイル */
-.add-url-btn:hover {
-    background: var(--border); /* ホバー時は少し濃い背景色にする */
-}
-
-/* タグ入力全体 */
-.tags-container {
-    position: relative;
-}
-
-/* タグの候補一覧 */
-.tag-suggestions {
-    position: absolute;
-    top: calc(100% + 6px);
-    left: 0;
-
-    min-width: 220px;
-    max-width: 320px;
-    width: fit-content;
-
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-    z-index: 100;
-
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-}
-
-/* 候補ボタン */
-.tag-suggestion-item {
-    width: 100%;
-
-    padding: 12px 16px;
-
-    border: none;
-    border-bottom: 1px solid var(--border);
-
-    background: var(--bg);
-    color: var(--text);
-
-    text-align: left;
-
-    cursor: pointer;
-
-    font-size: 16px;
-
-    transition: background 0.15s ease;
-}
-
-/* 最後の線を消す */
 .tag-suggestion-item:last-child {
     border-bottom: none;
 }
 
-/* ホバー時 */
 .tag-suggestion-item:hover {
     background: var(--code-bg);
+    color: var(--accent);
 }

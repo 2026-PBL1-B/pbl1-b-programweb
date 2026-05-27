@@ -1,19 +1,29 @@
-:root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+:root {
+  --text: #4b5563;
+  --text-h: #111827;
+  --bg: #f8fafc;
+  --border: #e2e8f0;
+  --code-bg: #f1f5f9;
+  --accent: #4A90E2;
+  --accent-hover: #357ABD;
+  --accent-bg: rgba(74, 144, 226, 0.1);
+  --accent-border: rgba(74, 144, 226, 0.5);
+  --social-bg: rgba(241, 245, 249, 0.5);
+  
+  /* Modern Additions */
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --gradient-primary: linear-gradient(135deg, #4A90E2 0%, #8b5cf6 100%);
+  --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.08);
+  --shadow-hover: 0 20px 40px -10px rgba(74, 144, 226, 0.25);
+
+  --shadow: var(--shadow-soft);
+
+  --sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --heading: 'Outfit', 'Inter', system-ui, sans-serif;
+  --mono: ui-monospace, 'Fira Code', Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -34,15 +44,22 @@
   :root {
     --text: #9ca3af;
     --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --bg: #0f172a;
+    --border: #1e293b;
+    --code-bg: #1e293b;
+    --accent: #60a5fa;
+    --accent-hover: #3b82f6;
+    --accent-bg: rgba(96, 165, 250, 0.15);
+    --accent-border: rgba(96, 165, 250, 0.5);
+    --social-bg: rgba(30, 41, 59, 0.5);
+
+    --glass-bg: rgba(15, 23, 42, 0.75);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    --gradient-primary: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.4);
+    --shadow-hover: 0 20px 40px -10px rgba(96, 165, 250, 0.3);
+    
+    --shadow: var(--shadow-soft);
   }
 
   #social .button-icon {

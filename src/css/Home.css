@@ -3,109 +3,213 @@
 /* Homeページ全体のコンテナ */
 .home-container {
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+
+/* バックグラウンドの装飾（モダンなぼかし円） */
+.home-container::before {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: var(--accent-bg);
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: floatBlob 20s infinite alternate ease-in-out;
+}
+
+.home-container::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    right: -10%;
+    width: 40vw;
+    height: 40vw;
+    background: rgba(139, 92, 246, 0.1);
+    filter: blur(100px);
+    border-radius: 50%;
+    z-index: 0;
+    animation: floatBlob 15s infinite alternate-reverse ease-in-out;
+}
+
+@keyframes floatBlob {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(5%, 10%) scale(1.1); }
 }
 
 /* コンテンツの配置（ヘッダーとの被りを防ぐ） */
 .home-content {
+    position: relative;
+    z-index: 1; /* 装飾の上に表示 */
     width: 100%;
-    padding: 110px 20px;
+    max-width: 1200px;
+    padding: 140px 20px 80px;
     display: flex;
-    flex-direction: column; /* 縦並びに設定 */
-    align-items: center;    /* 中央揃え */
-    gap: 40px;              /* カード間の余白 */
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
     box-sizing: border-box;
 }
-
 
 /* ----------------------------------
     イベントカウントダウン用のカード
 ----------------------------------- */
 .event-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px;
-    background-color: var(--bg);
-    box-shadow: var(--shadow);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: var(--shadow-soft);
     box-sizing: border-box;
-    width: 80%;               /* 画面幅の約80%を占めるように設定 */
-    max-width: 1200px;        /* 画面が広すぎるときのために、最大幅を制限（お好みで調整可） */
-    display: flex;            /* Flexboxを使用 */
-    flex-direction: row;      /* 子要素を横並びにする */
-    justify-content: space-between; /* タイトルとカウントダウンを両端に配置 */
-    align-items: center;      /* 垂直方向の中央揃え */
-    gap: 32px;                /* 要素間の隙間を広げる */
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
 }
 
-/* カードのタイトル（修正） */
+.event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* カードのタイトル */
 .event-title {
-    color: var(--accent);
-    font-size: 50px;          /* ★ さらに大きくしてインパクトを出す */
-    margin: 0;                /* gapで制御するためmarginをリセット */
-    line-height: 1;           /* 高さを詰めてスタイリッシュに */
-    text-align: left;         /* 横長レイアウトに合わせて左揃え */
-    flex-shrink: 0;           /* タイトルが潰れないようにする */
+    font-size: 56px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1.1;
+    text-align: left;
+    flex-shrink: 0;
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -1px;
 }
 
-/* カウントダウンテキスト全体（修正） */
+/* カウントダウンテキスト全体 */
 .countdown-text {
     font-size: 24px;
-    font-weight: bold;
-    color: var(--text);
-    text-align: right;        /* 横長レイアウトに合わせて右揃え */
-    display: flex;            /* 数字と「あと」「日」を揃えるため */
-    align-items: baseline;    /* 単位と数字のベースライン（下端）を合わせる */
-    gap: 8px;                 /* 数字と単位の間の隙間 */
+    font-weight: 600;
+    color: var(--text-h);
+    text-align: right;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
 }
 
-/* 日数の数字部分（強調）（修正） */
+/* 日数の数字部分（強調） */
 .countdown-number {
-    color: var(--accent);
-    font-size: 64px;          /* ★ さらに大きくしてインパクトを出す */
-    margin: 0;                /* gapで制御するためmarginをリセット */
-    line-height: 1;           /* 高さを詰めてスタイリッシュに */
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 80px;
+    font-weight: 800;
+    margin: 0;
+    line-height: 1;
+    letter-spacing: -2px;
 }
-
 
 /* ----------------------------------
-    理念（サイトについて）用のカード ★新規追加
+    理念（サイトについて）用のカード
 ----------------------------------- */
 .philosophy-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px;
-    background-color: var(--bg);
-    box-shadow: var(--shadow);
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 56px 48px;
+    box-shadow: var(--shadow-soft);
     box-sizing: border-box;
-    width: 80%;               /* イベントカードと同じ80%幅 */
-    max-width: 1200px;
+    width: 90%;
+    max-width: 1000px;
     display: flex;
-    flex-direction: column;   /* タイトルと文章を縦に並べる */
-    gap: 24px;
+    flex-direction: column;
+    gap: 32px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.philosophy-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
 }
 
 .philosophy-title {
-    font-size: 28px;
+    font-size: 32px;
+    font-weight: 700;
     margin: 0;
     color: var(--text-h);
-    text-align: center;       /* タイトルは中央揃え */
-    border-bottom: 2px solid var(--border);
-    padding-bottom: 16px;
+    text-align: center;
+    position: relative;
+    padding-bottom: 24px;
+}
+
+/* タイトル下のグラデーションライン */
+.philosophy-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--gradient-primary);
 }
 
 .philosophy-content {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    line-height: 1.8;         /* 文章を読みやすくするため行間を広げる */
+    gap: 16px;
+    line-height: 1.8;
 }
 
 .philosophy-text {
     font-size: 18px;
     color: var(--text);
     margin: 0;
-    text-align: left;         /* 文章は左揃え */
+    text-align: center; /* 理念は中央揃えの方がモダンなランディングページ風になる */
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .event-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 32px 24px;
+    }
+    
+    .event-title {
+        font-size: 40px;
+        text-align: center;
+    }
+    
+    .countdown-text {
+        text-align: center;
+    }
+    
+    .countdown-number {
+        font-size: 64px;
+    }
+    
+    .philosophy-card {
+        padding: 40px 24px;
+    }
 }

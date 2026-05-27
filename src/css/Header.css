@@ -1,55 +1,78 @@
 /* src/css/Header.css */
-/* サービス名 */
-.service-name {
-  position: fixed;
-  top: 0;
-  left: 16px;
-  height: 48px;
-  margin: 0;
+
+/* ヘッダー全体 */
+.header-wrapper {
+  position: relative;
   display: flex;
-  align-items: center;
-  font-size: 30px;
-  font-weight: 10000;
-  color: #4A90E2;
-  cursor: pointer;
-  z-index: 9999;
+  flex-direction: column;
+  background: transparent;
 }
 
-/* アクティブなナビゲーションリンク */
-.nav-link.active {
-  text-decoration: underline;
-  color: white;
-  text-underline-offset: 8px;  
-}
-/* アカウントボタン背景（ナビバーより上の白塗り） */
+/* ナビバーより上の部分の背景（グラスモーフィズム） */
 .header-top {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 48px;           /* ✅ ナビバーのtopと同じ高さ */
-  background-color: white;
-  z-index: 9997;          /* ✅ ナビバーより下、コンテンツより上 */
+  height: 48px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  z-index: 9997;
+  border-bottom: 1px solid var(--glass-border);
 }
+
+/* サービス名 */
+.service-name {
+  position: fixed;
+  top: 0;
+  left: 24px;
+  height: 48px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  cursor: pointer;
+  z-index: 9999;
+  letter-spacing: -0.5px;
+  transition: transform 0.2s ease;
+}
+
+.service-name:hover {
+  transform: scale(1.02);
+}
+
 /* アカウントボタン */
 .account-button {
   position: fixed;
-  top: 0;               /* ✅ 一番上 */
-  right: 16px;
-  background-color: #4A90E2;
+  top: 4px;
+  right: 24px;
+  background: var(--gradient-primary);
   color: white;
-  border: none;
+  border: 2px solid var(--glass-border);
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  font-size: 24px;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
   cursor: pointer;
   z-index: 9999;
-  overflow: hidden; /* 画像がはみ出ないように追加 */
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0; /* paddingをリセット */
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: var(--shadow-soft);
+}
+
+.account-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: var(--shadow-hover);
 }
 
 /* アバター画像 */
@@ -64,40 +87,59 @@
   align-items: center;
   display: flex;
   flex-direction: row;
-  background-color: #4A90E2;
-  height: auto;           /* ✅ fixedからautoに変更 */
-  min-height: 72px; 
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  height: auto;
+  min-height: 64px;
   width: 100%;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 8%;
   position: fixed;
-  top: 48px;            /* ✅ アカウントボタンの真下 */
+  top: 48px;
   left: 0;
-  z-index: 9998;        /* ✅ アカウントボタンより一段低い */
+  z-index: 9998;
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-soft);
 }
 
 /* ナビゲーションリンク */
 .nav-link {
-  font-size: 32px;
-  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
   cursor: pointer;
   margin: 0;
-  flex: 1;                /* 各要素が均等に幅を取る */
-  text-align: center;     /* 各要素内で中央揃え */
-  padding: 16px 0;
-}
-
-/* ヘッダー全体 */
-.header-wrapper {
+  text-align: center;
+  padding: 20px 16px;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  background-color: white;
+  transition: color 0.3s ease;
+  text-decoration: none !important;
 }
+
 .nav-link:hover {
-  color: purple;           /* 紫色 */
-  text-decoration: underline;  /* 下線 */
-  text-underline-offset: 8px;
+  color: var(--accent);
 }
 
+/* アクティブなナビゲーションリンクのアニメーション下線 */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(-50%);
+  border-radius: 3px 3px 0 0;
+}
 
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
 
+.nav-link.active {
+  color: var(--text-h);
+}

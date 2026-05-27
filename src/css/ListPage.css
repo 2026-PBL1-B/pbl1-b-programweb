@@ -1,68 +1,99 @@
 /* src/css/ListPage.css */
 
-/* ページ全体のレイアウト */
 .page-container {
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 0;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
 }
 
-/* フィルターと投稿ボタンの横並びコンテナ */
-.action-bar {
-    width: 100%;
-    display: flex;
-    justify-content: space-between; /* 要素を左右の両端に離して配置します */
-    align-items: center;            /* 縦方向の中央を揃えます */
-    margin-bottom: 0px;            /* 下のリストとの間に余白を作ります */
+.page-container::before {
+    content: '';
+    position: fixed;
+    top: -20%;
+    right: -10%;
+    width: 50vw;
+    height: 50vw;
+    background: rgba(139, 92, 246, 0.08);
+    filter: blur(120px);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
 }
 
-/* 共通のボタンデザイン */
-.primary-button { 
-    padding: 8px 16px;
-    background-color: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--text);
-    width: 160px;
-    font-size: 14px;
-    font-weight: bold;
-    text-align: center;
-}
-
-/* 一覧部分のレイアウト */
 .content-layout {
     width: 100%;
+    max-width: 1200px;
     display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 110px; /* ヘッダーと被らないように大きめの数値で設定 */
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    padding: 140px 20px 80px;
+    position: relative;
+    z-index: 1;
+}
+
+.action-bar {
+    width: 100%;
+    max-width: 800px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.primary-button {
+    padding: 12px 24px;
+    background: var(--gradient-primary);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    text-align: center;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-soft);
+}
+
+.primary-button:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
 }
 
 .main-column {
-    width: 80%;
+    width: 100%;
+    max-width: 800px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    align-items: center;
+    gap: 24px;
 }
 
-/* カード（質問・制作物）のデザイン */
 .item-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    background-color: var(--bg);
-    box-shadow: var(--shadow);
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: var(--shadow-soft);
     text-align: left;
     width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 16px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
 }
 
 .card-meta {
@@ -74,71 +105,89 @@
 }
 
 .author-name {
-    font-weight: bold;
+    font-weight: 600;
     margin-right: 8px;
+    color: var(--text-h);
 }
 
-/* 解決状態のバッジ */
 .status-badge {
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-weight: bold;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
     font-size: 12px;
-}
-.status-open{
-    background-color: #e0f2f1;
-    color: #00695c;
-}
-.status-resolved  {
-    background-color: #ffebee;
-    color: #c62828;
+    letter-spacing: 0.5px;
 }
 
-/* タイトルとリンク */
+.status-open {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-resolved {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
 .title-link {
     text-decoration: none;
 }
+
 .item-title {
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: 700;
     margin: 0;
     color: var(--text-h);
     cursor: pointer;
     overflow-wrap: anywhere;
     word-break: break-word;
+    transition: color 0.2s ease;
 }
 
-/* タグ一覧 */
+.title-link:hover .item-title {
+    color: var(--accent);
+}
+
 .tag-list {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
 }
+
 .tag-badge {
-    font-size: 12px;
-    background-color: var(--code-bg);
-    padding: 2px 8px;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--code-bg);
+    color: var(--text);
+    padding: 4px 12px;
     border-radius: 12px;
     border: 1px solid var(--border);
 }
 
-/* コンテンツテキストの省略表示（...） */
 .item-content {
-    font-size: 14px;
+    font-size: 16px;
     color: var(--text);
     margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.5;
 }
 
-/* 戻るリンク */
 .back-link-container {
     margin-top: 40px;
+    align-self: flex-start;
 }
+
 .back-link {
     color: var(--accent);
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
+    transition: opacity 0.2s ease;
 }
 
+.back-link:hover {
+    opacity: 0.8;
+}
