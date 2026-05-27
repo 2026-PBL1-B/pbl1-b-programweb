@@ -63,7 +63,8 @@ export default function AvatarIcon({ userId, size = 35, className = "" }) {
           height: `${size}px`,
           borderRadius: '50%',
           objectFit: 'cover',
-          flexShrink: 0
+          flexShrink: 0,
+          backgroundColor: '#f0f0f0' // 読み込み中や背景透過対策
         }}
       />
     );
