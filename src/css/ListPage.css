@@ -79,21 +79,48 @@
 }
 .item-card:nth-child(4n) {
     background-color: #dcfce7; /* パステルグリーン */
+    transform: rotate(0.5deg);
 }
 
-/* マスキングテープ風のアクセント */
+/* 磁石のアクセント（左右上角） */
+.item-card::before,
 .item-card::after {
     content: '';
     position: absolute;
-    top: -10px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-3deg);
-    width: 100px;
-    height: 22px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    border-radius: 1px;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+/* 左上の磁石 */
+.item-card::before {
+    left: 0;
+    transform: translate(-50%, -50%);
+    background-color: #ef4444; /* Red magnet */
+}
+
+/* 右上の磁石 */
+.item-card::after {
+    right: 0;
+    transform: translate(50%, -50%);
+    background-color: #ef4444; /* Red magnet */
+}
+
+/* 交互に磁石の色を変える */
+.item-card:nth-child(2n)::before,
+.item-card:nth-child(2n)::after {
+    background-color: #3b82f6; /* Blue magnet */
+}
+.item-card:nth-child(3n)::before,
+.item-card:nth-child(3n)::after {
+    background-color: #eab308; /* Yellow magnet */
+}
+.item-card:nth-child(4n)::before,
+.item-card:nth-child(4n)::after {
+    background-color: #22c55e; /* Green magnet */
 }
 
 .card-meta {

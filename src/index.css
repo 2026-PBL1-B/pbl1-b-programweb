@@ -37,7 +37,7 @@
   :root {
     --text: #e0e0e0;
     --text-h: #ffffff;
-    --bg: #2a2d2f; /* A very soft dark gray/chalkboard hint */
+    --bg: #ffffff; /* 強制的にホワイトボードの白 */
     --border: #444749;
     --code-bg: #323537;
     --accent: #5cbfcc;
@@ -54,6 +54,7 @@
 
 body {
   margin: 0;
+  background-color: var(--bg);
 }
 
 #root {

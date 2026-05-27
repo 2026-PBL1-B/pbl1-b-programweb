@@ -1,14 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #f2f2f2;
-  font-family: sans-serif;
-}
-
+/* UserPage.css */
 .profile-container {
   min-height: 100vh;
   padding: 110px 40px 40px 40px;

@@ -42,19 +42,28 @@
     transform: rotate(-1deg);
 }
 
-/* マスキングテープ */
+/* 磁石（左右上角） */
+.event-card::before,
 .event-card::after {
     content: '';
     position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%) rotate(2deg);
-    width: 120px;
-    height: 28px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    border-radius: 1px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    background-color: #22c55e; /* Green magnet */
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.event-card::before {
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+
+.event-card::after {
+    right: 0;
+    transform: translate(50%, -50%);
 }
 
 /* カードのタイトル（修正） */
@@ -106,19 +115,28 @@
     transform: rotate(1deg);
 }
 
-/* マスキングテープ */
+/* 磁石（左右上角） */
+.philosophy-card::before,
 .philosophy-card::after {
     content: '';
     position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-2deg);
-    width: 120px;
-    height: 28px;
-    background-color: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    border-radius: 1px;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    background-color: #f97316; /* Orange magnet */
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.philosophy-card::before {
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+
+.philosophy-card::after {
+    right: 0;
+    transform: translate(50%, -50%);
 }
 
 .philosophy-title {

@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* 中央寄せ（中身が100%なら全体に広がる） */
-    background-color: var(--bg-page, #f3f4f6); /* ページ背景色（任意） */
+    background-color: transparent; /* 背景を透明にし、全体の白背景を活かす */
 }
 
 .page-header {
