@@ -28,7 +28,7 @@
     border: none;
     border-radius: 2px 2px 12px 2px;
     padding: 40px;
-    background-color: #ffedd5; /* パステルオレンジ */
+    background-color: #fce7f3; /* パステルピンク */
     box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
     box-sizing: border-box;
     width: 80%;               /* 画面幅の約80%を占めるように設定 */
@@ -68,7 +68,7 @@
 
 /* カードのタイトル（修正） */
 .event-title {
-    color: var(--accent);
+    color: #831843;           /* 視認性の良い濃いピンク（テキスト色） */
     font-size: 50px;          /* ★ さらに大きくしてインパクトを出す */
     margin: 0;                /* gapで制御するためmarginをリセット */
     line-height: 1;           /* 高さを詰めてスタイリッシュに */
@@ -80,7 +80,7 @@
 .countdown-text {
     font-size: 24px;
     font-weight: bold;
-    color: var(--text);
+    color: #831843;           /* 視認性の良い濃いピンク（テキスト色） */
     text-align: right;        /* 横長レイアウトに合わせて右揃え */
     display: flex;            /* 数字と「あと」「日」を揃えるため */
     align-items: baseline;    /* 単位と数字のベースライン（下端）を合わせる */
@@ -89,7 +89,7 @@
 
 /* 日数の数字部分（強調）（修正） */
 .countdown-number {
-    color: var(--accent);
+    color: #be185d;           /* 少し明るめの濃いピンク（アクセント） */
     font-size: 64px;          /* ★ さらに大きくしてインパクトを出す */
     margin: 0;                /* gapで制御するためmarginをリセット */
     line-height: 1;           /* 高さを詰めてスタイリッシュに */

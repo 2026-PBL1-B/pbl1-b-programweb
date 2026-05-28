@@ -46,7 +46,7 @@
 .detail-card {
     width: 80%;
     border: 1px solid var(--border, #e5e7eb);
-    border-radius: 12px;
+    border-radius: 2px 2px 12px 2px; /* 付箋風の少しめくれたような角（Listページと統一） */
     padding: 40px;
     background-color: var(--bg, #ffffff);
     box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
