@@ -206,15 +206,7 @@ function UserPage() {
       {/* 編集ボタン */}
       {isOwnProfile && (
         <section className="edit-profile-section" style={{ textAlign: 'center', margin: '20px 0' }}>
-          <Link to="/myprofileedit" className="edit-button" style={{
-            display: 'inline-block',
-            padding: '10px 20px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '5px',
-            fontWeight: 'bold'
-          }}>
+          <Link to="/myprofileedit" className="edit-button">
             プロフィールを編集する
           </Link>
         </section>
