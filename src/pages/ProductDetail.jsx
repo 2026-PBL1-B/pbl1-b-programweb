@@ -189,7 +189,8 @@ useEffect(() => {
             )}
 
             <div>
-              <p className="section-label" style={{ marginTop: '16px' }}>制作物内容</p>
+              <p className="section-label" style={{ marginTop: '16px', marginBottom: '4px' }}>制作物内容</p>
+              <div className="hand-drawn-line"></div>
               <div className="post-content markdown-preview">
                 <MarkdownRenderer>
                   {product.content}

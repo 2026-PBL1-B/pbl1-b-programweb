@@ -150,7 +150,8 @@ useEffect(() => {
                         </div>
 
                         <div>
-                            <p className="section-label" style={{ marginTop: '16px' }}>質問内容</p>
+                            <p className="section-label" style={{ marginTop: '16px', marginBottom: '4px' }}>質問内容</p>
+                            <div className="hand-drawn-line"></div>
                             <div className="post-content markdown-preview">
                                 <MarkdownRenderer>
                                     {question.content}
