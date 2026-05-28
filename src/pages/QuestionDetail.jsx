@@ -112,10 +112,6 @@ useEffect(() => {
 
                     <div className="detail-card" style={{ backgroundColor: '#fef9c3', '--note-bg': '#fef9c3' }}>
 
-                        <div className="like-button-container">
-                            <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
-                        </div>
-
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
                             {/* 1行目: アイコンとユーザーネーム */}
                             <div className="detail-meta" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -157,6 +153,11 @@ useEffect(() => {
                                     {question.content}
                                 </MarkdownRenderer>
                             </div>
+                        </div>
+
+                        {/* いいねボタンを記事の一番下に配置 */}
+                        <div className="like-button-container">
+                            <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
                         </div>
                     </div>
 

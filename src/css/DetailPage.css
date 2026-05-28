@@ -131,14 +131,16 @@
     font-weight: 500;
 }
 
-/* いいねボタンを右下に配置するコンテナ */
+/* いいねボタンを右下にはみ出すように配置するコンテナ */
 .like-button-container {
     display: flex;
-    /* 右寄せにする */
     justify-content: flex-end; 
-    /* カードの下部 padding と合わさってちょうどいい位置になるよう調整 */
-    margin-top: 0;
-    margin-bottom: 0;
+    /* カードの枠線にかかるようにマイナスマージンで位置調整 */
+    margin-top: 10px;
+    margin-bottom: -20px;
+    margin-right: -10px;
+    position: relative;
+    z-index: 10;
 }
 
 .comment-section {

@@ -1,0 +1,47 @@
+/* src/css/LikeButton.css */
+
+.like-stamp-button {
+  background-color: rgba(255, 255, 255, 0.9);
+  color: #ccc; /* いいね前は薄い色 */
+  border: 2px dashed #ccc; /* 押す準備（ガイド線）のような破線 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+  padding: 12px 28px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 少しバウンスする動き */
+  transform: rotate(-15deg) translateY(-10px) scale(1.1); /* 浮いていて押す準備をしている感じ */
+  box-shadow: 4px 8px 16px rgba(0,0,0,0.1); /* 影を大きくして浮遊感を強調 */
+  font-family: inherit;
+}
+
+/* ホバー時はさらに少し上に持ち上がる（スタンプを構えた状態） */
+.like-stamp-button:hover {
+  transform: rotate(-15deg) translateY(-15px) scale(1.15);
+  box-shadow: 6px 12px 20px rgba(0,0,0,0.15);
+  border-color: #fca5a5;
+  color: #fca5a5;
+}
+
+/* いいねした状態（赤いハートスタンプがガッツリ押された状態） */
+.like-stamp-button.liked {
+  color: #e11d48; /* 赤ペンの色 */
+  border: 3px solid #e11d48; /* 力強く押された実線 */
+  background-color: transparent;
+  transform: rotate(5deg) translateY(0) scale(1); /* 傾きを変えて紙にピッタリくっつく */
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.05); /* 影を落として密着感を出す */
+}
+
+/* 押した後のホバーはあまり動かさない */
+.like-stamp-button.liked:hover {
+  transform: rotate(5deg) translateY(-2px) scale(1.02);
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.1);
+}
+
+/* アイコン */
+.like-stamp-button span.icon {
+  font-size: 24px;
+}

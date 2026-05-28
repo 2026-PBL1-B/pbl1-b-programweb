@@ -124,10 +124,6 @@ useEffect(() => {
           
           {/* 詳細情報のカード */}
           <div className="detail-card" style={{ backgroundColor: '#ffedd5', '--note-bg': '#ffedd5' }}>
-            
-            <div className="like-button-container">
-              <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
-            </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
               {/* 1行目: アイコンとユーザーネーム */}
@@ -196,6 +192,11 @@ useEffect(() => {
                   {product.content}
                 </MarkdownRenderer>
               </div>
+            </div>
+
+            {/* いいねボタンを記事の一番下に配置 */}
+            <div className="like-button-container">
+              <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
             </div>
           </div>
 

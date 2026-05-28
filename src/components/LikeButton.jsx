@@ -1,19 +1,13 @@
-{/* いいね機能 */}
+import '../css/LikeButton.css';
+
+{/* いいね機能（ハートスタンプ風） */}
 export default function LikeButton({ liked, count, onClick }) {
   return (
     <button
+      className={`like-stamp-button ${liked ? 'liked' : ''}`}
       onClick={onClick}
-      style={{
-        backgroundColor: liked ? "#E24A4A" : "#ccc",  // いいね時は赤
-        color: "white",
-        border: "none",
-        padding: "8px 16px",
-        borderRadius: "8px",
-        cursor: "pointer",
-        fontSize: "16px"
-      }}
     >
-      {liked ? "❤️" : "🤍"} {count}
+      <span className="icon">{liked ? "❤️" : "🤍"}</span> {count}
     </button>
   );
 }
