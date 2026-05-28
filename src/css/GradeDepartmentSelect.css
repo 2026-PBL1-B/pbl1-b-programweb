@@ -60,7 +60,7 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
-    min-width: 160px;
+    min-width: 200px;
 
     /* 茶色いボード */
     background: #c8933a;

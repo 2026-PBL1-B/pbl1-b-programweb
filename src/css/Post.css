@@ -107,6 +107,7 @@
 
 /* モード切り替えボタン（青文字・黒ペン枠） */
 .mode-buttons button {
+    margin-bottom: 5px;
     margin-left: 10px;
     padding: 8px 16px;
     background-color: transparent;
@@ -243,10 +244,8 @@
 .additional-urls-section {
     display: flex;
     flex-direction: column;
-    gap: 0px;       /* 縦に並ぶ要素同士の隙間 */
-    
-    /* 🌟修正: GitHubボックスとの間隔を狭める（マイナスマージンで調整） */
-    margin-top: -0px; 
+    gap: 5px;       /* 縦に並ぶ要素同士の隙間 */
+    margin-top: 5px; 
 }
 
 /* 入力ボックスと×ボタンを横並びにする */
@@ -367,4 +366,77 @@
 /* ホバー時 */
 .tag-suggestion-item:hover {
     background: var(--code-bg);
+}
+
+/* チェックボックスを右寄せに配置するレイアウト */
+.post-options {
+    margin-top: 20px;
+    padding: 10px 0;
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+/* 手書き風チェックボックスのラベル全体 */
+.handwritten-checkbox {
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding-left: 32px; /* 四角の分の余白を空ける */
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    user-select: none;
+    color: var(--text);
+}
+
+/* デフォルトのチェックボックスは隠す */
+.handwritten-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* 黒ペンで書いたような手書き風の四角（□） */
+.handwritten-checkbox .checkmark {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    height: 22px;
+    width: 22px;
+    background-color: transparent;
+    border: 2px solid #333; /* 黒ペンの色 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
+    transition: all 0.2s ease;
+}
+
+/* 赤ペンで書いたような手書き風チェックマーク（✔） */
+.handwritten-checkbox .checkmark::after {
+    content: "";
+    position: absolute;
+    display: none;
+    
+    /* 位置とサイズ */
+    left: 0px;
+    top: -10px;
+    width: 26px;
+    height: 26px;
+    
+    /* 手書き風のチェックマークをSVGとして直接読み込む */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff3b30' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M23 4 c -5 4 -9 12 -13 18 c -3 -4 -6 -6 -8 -7' /%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* クリックしてチェックされたら表示する */
+.handwritten-checkbox input:checked ~ .checkmark::after {
+    display: block;
+}
+
+/* ホバー時に四角の色を少し変える */
+.handwritten-checkbox:hover input ~ .checkmark {
+    background-color: rgba(0, 0, 0, 0.03);
 }
