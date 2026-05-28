@@ -148,40 +148,57 @@
 }
 
 /* =========================================
-   黒いコメントカード（新デザイン）
+   付箋風のコメントカード（新デザイン）
    ========================================= */
-.comment-item-black {
+.comment-item-sticky {
   width: 100%;
-  background-color: var(--code-bg, #f9fafb);
+  background-color: #dcfce7; /* パステルグリーン */
   color: #444;
-  border-radius: 8px;
-  padding: 16px;
+  border: none;
+  border-radius: 2px 2px 12px 2px;
+  padding: 24px;
   margin-bottom: 16px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
   box-sizing: border-box;
+  position: relative;
 }
 
-.comment-item-black .comment-header {
+/* 磁石のアクセント（左上） */
+.comment-item-sticky::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background-color: #22c55e; /* グリーンの磁石 */
+  border-radius: 50%;
+  box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+  z-index: 2;
+}
+
+.comment-item-sticky .comment-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #444;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1); /* 少し薄めの境界線 */
 }
 
-.comment-item-black .comment-username {
+.comment-item-sticky .comment-username {
   font-weight: bold;
   color: #444;
   font-size: 14px;
 }
 
-.comment-item-black .comment-date {
+.comment-item-sticky .comment-date {
   font-size: 12px;
-  color: #aaa;
+  color: #888;
 }
 
-.comment-item-black .comment-body {
+.comment-item-sticky .comment-body {
   font-size: 15px;
   color: #444;
   line-height: 1.5;
@@ -190,7 +207,7 @@
   word-break: break-word;
 }
 
-.comment-item-black .comment-body pre {
+.comment-item-sticky .comment-body pre {
   white-space: pre-wrap;
   word-break: break-all;
 }

@@ -160,7 +160,7 @@ function CommentItem({ comment, type }) {
   };
 
   return (
-    <div className="comment-item-black">
+    <div className="comment-item-sticky">
       <div className="comment-header" style={{ alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

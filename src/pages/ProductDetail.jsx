@@ -123,7 +123,7 @@ useEffect(() => {
         <div className="main-column">
           
           {/* 詳細情報のカード */}
-          <div className="detail-card" style={{ backgroundColor: '#dcfce7' }}>
+          <div className="detail-card" style={{ backgroundColor: '#ffedd5' }}>
             
             <div className="like-button-container">
               <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />

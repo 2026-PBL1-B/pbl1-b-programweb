@@ -116,7 +116,7 @@ function ProductList() {
                         <p>該当する制作物はありません。</p>
                     ) : (
                         filteredAndSortedArticles.map((article) => (
-                            <div key={article.id} className="item-card" style={{ backgroundColor: '#dcfce7' }}>
+                            <div key={article.id} className="item-card" style={{ backgroundColor: '#ffedd5' }}>
                                 <div className="card-meta">
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <AvatarIcon userId={article.user_id} />
