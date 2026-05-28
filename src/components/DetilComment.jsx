@@ -170,7 +170,6 @@ function CommentItem({ comment, type }) {
             <AvatarIcon userId={comment.user_id} size={30} />
             <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
           </div>
-          <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} />
         </div>
         <span className="comment-date">
           {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
@@ -180,6 +179,10 @@ function CommentItem({ comment, type }) {
         <MarkdownRenderer>
           {comment.content}
         </MarkdownRenderer>
+      </div>
+      {/* コメントのいいねスタンプ（右下・少し小さめ） */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', marginRight: '-10px', marginBottom: '-10px', position: 'relative', zIndex: 10 }}>
+        <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} isSmall={true} />
       </div>
     </div>
   );
