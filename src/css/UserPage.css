@@ -10,15 +10,16 @@
 
 /* ヘッダー */
 .profile-header {
-  background: white;
-  border-radius: 16px;
+  background: transparent;
+  border: 2px solid #333; /* 手書き風黒枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
   padding: 32px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: none;
 }
 
 .profile-left {
@@ -111,11 +112,12 @@
 }
 
 .school-card {
-  background: white;
-  border-radius: 16px;
+  background: transparent;
+  border: 2px solid #333; /* 手書き風黒枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
   padding: 24px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: none;
 }
 
 .school-card h2 {

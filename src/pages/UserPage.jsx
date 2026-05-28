@@ -307,7 +307,11 @@ function UserPage() {
             [...userArticles]
               .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
               .map((article) => (
-              <div key={article.id} className="item-card">
+              <div 
+                key={article.id} 
+                className="item-card" 
+                style={{ backgroundColor: viewType === "products" ? '#ffedd5' : '#fef9c3' }}
+              >
                 <div className="card-meta">
                   <div>
                     <UserLink userId={user_id} userName={profile.name} prefix="@" className="author-name" />
