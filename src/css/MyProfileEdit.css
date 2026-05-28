@@ -1,7 +1,6 @@
 .myprofile-container {
   min-height: 100vh;
-  background-color: #f4f7fb;
-
+  background-color: transparent;
   padding: 40px 20px;
 }
 
@@ -22,151 +21,139 @@
   font-size: 15px;
 }
 
-/* カード */
-.profile-card {
+/* ノート風カード */
+.profile-card.notebook-paper {
   max-width: 700px;
-
   margin: 0 auto;
-
-  background: white;
-
-  border-radius: 24px;
-
-  padding: 40px;
-
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  
+  /* ノートの背景（薄い黄色がかった白 ＋ 横罫線） */
+  background-color: #fdfbf7;
+  background-image: linear-gradient(transparent 95%, #e1d8c1 100%);
+  background-size: 100% 32px; /* 行の高さを32pxに設定 */
+  
+  border: 1px solid #e1d8c1;
+  border-radius: 4px 16px 16px 4px;
+  
+  /* 左側の赤いマージン線とノートの綴じ穴を表現 */
+  padding: 40px 40px 40px 70px;
+  position: relative;
+  box-shadow: 2px 4px 12px rgba(0,0,0,0.08);
 }
 
-/* アイコン */
-.icon-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  margin-bottom: 32px;
+/* 左側の赤い線 */
+.profile-card.notebook-paper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50px;
+  width: 2px;
+  background-color: rgba(235, 100, 100, 0.4);
+  z-index: 0;
 }
 
-.profile-icon {
-  width: 120px;
-  height: 120px;
-
+/* ノートの綴じ穴（左端にいくつか配置） */
+.profile-card.notebook-paper::after {
+  content: '';
+  position: absolute;
+  top: 40px;
+  left: 15px;
+  width: 12px;
+  height: 12px;
+  background-color: #f4f7fb; /* 背景色に合わせて穴が空いているように見せる */
   border-radius: 50%;
-
-  background: #d9e6f7;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 48px;
-
-  margin-bottom: 16px;
-}
-
-.icon-button {
-  border: none;
-
-  background: #222;
-  color: white;
-
-  padding: 10px 20px;
-
-  border-radius: 12px;
-
-  cursor: pointer;
-
-  transition: 0.2s;
-}
-
-.icon-button:hover {
-  opacity: 0.8;
+  box-shadow: inset 1px 1px 3px rgba(0,0,0,0.2), 
+              0 300px 0 0 #f4f7fb, inset 1px 301px 3px rgba(0,0,0,0.2),
+              0 150px 0 0 #f4f7fb, inset 1px 151px 3px rgba(0,0,0,0.2);
+  z-index: 0;
 }
 
 /* フォーム */
 .form-group {
   display: flex;
   flex-direction: column;
-
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 
 .form-group label {
   font-weight: bold;
-
   margin-bottom: 8px;
-
   color: #333;
+  font-size: 16px;
+  position: relative;
+  z-index: 1; /* 罫線の上に乗せる */
 }
 
-/* 入力欄 */
+/* 入力欄（手書き風） */
 .form-group input,
-.form-group textarea,
-.form-group select {
-
+.form-group textarea {
   width: 100%;
-
-  padding: 14px;
-
-  border-radius: 12px;
-
-  border: 1px solid #ccc;
-
+  padding: 12px 16px;
+  border: 2px solid #333;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   font-size: 15px;
-
   box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.5); /* うっすら白くして罫線を見えにくくする */
+  font-family: inherit;
+  outline: none;
+  position: relative;
+  z-index: 1; /* プルダウンが開いたときに隠れないようにしつつ、::beforeの上に出す */
 }
 
 /* textarea */
 .form-group textarea {
   resize: vertical;
+  line-height: 32px; /* ノートの罫線に合わせる */
 }
 
-/* 保存ボタン */
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+/* 保存ボタン（手書き風） */
 .save-button {
   width: 100%;
-
-  border: none;
-
-  background: #4b7bec;
-
-  color: white;
-
+  background: transparent;
+  color: #333;
   padding: 16px;
-
-  border-radius: 14px;
-
+  border: 2px solid #333;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   font-size: 16px;
   font-weight: bold;
-
   cursor: pointer;
-
   transition: 0.2s;
+  font-family: inherit;
+  margin-top: 16px;
+  position: relative;
+  z-index: 1;
 }
 
 .save-button:hover {
-  opacity: 0.85;
+  background: rgba(0,0,0,0.05);
+}
+
+/* 無効時のスタイル */
+.form-group input:disabled {
+  background-color: rgba(0,0,0,0.03);
+  color: #777;
+  cursor: not-allowed;
+  border: 1px solid #ccc;
 }
 
 /* レスポンシブ */
 @media (max-width: 768px) {
-
-  .profile-card {
-    padding: 24px;
+  .profile-card.notebook-paper {
+    padding: 30px 20px 30px 50px;
   }
-
+  .profile-card.notebook-paper::before {
+    left: 35px;
+  }
+  .profile-card.notebook-paper::after {
+    left: 10px;
+  }
   .myprofile-header h1 {
     font-size: 26px;
   }
-
-}
-
-.form-group input:disabled {
-
-  background-color: #f1f3f5;
-
-  color: #777;
-
-  cursor: not-allowed;
-
-  border: 1px solid #dcdcdc;
 }

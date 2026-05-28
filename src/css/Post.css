@@ -14,10 +14,10 @@
 .title {
     padding: 20px;
     font-size: 18px;
-    border: 1px solid var(--border); /* 追加: サイト共通の枠線 */
-    border-radius: 8px;              /* 追加: 角を少し丸く */
-    background: var(--bg);           /* 変更: サイト共通の背景色 */
-    color: var(--text);              /* 追加: サイト共通の文字色 */
+    border: 2px solid #333; /* 手書き風の黒枠 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
+    background: transparent;
+    color: var(--text);
     width: 100%;
     box-sizing: border-box;
 }
@@ -29,9 +29,9 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: var(--bg);           /* サイト共通の背景色 */
-    border: 1px solid var(--border); /* サイト共通の枠線 */
-    border-radius: 8px;              /* 角を少し丸く */
+    background: transparent;
+    border: 2px solid #333; /* 手書き風の黒枠 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
     min-height: 60px;
     box-sizing: border-box;
 
@@ -81,14 +81,52 @@
     color: var(--text-h); /* 見出しの色 */
 }
 
+/* 投稿ボタン（黒文字・青ペン枠） */
+.post-submit-btn {
+    margin-left: 10px;
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 2px solid #0055ff; /* 青ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+    color: #333; /* 黒文字 */
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: inherit;
+    transition: background-color 0.2s;
+}
+
+.post-submit-btn:hover {
+    background-color: rgba(0, 85, 255, 0.05);
+}
+
+.post-submit-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* モード切り替えボタン（青文字・黒ペン枠） */
 .mode-buttons button {
     margin-left: 10px;
-    padding: 6px 12px;
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 2px solid #333; /* 黒ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+    color: #0055ff; /* 青文字 */
+    font-weight: bold;
     cursor: pointer;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: 4px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: background-color 0.2s;
+}
+
+.mode-buttons button:hover {
+    background-color: rgba(0, 85, 255, 0.05);
+}
+
+.mode-buttons button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 /* 本文エリア */
@@ -107,10 +145,11 @@
 }
 
 .editor {
-    background: var(--bg);           /* 編集エリアは元の背景色 */
-    border: 1px solid var(--border); /* エディタの枠線 */
+    background: transparent;
+    border: 2px solid #333; /* 手書き風の黒枠 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
     padding: 20px;
-    resize: none;
+    resize: vertical; /* 縦方向のみリサイズ可能に変更 */
     font-family: inherit;
 }
 
@@ -175,9 +214,9 @@
 .github-url-input {
     padding: 20px;
     font-size: 18px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
+    border: 2px solid #333; /* 手書き風の黒枠 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
+    background: transparent;
     color: var(--text);
     width: 100%;
     box-sizing: border-box;
@@ -222,18 +261,18 @@
     flex-grow: 1; /* 横幅を可能な限り広げる */
     padding: 20px;
     font-size: 18px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--bg);
+    border: 2px solid #333; /* 手書き風の黒枠 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
+    background: transparent;
     color: var(--text);
     box-sizing: border-box;
 }
 
 /* 追加URLボックスの ×ボタン（削除） */
 .remove-url-btn {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    background: transparent;
+    border: 2px solid #888;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
     font-size: 18px;
     color: #888;
     cursor: pointer;
@@ -256,11 +295,11 @@
 /* 追加URLボックス ＋ボタン */
 .add-url-btn {
     align-self: flex-start; /* 左寄せ */
-    background: var(--code-bg); /* 識別しやすいように背景色を適用 */
-    border: 1px dashed var(--border); 
+    background: transparent; 
+    border: 2px dashed #333; /* 点線の手書き風 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
     color: var(--text);
     padding: 10px 20px;
-    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
     transition: background 0.2s ease;

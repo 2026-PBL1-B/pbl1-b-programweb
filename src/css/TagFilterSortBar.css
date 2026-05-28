@@ -14,33 +14,78 @@
     left: 0;
     width: 100%;
     height: 100%;
-
     background: rgba(0,0,0,0.5);
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     z-index: 999;
 }
 
-.modal-content {
-    background: white;
-    padding: 24px;
-    border-radius: 16px;
-
+/* クリップボード風モーダルの外側（茶色いボード） */
+.clipboard-modal {
+    position: relative;
+    background: #c8933a; /* 茶色いボード */
+    border-radius: 4px;
+    padding: 30px 12px 12px 12px;
+    box-shadow: 2px 8px 24px rgba(0,0,0,0.3);
     width: 500px;
-    max-height: 70vh;
+    max-width: 90vw;
+    display: flex;
+    flex-direction: column;
+}
 
-    overflow-y: auto;
+/* 銀色のクリップ金具 */
+.clipboard-modal .clipboard-clip {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 24px;
+    background: linear-gradient(to bottom, #f0f0f0, #aaa);
+    border: 1.5px solid #999;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* クリップのピン（中央の丸） */
+.clipboard-modal .clipboard-clip-pin {
+    width: 8px;
+    height: 8px;
+    background: #555;
+    border-radius: 50%;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
+}
+
+/* クリップボードの白い紙部分 */
+.clipboard-modal-paper {
+    background: #fffef7;
+    border-radius: 2px;
+    padding: 24px;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    max-height: 70vh; /* 高さ制限を紙部分にかける */
 }
 
 .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     margin-bottom: 16px;
+    border-bottom: 2px solid #333;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    padding-bottom: 8px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
 }
 
 .close-button {
@@ -48,21 +93,32 @@
     background: none;
     font-size: 24px;
     cursor: pointer;
+    color: #666;
+}
+.close-button:hover {
+    color: #e11d48;
 }
 
 .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    overflow-y: auto; /* 紙の中でスクロール可能に */
+    flex-grow: 1; /* 余白を埋める */
+    padding: 10px 0;
 }
 
 .tag-button {
     border: none;
     border-radius: 999px;
     padding: 8px 14px;
-
     background: #ddd;
     cursor: pointer;
+    font-family: inherit;
+    transition: background 0.1s;
+}
+.tag-button:hover {
+    background: #ccc;
 }
 
 .tag-button.active {
@@ -71,15 +127,22 @@
 }
 
 .tag-open-button {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-
-    background: var(--bg);
-    color: var(--text);
-
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 2px solid #0055ff; /* 青ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+    color: #333; /* 黒ペン */
     cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s;
+    font-family: inherit;
 }
+.tag-open-button:hover {
+    background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
+}
+
 /* ページネーションのデザイン */
 .pagination {
     display: flex;
@@ -87,15 +150,15 @@
     align-items: center;
     gap: 16px;
     width: 100%;
-    margin-top: 20px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed #ccc;
 }
 
 .page-arrow {
     all: unset;
-
     font-size: 20px;
     cursor: pointer;
-
     color: var(--text);
 }
 
@@ -108,15 +171,25 @@
     font-size: 14px;
 }
 
-
 .search-area {
-    margin: 16px 0;
+    margin: 8px 0 16px 0;
 }
 
+/* 手書き風のタグ検索入力欄 */
 .tag-search-input {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    background: transparent;
+    border: 2px solid #333; /* 黒ペン風枠 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風丸み */
     font-size: 14px;
+    color: var(--text);
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.tag-search-input:focus {
+    outline: none;
+    /* フォーカス時も枠線の色は黒のままにする */
 }

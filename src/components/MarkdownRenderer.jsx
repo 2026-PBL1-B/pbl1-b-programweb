@@ -48,6 +48,11 @@ const MarkdownRenderer = ({ children, ...props }) => {
         remarkPlugins={[remarkGfm, remarkBreaks]}
         {...props}
         components={{
+          pre({ children }) {
+            // デフォルトの <pre> タグによるグレー背景や余白が適用されないように、
+            // そのまま children（CodeBlockコンポーネント）を返す
+            return <>{children}</>;
+          },
           code({ node, inline, className, children, ...codeProps }) {
             // If it has a language class or is not inline, it's a code block
             const match = /language-(\w+)/.exec(className || '');

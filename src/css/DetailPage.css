@@ -8,7 +8,7 @@
     display: flex;
     flex-direction: column;
     align-items: center; /* 中央寄せ（中身が100%なら全体に広がる） */
-    background-color: var(--bg-page, #f3f4f6); /* ページ背景色（任意） */
+    background-color: transparent; /* 背景を透明にし、全体の白背景を活かす */
 }
 
 .page-header {
@@ -46,7 +46,7 @@
 .detail-card {
     width: 80%;
     border: 1px solid var(--border, #e5e7eb);
-    border-radius: 12px;
+    border-radius: 2px 2px 12px 2px; /* 付箋風の少しめくれたような角（Listページと統一） */
     padding: 40px;
     background-color: var(--bg, #ffffff);
     box-shadow: var(--shadow, 0 4px 6px -1px rgba(0, 0, 0, 0.1));
@@ -93,10 +93,9 @@
     white-space: pre-wrap;
     overflow-wrap: anywhere;
     word-break: break-word;
-    padding: 24px;
-    background-color: var(--code-bg, #f9fafb);
-    border-radius: 8px;
-    border: 1px solid var(--border, #e5e7eb);
+    padding: 12px 0; /* 背景がなくなるので横の余白を少し減らして調整 */
+    background-color: transparent; /* 背景をなくす */
+    border: none; /* 枠線もなくす */
     min-height: 200px;
     margin-bottom: 16px;  /* 次に来るいいねボタンとの間隔を指定 */
 }
@@ -132,14 +131,16 @@
     font-weight: 500;
 }
 
-/* いいねボタンを右下に配置するコンテナ */
+/* いいねボタンを右下にはみ出すように配置するコンテナ */
 .like-button-container {
     display: flex;
-    /* 右寄せにする */
     justify-content: flex-end; 
-    /* カードの下部 padding と合わさってちょうどいい位置になるよう調整 */
-    margin-top: 0;
-    margin-bottom: 0;
+    /* カードの枠線にかかるようにマイナスマージンで位置調整 */
+    margin-top: 10px;
+    margin-bottom: -20px;
+    margin-right: -10px;
+    position: relative;
+    z-index: 10;
 }
 
 .comment-section {
@@ -147,4 +148,15 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+}
+
+/* 手書き風の黒線 */
+.hand-drawn-line {
+    width: 95%; /* 端っこまでいかないように */
+    height: 3px;
+    background-color: #111;
+    margin: 4px 0 16px 0;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    transform: rotate(-0.5deg);
+    opacity: 0.8; /* ペンのかすれ感を出すため少しだけ透明に */
 }

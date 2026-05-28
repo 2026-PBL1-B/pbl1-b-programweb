@@ -7,6 +7,8 @@ import { defaultUrlTransform } from 'react-markdown';
 import '../css/Post.css';
 import { uploadImage } from '../api/image';
 import { getTags } from '../api/Tag';
+import AvatarIcon from './AvatarIcon';
+import { grades } from '../domain/GradeDepartment';
 
 function PostForm({ 
     pageTitle,
@@ -21,7 +23,8 @@ function PostForm({
     showGithubUrl = false,          // GithubのURL機能
     showAdditionalUrls = false,      // 任意のURL追加機能
     onDraftSubmit,                   // 下書き保存用の関数を受け取るプロップス
-    initialData = null               // 初期データを受け取るプロップス
+    initialData = null,              // 初期データを受け取るプロップス
+    postType = 'product'             // プレビュー時の付箋の色などを決定するプロパティ
 }) {
     const [title, setTitle] = useState(initialData?.title || "");
     const [tags, setTags] = useState(initialData?.tags || []);
@@ -318,18 +321,87 @@ const handleImageSelect = (e) => {
                     )}
 
                     {(mode === "preview" || mode === "split") && (
-                        <div className="preview">
-                            <div className="markdown-preview">
-                                <MarkdownRenderer 
-                                    urlTransform={(url) => {
-                                        if (url.startsWith('blob:')) {
-                                            return url; // blob URL (ローカルプレビュー用) を許可する
-                                        }
-                                        return defaultUrlTransform(url);
-                                    }}
-                                >
-                                    {content || "本文がここに表示されます"}
-                                </MarkdownRenderer>
+                        <div className="preview" style={{ padding: 0, border: 'none', background: 'transparent' }}>
+                            <div 
+                                className="detail-card" 
+                                style={{ 
+                                    backgroundColor: postType === 'product' ? '#ffedd5' : '#fef9c3',
+                                    '--note-bg': postType === 'product' ? '#ffedd5' : '#fef9c3',
+                                    minHeight: '100%',
+                                    margin: 0,
+                                    width: '100%',
+                                    boxSizing: 'border-box'
+                                }}
+                            >
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
+                                    <div className="detail-meta" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                            <AvatarIcon userId={null} />
+                                            <span style={{ color: 'var(--accent)', fontWeight: 'bold' }}>投稿者: あなた (プレビュー)</span>
+                                        </div>
+                                        <span style={{ fontSize: '12px', fontWeight: 'normal' }}>投稿日: {new Date().toLocaleDateString('ja-JP')}</span>
+                                    </div>
+                                    
+                                    {(showGradeDepartment || grade || department) && (
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <span>{department ? department : '学科:未設定'}</span>
+                                            <span>{grade ? (grades.find(g => g.value === String(grade))?.label || grade) : '学年:未設定'}</span>
+                                        </div>
+                                    )}
+
+                                    <h2 className="post-title" style={{ marginTop: '12px' }}>{title || "タイトル未設定"}</h2>
+
+                                    <div className="tag-list" style={{ marginTop: '12px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                                        {tags.length > 0 ? (
+                                            tags.map((tag, index) => (
+                                                <span key={index} className="tag-badge">
+                                                    #{tag}
+                                                </span>
+                                            ))
+                                        ) : (
+                                            <p className="item-content" style={{ margin: 0 }}>タグはありません</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {(githubUrl || (additionalUrls && additionalUrls.length > 0 && additionalUrls.some(u => u.trim() !== ''))) && (
+                                    <div className="link-section" style={{ marginTop: '10px' }}>
+                                        <p className="section-label" style={{ marginBottom: '8px' }}>関連リンク</p>
+                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                            {githubUrl && (
+                                                <a href={githubUrl} target="_blank" rel="noopener noreferrer" style={{ wordBreak: 'break-all', color: 'var(--accent, #3b82f6)', textDecoration: 'underline', fontSize: '15px' }}>
+                                                    🔗 {githubUrl}
+                                                </a>
+                                            )}
+                                            {additionalUrls && additionalUrls.map((link, index) => (
+                                                link.trim() !== '' && (
+                                                    <a key={index} href={link} target="_blank" rel="noopener noreferrer" style={{ wordBreak: 'break-all', color: 'var(--accent, #3b82f6)', textDecoration: 'underline', fontSize: '15px' }}>
+                                                        🔗 {link}
+                                                    </a>
+                                                )
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div>
+                                    <p className="section-label" style={{ marginTop: '16px', marginBottom: '4px' }}>
+                                        {postType === 'product' ? '制作物内容' : '質問内容'}
+                                    </p>
+                                    <div className="hand-drawn-line"></div>
+                                    <div className="post-content" style={{ marginTop: '16px' }}>
+                                        <MarkdownRenderer 
+                                            urlTransform={(url) => {
+                                                if (url.startsWith('blob:')) {
+                                                    return url; // blob URL (ローカルプレビュー用) を許可する
+                                                }
+                                                return defaultUrlTransform(url);
+                                            }}
+                                        >
+                                            {content || "本文がここに表示されます"}
+                                        </MarkdownRenderer>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}
@@ -363,18 +435,17 @@ const handleImageSelect = (e) => {
                 }}>
                     <button 
                         type="button" 
-                        className="draft-save-btn"
+                        className="post-submit-btn draft-save-btn"
                         disabled={loading} 
                         onClick={handleDraftClick}
-                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
                     >
                         {loading ? '保存中...' : '下書き保存'}
                     </button>
                     <button 
                         type="button" 
+                        className="post-submit-btn submit-btn"
                         onClick={handleSubmitClick} 
                         disabled={loading} 
-                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
                     >
                         {loading ? '送信中...' : submitButtonText}
                     </button>
