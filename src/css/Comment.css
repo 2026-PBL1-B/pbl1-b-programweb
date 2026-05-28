@@ -29,15 +29,17 @@
 /* 入力ボックスとプレビューの共通スタイル */
 .comment-input {
   width: 100%;
-  padding: 12px;
+  padding: 20px;
   font-size: 16px;
-  border-radius: 8px;
+  border: 2px solid #333; /* 手書き風の黒枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
+  background: transparent;
   box-sizing: border-box;
   outline: none;
-  background-color: #ffffff;
-  border: 1px solid #333;   /* 枠線を明示的に指定 */
   min-height: 44px;         /* 1行分の最低高さ */
   line-height: 1.5;         /* 行間を統一 */
+  font-family: inherit;
+  resize: vertical;         /* 縦方向のみリサイズ可能 */
 }
 
 /* プレビュー側（div）専用の調整 */
@@ -54,7 +56,8 @@
 }
 
 .comment-input:focus {
-  border-color: #007bff;
+  /* 枠の色は変えずにそのままにする（手書き風を維持） */
+  outline: none;
 }
 
 /* 送信ボタンを右下に配置 */
