@@ -26,7 +26,10 @@ export default function DetailCommentPost({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!comment.trim()) return;
+    if (!comment.trim()) {
+      alert("コメントを入力してください");
+      return;
+    }
     if (onSubmit) {
       onSubmit(comment);
     }
@@ -90,7 +93,6 @@ export default function DetailCommentPost({ onSubmit }) {
           <button
             type="submit"
             className="comment-submit-button"
-            disabled={!comment.trim()}
           >
             投稿する
           </button>

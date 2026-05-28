@@ -435,18 +435,17 @@ const handleImageSelect = (e) => {
                 }}>
                     <button 
                         type="button" 
-                        className="draft-save-btn"
+                        className="post-submit-btn draft-save-btn"
                         disabled={loading} 
                         onClick={handleDraftClick}
-                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
                     >
                         {loading ? '保存中...' : '下書き保存'}
                     </button>
                     <button 
                         type="button" 
+                        className="post-submit-btn submit-btn"
                         onClick={handleSubmitClick} 
                         disabled={loading} 
-                        style={{ padding: '10px 30px', cursor: 'pointer', fontWeight: 'bold' }}
                     >
                         {loading ? '送信中...' : submitButtonText}
                     </button>
