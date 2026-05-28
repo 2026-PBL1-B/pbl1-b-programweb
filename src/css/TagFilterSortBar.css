@@ -19,7 +19,8 @@
 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* center（中央配置）から「上揃え」に変更 */
+    padding-top: 150px;      /* ヘッダーの高さ ＋ 少しの余白 分だけ下に押し下げる */
 
     z-index: 999;
 }
@@ -50,19 +51,32 @@
     cursor: pointer;
 }
 
+/* --- タグのリストを元の形（Flexbox）に戻す --- */
 .tag-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
+/* --- タグボタンの幅を文字数に合わせつつ、長すぎる場合は改行 --- */
 .tag-button {
     border: none;
-    border-radius: 999px;
+    /* 角丸は複数行でも綺麗に見える8pxにしています（以前のカプセル型が良い場合は999pxにしてください） */
+    border-radius: 8px; 
     padding: 8px 14px;
 
     background: #ddd;
     cursor: pointer;
+
+    /* ▼ 文字の長さに合わせて幅を変える設定 ▼ */
+    width: auto;
+    max-width: 100%; /* 長すぎるタグが枠をはみ出さないように制限 */
+
+    /* ▼ 長いタグ名を省略（...）せずに改行させる設定 ▼ */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+    text-align: left; /* 文字の開始位置を左に揃える */
 }
 
 .tag-button.active {
@@ -119,4 +133,92 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 14px;
+}
+
+
+
+/* --- 輪郭線なし：木製のボード（板）部分 --- */
+.modal-content.clipboard-board {
+    background-color: #f5d0a9; 
+    padding: 25px 16px 16px 16px; 
+    border-radius: 12px;
+    
+    border: none;
+    box-shadow: 6px 6px 0px rgba(121, 85, 72, 0.3);
+    
+    /* 横幅の設定 */
+    width: 700px;
+    max-width: 95vw;
+    
+    /* ▼ 縦幅（高さ）を大きくするための設定 ▼ */
+    height: 70vh;      /* 常に画面の高さの85%のサイズにする */
+    max-height: 70vh;  /* 最大値を95%まで引き上げ（画面から見切れないための予防） */
+    
+    position: relative; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- 輪郭線なし：クリップボードの金具部分 --- */
+.clipboard-clip {
+    position: absolute;
+    top: 8px; /* 少し下げて紙に重なるように */
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 100px;
+    height: 35px;
+    background-color: #d0d0d0; /* 少しだけ濃いグレーに */
+    
+    /* 輪郭線を削除 */
+    border: none;
+    border-radius: 6px;
+    /* 金具の厚みを出す影 */
+    box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.1);
+    
+    z-index: 10; 
+}
+
+/* 金具のディテール（穴の表現） */
+.clipboard-clip::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    /* 丸い穴が開いているように見せる */
+    background-color: #f5d0a9; 
+    border-radius: 50%;
+}
+
+/* --- 紙部分 --- */
+.clipboard-paper {
+    background-color: #ffffff; 
+    border-radius: 4px;
+    padding: 30px 24px 24px 24px; 
+    
+    border: none;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.05);
+    
+    overflow-y: auto; 
+    height: 100%;
+
+    /* ▼ 追加：中身を縦並びにし、ページネーションを下に固定しやすくする ▼ */
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- ページネーション --- */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    
+    /* ▼ 変更：タグの量が少ないページでも、自動的に一番下に押し下げる ▼ */
+    margin-top: auto; 
+    padding-top: 20px; /* タグとの間に少し余白を持たせる */
 }

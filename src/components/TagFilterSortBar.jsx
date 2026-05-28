@@ -31,7 +31,9 @@ function TagFilterSortBar({
         ? "すべてのタグ" 
         : `${selectedTagNames.length}個のタグを選択中`;
 
-    const tagsPerPage = 10; //1ページに表示される数の設定
+    // 3列のGridに合わせて、3の倍数（例：21や24）に変更します
+    // クリップボードの縦幅に合わせてお好みの数値に調整してください
+    const tagsPerPage = 30;
 
     // const sortedTags = [...availableTags].sort((a, b) => a.name.localeCompare(b.name, 'ja')); //タグを日本語順でソート
     
@@ -71,70 +73,77 @@ function TagFilterSortBar({
             {/* モーダル本体 */}
             {isModalOpen && (
                 <div className="modal-overlay">
-                    <div className="modal-content">
+                    {/* クラスに clipboard-board を追加して木の板にします */}
+                    <div className="modal-content clipboard-board">
+                        
+                        {/* 金具部分を追加 */}
+                        <div className="clipboard-clip"></div>
 
-                        <div className="modal-header">
-                            <h2>タグを選択</h2>
+                        {/* 紙の部分を追加し、既存のコンテンツを囲みます */}
+                        <div className="clipboard-paper">
+                            <div className="modal-header">
+                                <h2>タグを選択</h2>
+                                <button
+                                    className="close-button"
+                                    onClick={() => setIsModalOpen(false)}
+                                >
+                                    ×
+                                </button>
+                            </div>
 
-                            <button
-                                className="close-button"
-                                onClick={() => setIsModalOpen(false)}
-                            >
-                                ×
-                            </button>
-                        </div>
+                            <div className="search-area">
+                                <input
+                                    type="text"
+                                    placeholder="タグ名で検索"
+                                    value={searchText}
+                                    onChange={(e) => {
+                                        setSearchText(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                    className="tag-search-input"
+                                />
+                            </div>
 
-                        <div className="search-area">
-                            <input
-                                type="text"
-                                placeholder="タグ名で検索"
-                                value={searchText}
-                                onChange={(e) => {
-                                    setSearchText(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                                className="tag-search-input"
-                            />
-                        </div>
-
-                        <div className="tag-list">
-                            {currentTags.map((tag) => (
-                                    <button
-                                        key={tag.id}
-                                        className={
-                                            selectedTagNames.includes(tag.name)
-                                                ? 'tag-button active'
-                                                : 'tag-button'
-                                        }
-                                        onClick={() => handleTagChange(tag.name)}
-                                    >
-                                        {tag.name}
-                                    </button>
-                            ))}
-                        </div>
-                        {/* ページネーション */}
-                        <div className="pagination">
-                            <button
-                                className="page-arrow"
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(currentPage -1)}
+                            <div className="tag-list">
+                                {currentTags.map((tag) => (
+                                        <button
+                                            key={tag.id}
+                                            className={
+                                                selectedTagNames.includes(tag.name)
+                                                    ? 'tag-button active'
+                                                    : 'tag-button'
+                                            }
+                                            onClick={() => handleTagChange(tag.name)}
+                                        >
+                                            {tag.name}
+                                        </button>
+                                ))}
+                            </div>
+                            
+                            {/* ページネーション */}
+                            <div className="pagination">
+                                <button
+                                    className="page-arrow"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(currentPage -1)}
                                 >
                                     {'<'}
-                            </button>
+                                </button>
 
-                            <span>
-                                {currentPage} / {totalPages}
-                            </span>
+                                <span>
+                                    {currentPage} / {totalPages}
+                                </span>
 
-                            <button
-                                className="page-arrow"
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage(currentPage + 1)}
-                            >
-                                {'>'}
-                            </button>
-                        </div>
-                    </div>
+                                <button
+                                    className="page-arrow"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                >
+                                    {'>'}
+                                </button>
+                            </div>
+                        </div> {/* // clipboard-paper の終わり */}
+                    </div> {/* // modal-content の終わり */}
                 </div>
             )}
 
