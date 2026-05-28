@@ -22,11 +22,11 @@
 /* Code block wrapper */
 .code-block-wrapper {
   position: relative;
-  background-color: #1e1e1e; /* Dark background */
-  border-radius: 8px;
+  background: var(--note-bg, transparent) !important; /* 背景をなくす (強制) */
   margin: 16px 0;
   overflow: hidden;
-  border: 1px solid #333;
+  border: 2px solid #333; /* 黒ペンで囲んでいる風 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
 }
 
 /* Header for code block */
@@ -34,11 +34,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #2d2d2d;
-  padding: 4px 12px;
-  font-size: 12px;
-  color: #aaa;
-  font-family: var(--mono);
+  background: var(--note-bg, transparent) !important; /* 背景をなくす (強制) */
+  padding: 8px 16px;
+  font-size: 14px;
+  color: #333;
+  font-family: inherit; /* 本文と同じフォント */
+  border-bottom: 1px dashed #333; /* 付箋風に少しラフな区切り */
 }
 
 .code-lang {
@@ -47,9 +48,9 @@
 
 /* Copy button */
 .copy-button {
-  background: transparent;
-  border: 1px solid #444;
-  color: #ccc;
+  background: var(--note-bg, transparent) !important;
+  border: 1px solid #333;
+  color: #333;
   padding: 2px 8px;
   border-radius: 4px;
   cursor: pointer;
@@ -58,37 +59,37 @@
 }
 
 .copy-button:hover {
-  background-color: #444;
-  color: #fff;
+  background-color: #333 !important;
+  color: #fff !important;
 }
 
 .copy-button.copied {
-  background-color: #4caf50;
-  color: white;
+  background-color: #4caf50 !important;
+  color: white !important;
   border-color: #4caf50;
 }
 
 /* Pre styling within wrapper */
 .code-block-wrapper pre {
   margin: 0 !important;
-  background-color: transparent !important;
-  padding: 16px !important;
+  background: var(--note-bg, transparent) !important;
+  padding: 16px !important; /* 横にも余白を持たせる */
   overflow-x: auto;
 }
 
 .code-block-wrapper code {
-  background-color: transparent !important;
-  color: #e6edf3 !important;
+  background: var(--note-bg, transparent) !important;
+  color: #333 !important; /* 背景がないので文字色を暗くする */
   padding: 0 !important;
-  font-family: var(--mono);
-  font-size: 14px;
+  font-family: inherit !important; /* 本文と同じフォントにする */
+  font-size: 17px !important; /* DetailPage.cssのpost-content(17px)に合わせる */
   display: block;
 }
 
 /* Inline code styling */
 .markdown-container :not(pre) > code {
-  background-color: var(--code-bg);
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
-  font-size: 85%;
+  background: var(--note-bg, transparent) !important; /* 背景をなくす (強制) */
+  color: #333 !important;
+  padding: 0 0.2em;
+  font-weight: bold;
 }

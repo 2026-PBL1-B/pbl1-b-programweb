@@ -123,7 +123,7 @@ useEffect(() => {
         <div className="main-column">
           
           {/* 詳細情報のカード */}
-          <div className="detail-card" style={{ backgroundColor: '#ffedd5' }}>
+          <div className="detail-card" style={{ backgroundColor: '#ffedd5', '--note-bg': '#ffedd5' }}>
             
             <div className="like-button-container">
               <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
@@ -191,7 +191,7 @@ useEffect(() => {
             <div>
               <p className="section-label" style={{ marginTop: '16px', marginBottom: '4px' }}>制作物内容</p>
               <div className="hand-drawn-line"></div>
-              <div className="post-content markdown-preview">
+              <div className="post-content">
                 <MarkdownRenderer>
                   {product.content}
                 </MarkdownRenderer>

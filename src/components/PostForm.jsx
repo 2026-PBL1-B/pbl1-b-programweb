@@ -21,7 +21,8 @@ function PostForm({
     showGithubUrl = false,          // GithubのURL機能
     showAdditionalUrls = false,      // 任意のURL追加機能
     onDraftSubmit,                   // 下書き保存用の関数を受け取るプロップス
-    initialData = null               // 初期データを受け取るプロップス
+    initialData = null,              // 初期データを受け取るプロップス
+    postType = 'product'             // プレビュー時の付箋の色などを決定するプロパティ
 }) {
     const [title, setTitle] = useState(initialData?.title || "");
     const [tags, setTags] = useState(initialData?.tags || []);
@@ -318,18 +319,36 @@ const handleImageSelect = (e) => {
                     )}
 
                     {(mode === "preview" || mode === "split") && (
-                        <div className="preview">
-                            <div className="markdown-preview">
-                                <MarkdownRenderer 
-                                    urlTransform={(url) => {
-                                        if (url.startsWith('blob:')) {
-                                            return url; // blob URL (ローカルプレビュー用) を許可する
-                                        }
-                                        return defaultUrlTransform(url);
-                                    }}
-                                >
-                                    {content || "本文がここに表示されます"}
-                                </MarkdownRenderer>
+                        <div className="preview" style={{ padding: 0, border: 'none', background: 'transparent' }}>
+                            <div 
+                                className="detail-card" 
+                                style={{ 
+                                    backgroundColor: postType === 'product' ? '#ffedd5' : '#fef9c3',
+                                    '--note-bg': postType === 'product' ? '#ffedd5' : '#fef9c3',
+                                    minHeight: '100%',
+                                    margin: 0,
+                                    width: '100%',
+                                    boxSizing: 'border-box'
+                                }}
+                            >
+                                <div>
+                                    <p className="section-label" style={{ marginTop: '16px', marginBottom: '4px' }}>
+                                        {postType === 'product' ? '制作物内容' : '質問内容'}
+                                    </p>
+                                    <div className="hand-drawn-line"></div>
+                                    <div className="post-content" style={{ marginTop: '16px' }}>
+                                        <MarkdownRenderer 
+                                            urlTransform={(url) => {
+                                                if (url.startsWith('blob:')) {
+                                                    return url; // blob URL (ローカルプレビュー用) を許可する
+                                                }
+                                                return defaultUrlTransform(url);
+                                            }}
+                                        >
+                                            {content || "本文がここに表示されます"}
+                                        </MarkdownRenderer>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     )}

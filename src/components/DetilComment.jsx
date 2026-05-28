@@ -54,26 +54,27 @@ export default function DetailCommentPost({ onSubmit }) {
           />
         ) : (
           // プレビュー時：preview-containerクラスのみ（comment-inputは外す）
-          <div
-            className="preview-container markdown-content"
-            style={{
-              minHeight: height,
-              overflowWrap: 'anywhere',
-              padding: '12px',
-              borderRadius: '8px',
-              border: '1px solid #333',
-              fontSize: '16px',
-              lineHeight: '1.5',
-              boxSizing: 'border-box',
+          <div 
+            className="comment-item-sticky" 
+            style={{ 
+              minHeight: height, 
+              boxSizing: 'border-box', 
+              marginBottom: '16px',
+              marginTop: '16px'
             }}
           >
-            {comment.trim() ? (
-              <MarkdownRenderer>
-                {comment}
-              </MarkdownRenderer>
-            ) : (
-              <span style={{ color: '#999' }}>プレビューする内容がありません</span>
-            )}
+            <div className="comment-header" style={{ marginBottom: '8px' }}>
+              <span style={{ fontWeight: 'bold', color: '#555' }}>プレビュー</span>
+            </div>
+            <div className="comment-body markdown-content">
+              {comment.trim() ? (
+                <MarkdownRenderer>
+                  {comment}
+                </MarkdownRenderer>
+              ) : (
+                <span style={{ color: '#999' }}>プレビューする内容がありません</span>
+              )}
+            </div>
           </div>
         )}
 

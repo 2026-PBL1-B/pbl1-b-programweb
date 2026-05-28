@@ -143,6 +143,7 @@ function ProductPost() {
             showAdditionalUrls={true}
             onDraftSubmit={handleDraftSubmit} 
             initialData={initialData}
+            postType="product"
           />
         )}
       </div>
