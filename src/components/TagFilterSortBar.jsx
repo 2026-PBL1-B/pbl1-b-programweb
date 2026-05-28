@@ -71,68 +71,75 @@ function TagFilterSortBar({
             {/* モーダル本体 */}
             {isModalOpen && (
                 <div className="modal-overlay">
-                    <div className="modal-content">
-
-                        <div className="modal-header">
-                            <h2>タグを選択</h2>
-
-                            <button
-                                className="close-button"
-                                onClick={() => setIsModalOpen(false)}
-                            >
-                                ×
-                            </button>
+                    <div className="modal-content clipboard-modal">
+                        {/* クリップ金具 */}
+                        <div className="clipboard-clip">
+                            <div className="clipboard-clip-pin"></div>
                         </div>
 
-                        <div className="search-area">
-                            <input
-                                type="text"
-                                placeholder="タグ名で検索"
-                                value={searchText}
-                                onChange={(e) => {
-                                    setSearchText(e.target.value);
-                                    setCurrentPage(1);
-                                }}
-                                className="tag-search-input"
-                            />
-                        </div>
+                        {/* 紙部分 */}
+                        <div className="clipboard-modal-paper">
+                            <div className="modal-header">
+                                <h2>タグを選択</h2>
 
-                        <div className="tag-list">
-                            {currentTags.map((tag) => (
-                                    <button
-                                        key={tag.id}
-                                        className={
-                                            selectedTagNames.includes(tag.name)
-                                                ? 'tag-button active'
-                                                : 'tag-button'
-                                        }
-                                        onClick={() => handleTagChange(tag.name)}
-                                    >
-                                        {tag.name}
-                                    </button>
-                            ))}
-                        </div>
-                        {/* ページネーション */}
-                        <div className="pagination">
-                            <button
-                                className="page-arrow"
-                                disabled={currentPage === 1}
-                                onClick={() => setCurrentPage(currentPage -1)}
+                                <button
+                                    className="close-button"
+                                    onClick={() => setIsModalOpen(false)}
                                 >
-                                    {'<'}
-                            </button>
+                                    ×
+                                </button>
+                            </div>
 
-                            <span>
-                                {currentPage} / {totalPages}
-                            </span>
+                            <div className="search-area">
+                                <input
+                                    type="text"
+                                    placeholder="タグ名で検索"
+                                    value={searchText}
+                                    onChange={(e) => {
+                                        setSearchText(e.target.value);
+                                        setCurrentPage(1);
+                                    }}
+                                    className="tag-search-input"
+                                />
+                            </div>
 
-                            <button
-                                className="page-arrow"
-                                disabled={currentPage === totalPages}
-                                onClick={() => setCurrentPage(currentPage + 1)}
-                            >
-                                {'>'}
-                            </button>
+                            <div className="tag-list">
+                                {currentTags.map((tag) => (
+                                        <button
+                                            key={tag.id}
+                                            className={
+                                                selectedTagNames.includes(tag.name)
+                                                    ? 'tag-button active'
+                                                    : 'tag-button'
+                                            }
+                                            onClick={() => handleTagChange(tag.name)}
+                                        >
+                                            {tag.name}
+                                        </button>
+                                ))}
+                            </div>
+                            {/* ページネーション */}
+                            <div className="pagination">
+                                <button
+                                    className="page-arrow"
+                                    disabled={currentPage === 1}
+                                    onClick={() => setCurrentPage(currentPage -1)}
+                                    >
+                                        {'<'}
+                                </button>
+
+                                <span>
+                                    {currentPage} / {totalPages}
+                                </span>
+
+                                <button
+                                    className="page-arrow"
+                                    disabled={currentPage === totalPages}
+                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                >
+                                    {'>'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
