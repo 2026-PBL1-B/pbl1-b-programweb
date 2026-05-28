@@ -407,21 +407,19 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                <div className="post-options" style={{ 
-                    marginTop: '20px', 
-                    padding: '10px 0',
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                    gap: '20px'
-                }}>
+                <div className="post-options">
                     {showFinish && (
-                        <label style={{ cursor: 'pointer' }}>
-                            <input type="checkbox" checked={isFinish} onChange={(e) => setIsFinish(e.target.checked)} /> 完成済み
+                        <label className="handwritten-checkbox">
+                            <input type="checkbox" checked={isFinish} onChange={(e) => setIsFinish(e.target.checked)} />
+                            <span className="checkmark"></span>
+                            完成済み
                         </label>
                     )}
 
-                    <label style={{ cursor: 'pointer' }}>
-                        <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} /> 公開する
+                    <label className="handwritten-checkbox">
+                        <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} />
+                        <span className="checkmark"></span>
+                        公開する
                     </label>
                 </div>
 
