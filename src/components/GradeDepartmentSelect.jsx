@@ -3,7 +3,7 @@ import { grades, departments } from '../domain/GradeDepartment';
 import '../css/GradeDepartmentSelect.css'; 
 
 // カスタムドロップダウン（クリップボード風）
-function ClipboardSelect({ value, onChange, options, placeholder = '選択しない' }) {
+export function ClipboardSelect({ value, onChange, options, placeholder = '選択しない' }) {
     const [isOpen, setIsOpen] = useState(false);
     const ref = useRef(null);
 
