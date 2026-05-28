@@ -71,14 +71,20 @@
 }
 
 .tag-open-button {
-    padding: 8px 12px;
-    border: 1px solid var(--border);
-    border-radius: 4px;
-
-    background: var(--bg);
-    color: var(--text);
-
+    padding: 8px 16px;
+    background-color: transparent;
+    border: 2px solid #0055ff; /* 青ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+    color: #333; /* 黒ペン */
     cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.2s;
+    font-family: inherit;
+}
+.tag-open-button:hover {
+    background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
 }
 /* ページネーションのデザイン */
 .pagination {

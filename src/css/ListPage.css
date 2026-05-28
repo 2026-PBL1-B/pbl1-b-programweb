@@ -18,18 +18,23 @@
     margin-bottom: 0px;            /* 下のリストとの間に余白を作ります */
 }
 
-/* 共通のボタンデザイン */
+/* 共通のボタンデザイン（青ペンで丸く囲んだようなデザイン） */
 .primary-button { 
     padding: 8px 16px;
-    background-color: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    background-color: transparent;
+    border: 2px solid #0055ff; /* 青ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
     cursor: pointer;
-    color: var(--text);
+    color: #333; /* 黒ペン */
     width: 160px;
     font-size: 14px;
     font-weight: bold;
     text-align: center;
+    transition: background-color 0.2s;
+    font-family: inherit;
+}
+.primary-button:hover {
+    background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
 }
 
 /* 一覧部分のレイアウト */
