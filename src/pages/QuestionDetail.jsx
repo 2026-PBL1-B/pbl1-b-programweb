@@ -110,7 +110,7 @@ useEffect(() => {
             <div className="content-layout">
                 <div className="main-column">
 
-                    <div className="detail-card">
+                    <div className="detail-card" style={{ backgroundColor: '#fef9c3' }}>
 
                         <div className="like-button-container">
                             <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
