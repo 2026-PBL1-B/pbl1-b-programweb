@@ -13,17 +13,30 @@ function TagFilterSortBar({
     const [isModalOpen, setIsModalOpen] = useState(false);  //モーダルの開閉状態を管理
     const [currentPage, setCurrentPage] = useState(1); // 現在のページ数の管理
     const [pageStarts, setPageStarts] = useState([0]); // 各ページの開始インデックス
-    const [maxVisible, setMaxVisible] = useState(0); // 現在のページで実際に見えている数
+    const [maxVisible, setMaxVisible] = useState(-1); // 現在のページで実際に見えている数 (-1は計測前)
     const [pageCapacity, setPageCapacity] = useState(0); // 1ページに最大いくつ入るかの目安
     const containerRef = useRef(null);
 
     const [searchText, setSearchText] = useState(""); // ユーザーが入力した検索文字
 
+    // モーダルが開かれた時の初期化
+    useEffect(() => {
+        if (isModalOpen) {
+            setPageStarts([0]);
+            setCurrentPage(1);
+            setPageCapacity(0);
+            setMaxVisible(-1);
+        }
+    }, [isModalOpen]);
+
     // 検索ワードやタグ一覧が変わったらリセット
     useEffect(() => {
-        setPageStarts([0]);
-        setCurrentPage(1);
-        setPageCapacity(0);
+        if (isModalOpen) {
+            setPageStarts([0]);
+            setCurrentPage(1);
+            setPageCapacity(0);
+            setMaxVisible(-1);
+        }
     }, [searchText, availableTags]);
 
     // ウィンドウサイズが変わったらリセット
@@ -32,6 +45,7 @@ function TagFilterSortBar({
             setPageStarts([0]);
             setCurrentPage(1);
             setPageCapacity(0);
+            setMaxVisible(-1);
         };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
@@ -74,7 +88,7 @@ function TagFilterSortBar({
     const currentTags = sortedTags.slice(startIndex, startIndex + 100);
 
     useLayoutEffect(() => {
-        if (!isModalOpen || !containerRef.current) return;
+        if (!isModalOpen || !containerRef.current || maxVisible !== -1) return;
 
         const container = containerRef.current;
         const tags = container.querySelectorAll('.tag-button');
@@ -98,26 +112,26 @@ function TagFilterSortBar({
         setMaxVisible(fitCount);
 
         // 1ページに最大いくつ入るか（キャパシティ）を保存
-        // 枠がいっぱいになった時（fitCount < tags.length）の値を採用する
         if (fitCount < tags.length) {
             setPageCapacity(fitCount);
         } else if (pageCapacity === 0 && fitCount > 0) {
-            // 全タグが1ページに収まる場合などのフォールバック
             setPageCapacity(fitCount);
         }
-    }, [isModalOpen, currentTags, currentPage, pageCapacity]);
+    }, [isModalOpen, currentTags, currentPage, maxVisible, pageCapacity]);
 
     const handleNextPage = () => {
         const nextStart = startIndex + maxVisible;
         if (maxVisible > 0 && nextStart < sortedTags.length) {
             setPageStarts([...pageStarts, nextStart]);
             setCurrentPage(currentPage + 1);
+            setMaxVisible(-1); // 次のページのために再計測
         }
     };
 
     const handlePrevPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1);
+            setMaxVisible(-1); // 前のページのために再計測
         }
     };
 
@@ -172,7 +186,9 @@ function TagFilterSortBar({
                             </div>
 
                             <div className="tag-list" ref={containerRef}>
-                                {currentTags.map((tag) => (
+                                {currentTags.map((tag, index) => {
+                                    const isVisible = maxVisible === -1 || index < maxVisible;
+                                    return (
                                         <button
                                             key={tag.id}
                                             className={
@@ -181,10 +197,16 @@ function TagFilterSortBar({
                                                     : 'tag-button'
                                             }
                                             onClick={() => handleTagChange(tag.name)}
+                                            style={{
+                                                display: isVisible ? 'inline-block' : 'none',
+                                                visibility: maxVisible === -1 ? 'hidden' : 'visible',
+                                                pointerEvents: maxVisible === -1 ? 'none' : 'auto'
+                                            }}
                                         >
                                             {tag.name}
                                         </button>
-                                ))}
+                                    );
+                                })}
                             </div>
                             {/* ページネーション */}
                             <div className="pagination">
