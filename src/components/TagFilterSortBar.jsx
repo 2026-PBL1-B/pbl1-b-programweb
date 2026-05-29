@@ -1,5 +1,5 @@
 // src/components/TagFilterSortBar.jsx
-import React, { useState } from 'react'; //useRef,useEffectは使わないため削除
+import React, { useState, useRef, useLayoutEffect, useEffect } from 'react';
 import '../css/TagFilterSortBar.css';
 
 function TagFilterSortBar({ 
@@ -12,8 +12,30 @@ function TagFilterSortBar({
 
     const [isModalOpen, setIsModalOpen] = useState(false);  //モーダルの開閉状態を管理
     const [currentPage, setCurrentPage] = useState(1); // 現在のページ数の管理
+    const [pageStarts, setPageStarts] = useState([0]); // 各ページの開始インデックス
+    const [maxVisible, setMaxVisible] = useState(0); // 現在のページで実際に見えている数
+    const [pageCapacity, setPageCapacity] = useState(0); // 1ページに最大いくつ入るかの目安
+    const containerRef = useRef(null);
 
     const [searchText, setSearchText] = useState(""); // ユーザーが入力した検索文字
+
+    // 検索ワードやタグ一覧が変わったらリセット
+    useEffect(() => {
+        setPageStarts([0]);
+        setCurrentPage(1);
+        setPageCapacity(0);
+    }, [searchText, availableTags]);
+
+    // ウィンドウサイズが変わったらリセット
+    useEffect(() => {
+        const handleResize = () => {
+            setPageStarts([0]);
+            setCurrentPage(1);
+            setPageCapacity(0);
+        };
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     // チェックボックスがクリックされた時の処理
     const handleTagChange = (tagName) => {
@@ -31,10 +53,6 @@ function TagFilterSortBar({
         ? "すべてのタグ" 
         : `${selectedTagNames.length}個のタグを選択中`;
 
-    const tagsPerPage = 30; //1ページに表示される数の設定
-
-    // const sortedTags = [...availableTags].sort((a, b) => a.name.localeCompare(b.name, 'ja')); //タグを日本語順でソート
-    
     const filteredTags = availableTags.filter((tag) =>
         tag.name.toLowerCase().includes(
             searchText.toLowerCase()
@@ -50,13 +68,64 @@ function TagFilterSortBar({
             )
     );
 
+    const startIndex = pageStarts[currentPage - 1];
+    // 多めに取得して、入りきらない分は隠す＆次のページの開始位置にする
+    // 1ページに最大100個あれば十分と想定
+    const currentTags = sortedTags.slice(startIndex, startIndex + 100);
 
-    const totalPages = Math.ceil(sortedTags.length / tagsPerPage); //総ページ数の計算
+    useLayoutEffect(() => {
+        if (!isModalOpen || !containerRef.current) return;
 
-    const startIndex = (currentPage - 1) * tagsPerPage; //現在のページの開始インデックス
-    const endIndex = startIndex + tagsPerPage; //現在のページの終了インデックス
+        const container = containerRef.current;
+        const tags = container.querySelectorAll('.tag-button');
+        if (tags.length === 0) {
+            setMaxVisible(0);
+            return;
+        }
 
-    const currentTags = sortedTags.slice(startIndex, endIndex); //現在のページに表示するタグの配列
+        const containerBottom = container.getBoundingClientRect().bottom;
+        let fitCount = 0;
+
+        for (let i = 0; i < tags.length; i++) {
+            const tagBottom = tags[i].getBoundingClientRect().bottom;
+            // 余裕を持って判定 (padding等考慮)
+            if (tagBottom <= containerBottom + 2) { 
+                fitCount = i + 1;
+            } else {
+                break;
+            }
+        }
+        setMaxVisible(fitCount);
+
+        // 1ページに最大いくつ入るか（キャパシティ）を保存
+        // 枠がいっぱいになった時（fitCount < tags.length）の値を採用する
+        if (fitCount < tags.length) {
+            setPageCapacity(fitCount);
+        } else if (pageCapacity === 0 && fitCount > 0) {
+            // 全タグが1ページに収まる場合などのフォールバック
+            setPageCapacity(fitCount);
+        }
+    }, [isModalOpen, currentTags, currentPage, pageCapacity]);
+
+    const handleNextPage = () => {
+        const nextStart = startIndex + maxVisible;
+        if (maxVisible > 0 && nextStart < sortedTags.length) {
+            setPageStarts([...pageStarts, nextStart]);
+            setCurrentPage(currentPage + 1);
+        }
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    };
+
+    // 合計ページ数の推定 (正確には出せないが、目安として)
+    const totalPagesEstimate = pageCapacity > 0 
+        ? Math.ceil(sortedTags.length / pageCapacity) 
+        : 1;
+
     return (
         <div className="filter-sort-bar">
             
@@ -97,13 +166,12 @@ function TagFilterSortBar({
                                     value={searchText}
                                     onChange={(e) => {
                                         setSearchText(e.target.value);
-                                        setCurrentPage(1);
                                     }}
                                     className="tag-search-input"
                                 />
                             </div>
 
-                            <div className="tag-list">
+                            <div className="tag-list" ref={containerRef}>
                                 {currentTags.map((tag) => (
                                         <button
                                             key={tag.id}
@@ -123,19 +191,19 @@ function TagFilterSortBar({
                                 <button
                                     className="page-arrow"
                                     disabled={currentPage === 1}
-                                    onClick={() => setCurrentPage(currentPage -1)}
+                                    onClick={handlePrevPage}
                                     >
                                         {'<'}
                                 </button>
 
                                 <span>
-                                    {currentPage} / {totalPages}
+                                    {currentPage} / {Math.max(currentPage, totalPagesEstimate)}
                                 </span>
 
                                 <button
                                     className="page-arrow"
-                                    disabled={currentPage === totalPages}
-                                    onClick={() => setCurrentPage(currentPage + 1)}
+                                    disabled={startIndex + maxVisible >= sortedTags.length}
+                                    onClick={handleNextPage}
                                 >
                                     {'>'}
                                 </button>
