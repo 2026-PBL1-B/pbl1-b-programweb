@@ -440,3 +440,21 @@
 .handwritten-checkbox:hover input ~ .checkmark {
     background-color: rgba(0, 0, 0, 0.03);
 }
+
+.post-tag-open-button {
+    align-self: flex-start; /* 左寄せ */
+    background: transparent; 
+    border: 2px solid #333; /* 点線の手書き風 */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    color: var(--text);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s ease;
+}
+
+.post-tag-open-button:hover {
+    border-color: #333333;
+    color: #333333;
+    background-color: #fafafa;
+}
