@@ -1,0 +1,89 @@
+/* src/css/Login.css */
+
+/* 画面全体のコンテナ：中央寄せ */
+.login-page-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg); /* 全体の背景色になじませる */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* コンテナ */
+.login-memo-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 48px;
+}
+
+/* ヘッダー部分 */
+.login-header {
+    text-align: center;
+    width: 100%;
+}
+
+.login-title {
+    font-size: 72px; /* 大きく目立たせる */
+    font-weight: bold;
+    color: #0055ff; /* 青ペン */
+    margin: 0 0 16px 0;
+    letter-spacing: 4px;
+    font-family: 'Comic Sans MS', 'HG丸ｺﾞｼｯｸM-PRO', 'Rounded M+ 1c', sans-serif; /* 手書き風フォント */
+    text-shadow: 2px 3px 0px rgba(0, 85, 255, 0.1); /* ペンのインクの重なり感 */
+}
+
+.login-subtitle {
+    font-size: 20px;
+    color: var(--text);
+    margin: 0;
+    padding-bottom: 12px;
+    /* 手書きのアンダーライン風 */
+    border-bottom: 2px solid #111;
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
+    display: inline-block;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+/* ボディ部分（ボタン配置など） */
+.login-body {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* サインインボタン（青ペン風の手書きデザイン） */
+.login-signin-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 24px;
+    width: 100%;
+    background-color: transparent;
+    border: 2px solid #0055ff; /* 青ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+    color: #333; /* 文字は黒 */
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.login-signin-button:hover {
+    background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+}

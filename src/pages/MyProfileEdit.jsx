@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { grades,departments } from "../domain/GradeDepartment";
+import { grades, departments } from "../domain/GradeDepartment";
 import { getProfileForUserID, updateProfile } from "../api/profile";
 import { getCurrentUserId } from "../api/Signin";
 import { useNavigate } from "react-router-dom";
+import { ClipboardSelect } from "../components/GradeDepartmentSelect";
 
 import "../css/MyProfileEdit.css";
 
@@ -41,12 +42,15 @@ function MyProfile() {
   // 入力変更処理
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     setProfile({
       ...profile,
       [name]: value,
     });
   };
+
+  // ClipboardSelect用のハンドラ
+  const handleDepartmentChange = (val) => setProfile({ ...profile, department: val });
+  const handleGradeChange = (val) => setProfile({ ...profile, grade: val });
 
   // 保存ボタン
   const handleSave = async () => {
@@ -67,10 +71,7 @@ function MyProfile() {
 
     if (result.success) {
       alert("プロフィールを保存しました！");
-            // 現在ユーザーID取得
       const userId = await getCurrentUserId();
-
-      // ユーザーページへ遷移
       navigate(`/userpage/${userId}`);
     } else {
       alert("プロフィールの保存に失敗しました: " + result.error);
@@ -86,28 +87,25 @@ function MyProfile() {
         <p>プロフィール情報を編集できます。</p>
       </div>
 
-      {/* プロフィールカード */}
-      <div className="profile-card">
+      {/* プロフィールカード（ノート風デザイン） */}
+      <div className="profile-card notebook-paper">
 
-        {/* アイコン */}
-        {/*}
+        {/* アイコン（元のままコメントアウト） */}
+        {/*
         <div className="icon-section">
-
           <div className="profile-icon">
             <span>👤</span>
           </div>
-
           <button className="icon-button">
             アイコン変更
           </button>
-
         </div>
         */}
 
-        {/* 名前 
+        {/* 名前（元のままコメントアウト） */}
+        {/*
         <div className="form-group">
           <label>名前</label>
-
           <input
             type="text"
             name="name"
@@ -117,10 +115,10 @@ function MyProfile() {
         </div>
         */}
 
-        {/* ユーザーID
+        {/* ユーザーID（元のままコメントアウト） */}
+        {/*
         <div className="form-group">
           <label>ユーザーID</label>
-
           <input
             type="text"
             name="userid"
@@ -128,12 +126,11 @@ function MyProfile() {
             disabled
           />
         </div>
-         */}
+        */}
 
         {/* 自己紹介 */}
         <div className="form-group">
           <label>自己紹介</label>
-
           <textarea
             name="bio"
             value={profile.bio}
@@ -142,58 +139,32 @@ function MyProfile() {
             rows="5"
           />
         </div>
+        
         {/* 学科 */}
         <div className="form-group">
           <label>学科</label>
-
-          <select
-            name="department"
+          <ClipboardSelect
             value={profile.department}
-            onChange={handleChange}
-          >
-            <option value="">
-              選択してください
-            </option>
-
-            {departments.map((department) => (
-
-            <option
-                key={department}
-                value={department}
-            >
-              {department}
-            </option>
-
-            ))}
-
-        </select>
+            onChange={handleDepartmentChange}
+            options={departments.map(d => ({ value: d, label: d }))}
+            placeholder="選択してください"
+          />
         </div>
+        
         {/* 学年 */}
         <div className="form-group">
           <label>学年</label>
-
-          <select
-            name="grade"
+          <ClipboardSelect
             value={profile.grade}
-            onChange={handleChange}
-          >
-            <option value="">選択してください</option>
-            {grades.map((grade) => (
-              <option
-                key={grade.value}
-                value={grade.value}
-              >
-                {grade.label}
-            </option>
-               ))}
-          </select>
-
+            onChange={handleGradeChange}
+            options={grades}
+            placeholder="選択してください"
+          />
         </div>
 
         {/* 卒業年 */}
         <div className="form-group">
           <label>卒業年</label>
-
           <input
             type="number"
             name="graduationYear"

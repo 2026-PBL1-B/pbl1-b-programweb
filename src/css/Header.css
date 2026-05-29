@@ -8,9 +8,11 @@
   margin: 0;
   display: flex;
   align-items: center;
-  font-size: 30px;
-  font-weight: 10000;
-  color: #4A90E2;
+  font-size: 34px;
+  font-family: var(--pen-font, 'Yomogi', cursive);
+  color: var(--pen-color, #1d4ed8);
+  font-weight: bold;
+  text-shadow: 0 0 1px var(--pen-color, #1d4ed8), 0 0 2px var(--pen-color, #1d4ed8); /* ペンの太さを強調 */
   cursor: pointer;
   z-index: 9999;
 }
@@ -18,9 +20,12 @@
 /* アクティブなナビゲーションリンク */
 .nav-link.active {
   text-decoration: underline;
-  color: white;
+  text-decoration-style: solid;
+  text-decoration-thickness: 3px;
+  color: var(--pen-color, #1d4ed8);
   text-underline-offset: 8px;  
 }
+
 /* アカウントボタン背景（ナビバーより上の白塗り） */
 .header-top {
   position: fixed;
@@ -28,28 +33,29 @@
   left: 0;
   width: 100%;
   height: 48px;           /* ✅ ナビバーのtopと同じ高さ */
-  background-color: white;
+  background-color: var(--bg);
   z-index: 9997;          /* ✅ ナビバーより下、コンテンツより上 */
 }
+
 /* アカウントボタン */
 .account-button {
   position: fixed;
-  top: 0;               /* ✅ 一番上 */
+  top: 6px;               /* 少し余白 */
   right: 16px;
-  background-color: #4A90E2;
-  color: white;
-  border: none;
+  background-color: transparent;
+  color: var(--pen-color, #1d4ed8);
+  border: 2px solid var(--pen-color, #1d4ed8); /* ペンで描いたような丸枠 */
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
-  font-size: 24px;
+  width: 36px;
+  height: 36px;
+  font-size: 20px;
   cursor: pointer;
   z-index: 9999;
   overflow: hidden; /* 画像がはみ出ないように追加 */
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0; /* paddingをリセット */
+  padding: 0;
 }
 
 /* アバター画像 */
@@ -64,7 +70,8 @@
   align-items: center;
   display: flex;
   flex-direction: row;
-  background-color: #4A90E2;
+  background-color: var(--bg); /* 青いブロック（枠）を無くし背景に同化させる */
+  border: none;
   height: auto;           /* ✅ fixedからautoに変更 */
   min-height: 72px; 
   width: 100%;
@@ -75,15 +82,33 @@
   z-index: 9998;        /* ✅ アカウントボタンより一段低い */
 }
 
+/* 手書き風の区切り線 */
+.nav-bar::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 2%;
+  width: 96%;
+  height: 3px;
+  background-color: #94a3b8; /* マーカーっぽいグレー */
+  border-radius: 10px;
+  transform: rotate(-0.3deg);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
 /* ナビゲーションリンク */
 .nav-link {
+  font-family: var(--pen-font, 'Yomogi', cursive);
   font-size: 32px;
-  color: white;
+  font-weight: bold;
+  text-shadow: 0 0 1px var(--pen-color, #1d4ed8), 0 0 2px var(--pen-color, #1d4ed8); /* ペンの太さを強調 */
+  color: var(--pen-color, #1d4ed8);
   cursor: pointer;
   margin: 0;
   flex: 1;                /* 各要素が均等に幅を取る */
   text-align: center;     /* 各要素内で中央揃え */
   padding: 16px 0;
+  transition: opacity 0.2s;
 }
 
 /* ヘッダー全体 */
@@ -91,13 +116,12 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  background-color: white;
+  background-color: transparent;
 }
+
 .nav-link:hover {
-  color: purple;           /* 紫色 */
-  text-decoration: underline;  /* 下線 */
+  opacity: 0.7;
+  text-decoration: underline;  /* 下線機能は残す */
+  text-decoration-thickness: 3px;
   text-underline-offset: 8px;
 }
-
-
-

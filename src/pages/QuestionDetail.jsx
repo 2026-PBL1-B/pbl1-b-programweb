@@ -110,11 +110,7 @@ useEffect(() => {
             <div className="content-layout">
                 <div className="main-column">
 
-                    <div className="detail-card">
-
-                        <div className="like-button-container">
-                            <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
-                        </div>
+                    <div className="detail-card" style={{ backgroundColor: '#fef9c3', '--note-bg': '#fef9c3' }}>
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginBottom: '8px', color: '#6b7280', fontSize: '14px', fontWeight: 'bold' }}>
                             {/* 1行目: アイコンとユーザーネーム */}
@@ -150,12 +146,18 @@ useEffect(() => {
                         </div>
 
                         <div>
-                            <p className="section-label" style={{ marginTop: '16px' }}>質問内容</p>
-                            <div className="post-content markdown-preview">
+                            <p className="section-label" style={{ marginTop: '16px', marginBottom: '4px' }}>質問内容</p>
+                            <div className="hand-drawn-line"></div>
+                            <div className="post-content">
                                 <MarkdownRenderer>
                                     {question.content}
                                 </MarkdownRenderer>
                             </div>
+                        </div>
+
+                        {/* いいねボタンを記事の一番下に配置 */}
+                        <div className="like-button-container">
+                            <LikeButton liked={liked} count={likeCount} onClick={handleLikeToggle} />
                         </div>
                     </div>
 

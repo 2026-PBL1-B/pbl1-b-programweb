@@ -25,11 +25,11 @@
     イベントカウントダウン用のカード
 ----------------------------------- */
 .event-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    border: none;
+    border-radius: 2px 2px 12px 2px;
     padding: 40px;
-    background-color: var(--bg);
-    box-shadow: var(--shadow);
+    background-color: #fce7f3; /* パステルピンク */
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
     box-sizing: border-box;
     width: 80%;               /* 画面幅の約80%を占めるように設定 */
     max-width: 1200px;        /* 画面が広すぎるときのために、最大幅を制限（お好みで調整可） */
@@ -38,11 +38,37 @@
     justify-content: space-between; /* タイトルとカウントダウンを両端に配置 */
     align-items: center;      /* 垂直方向の中央揃え */
     gap: 32px;                /* 要素間の隙間を広げる */
+    position: relative;
+    transform: rotate(-1deg);
+}
+
+/* 磁石（左右上角） */
+.event-card::before,
+.event-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    background-color: #22c55e; /* Green magnet */
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.event-card::before {
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+
+.event-card::after {
+    right: 0;
+    transform: translate(50%, -50%);
 }
 
 /* カードのタイトル（修正） */
 .event-title {
-    color: var(--accent);
+    color: #831843;           /* 視認性の良い濃いピンク（テキスト色） */
     font-size: 50px;          /* ★ さらに大きくしてインパクトを出す */
     margin: 0;                /* gapで制御するためmarginをリセット */
     line-height: 1;           /* 高さを詰めてスタイリッシュに */
@@ -54,7 +80,7 @@
 .countdown-text {
     font-size: 24px;
     font-weight: bold;
-    color: var(--text);
+    color: #831843;           /* 視認性の良い濃いピンク（テキスト色） */
     text-align: right;        /* 横長レイアウトに合わせて右揃え */
     display: flex;            /* 数字と「あと」「日」を揃えるため */
     align-items: baseline;    /* 単位と数字のベースライン（下端）を合わせる */
@@ -63,7 +89,7 @@
 
 /* 日数の数字部分（強調）（修正） */
 .countdown-number {
-    color: var(--accent);
+    color: #be185d;           /* 少し明るめの濃いピンク（アクセント） */
     font-size: 64px;          /* ★ さらに大きくしてインパクトを出す */
     margin: 0;                /* gapで制御するためmarginをリセット */
     line-height: 1;           /* 高さを詰めてスタイリッシュに */
@@ -74,17 +100,43 @@
     理念（サイトについて）用のカード ★新規追加
 ----------------------------------- */
 .philosophy-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    border: none;
+    border-radius: 2px 2px 12px 2px;
     padding: 40px;
-    background-color: var(--bg);
-    box-shadow: var(--shadow);
+    background-color: #e0e7ff; /* パステルブルー・パープル系 */
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
     box-sizing: border-box;
     width: 80%;               /* イベントカードと同じ80%幅 */
     max-width: 1200px;
     display: flex;
     flex-direction: column;   /* タイトルと文章を縦に並べる */
     gap: 24px;
+    position: relative;
+    transform: rotate(1deg);
+}
+
+/* 磁石（左右上角） */
+.philosophy-card::before,
+.philosophy-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 16px;
+    height: 16px;
+    background-color: #f97316; /* Orange magnet */
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+.philosophy-card::before {
+    left: 0;
+    transform: translate(-50%, -50%);
+}
+
+.philosophy-card::after {
+    right: 0;
+    transform: translate(50%, -50%);
 }
 
 .philosophy-title {

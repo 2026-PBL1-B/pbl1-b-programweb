@@ -18,18 +18,23 @@
     margin-bottom: 0px;            /* 下のリストとの間に余白を作ります */
 }
 
-/* 共通のボタンデザイン */
+/* 共通のボタンデザイン（青ペンで丸く囲んだようなデザイン） */
 .primary-button { 
     padding: 8px 16px;
-    background-color: var(--code-bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    background-color: transparent;
+    border: 2px solid #0055ff; /* 青ペン */
+    border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
     cursor: pointer;
-    color: var(--text);
+    color: #333; /* 黒ペン */
     width: 160px;
     font-size: 14px;
     font-weight: bold;
     text-align: center;
+    transition: background-color 0.2s;
+    font-family: inherit;
+}
+.primary-button:hover {
+    background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
 }
 
 /* 一覧部分のレイアウト */
@@ -52,17 +57,75 @@
 
 /* カード（質問・制作物）のデザイン */
 .item-card {
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    border: none;
+    border-radius: 2px 2px 12px 2px; /* 付箋風の少しめくれたような角 */
     padding: 24px;
-    background-color: var(--bg);
-    box-shadow: var(--shadow);
+    background-color: #fef9c3; /* デフォルトはパステルイエロー */
+    box-shadow: 2px 4px 8px rgba(0,0,0,0.08);
     text-align: left;
     width: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    position: relative;
+    margin-bottom: 8px; /* 傾きによるレイアウトへの影響を緩和 */
+    transition: transform 0.2s;
+}
+
+/* 交互に付箋の色と傾きを変える */
+.item-card:nth-child(2n) {
+    background-color: #e0f2fe; /* パステルブルー */
+    transform: rotate(1deg);
+}
+.item-card:nth-child(3n) {
+    background-color: #fce7f3; /* パステルピンク */
+    transform: rotate(-1deg);
+}
+.item-card:nth-child(4n) {
+    background-color: #dcfce7; /* パステルグリーン */
+    transform: rotate(0.5deg);
+}
+
+/* 磁石のアクセント（左右上角） */
+.item-card::before,
+.item-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    box-shadow: inset -2px -2px 4px rgba(0,0,0,0.1), 1px 1px 3px rgba(0,0,0,0.2);
+    z-index: 2;
+}
+
+/* 左上の磁石 */
+.item-card::before {
+    left: 0;
+    transform: translate(-50%, -50%);
+    background-color: #ef4444; /* Red magnet */
+}
+
+/* 右上の磁石 */
+.item-card::after {
+    right: 0;
+    transform: translate(50%, -50%);
+    background-color: #ef4444; /* Red magnet */
+}
+
+/* 交互に磁石の色を変える */
+.item-card:nth-child(2n)::before,
+.item-card:nth-child(2n)::after {
+    background-color: #3b82f6; /* Blue magnet */
+}
+.item-card:nth-child(3n)::before,
+.item-card:nth-child(3n)::after {
+    background-color: #eab308; /* Yellow magnet */
+}
+.item-card:nth-child(4n)::before,
+.item-card:nth-child(4n)::after {
+    background-color: #22c55e; /* Green magnet */
 }
 
 .card-meta {

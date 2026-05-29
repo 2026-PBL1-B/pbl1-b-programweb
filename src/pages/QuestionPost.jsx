@@ -104,6 +104,7 @@ function QuestionPost() {
 					showGradeDepartment={true}
 					onDraftSubmit={handleDraftSubmit}
 					initialData={initialData}
+					postType="question"
 				/>
 			)}
 		</div>

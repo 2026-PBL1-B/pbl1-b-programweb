@@ -26,7 +26,10 @@ export default function DetailCommentPost({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!comment.trim()) return;
+    if (!comment.trim()) {
+      alert("コメントを入力してください");
+      return;
+    }
     if (onSubmit) {
       onSubmit(comment);
     }
@@ -54,26 +57,27 @@ export default function DetailCommentPost({ onSubmit }) {
           />
         ) : (
           // プレビュー時：preview-containerクラスのみ（comment-inputは外す）
-          <div
-            className="preview-container markdown-content"
-            style={{
-              minHeight: height,
-              overflowWrap: 'anywhere',
-              padding: '12px',
-              borderRadius: '8px',
-              border: '1px solid #333',
-              fontSize: '16px',
-              lineHeight: '1.5',
-              boxSizing: 'border-box',
+          <div 
+            className="comment-item-sticky" 
+            style={{ 
+              minHeight: height, 
+              boxSizing: 'border-box', 
+              marginBottom: '16px',
+              marginTop: '16px'
             }}
           >
-            {comment.trim() ? (
-              <MarkdownRenderer>
-                {comment}
-              </MarkdownRenderer>
-            ) : (
-              <span style={{ color: '#999' }}>プレビューする内容がありません</span>
-            )}
+            <div className="comment-header" style={{ marginBottom: '8px' }}>
+              <span style={{ fontWeight: 'bold', color: '#555' }}>プレビュー</span>
+            </div>
+            <div className="comment-body markdown-content">
+              {comment.trim() ? (
+                <MarkdownRenderer>
+                  {comment}
+                </MarkdownRenderer>
+              ) : (
+                <span style={{ color: '#999' }}>プレビューする内容がありません</span>
+              )}
+            </div>
           </div>
         )}
 
@@ -89,7 +93,6 @@ export default function DetailCommentPost({ onSubmit }) {
           <button
             type="submit"
             className="comment-submit-button"
-            disabled={!comment.trim()}
           >
             投稿する
           </button>
@@ -160,14 +163,13 @@ function CommentItem({ comment, type }) {
   };
 
   return (
-    <div className="comment-item-black">
+    <div className="comment-item-sticky">
       <div className="comment-header" style={{ alignItems: 'flex-start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <AvatarIcon userId={comment.user_id} size={30} />
             <UserLink userId={comment.user_id} className="comment-username" prefix="@" />
           </div>
-          <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} />
         </div>
         <span className="comment-date">
           {comment.created_at ? new Date(comment.created_at).toLocaleString() : ''}
@@ -177,6 +179,10 @@ function CommentItem({ comment, type }) {
         <MarkdownRenderer>
           {comment.content}
         </MarkdownRenderer>
+      </div>
+      {/* コメントのいいねスタンプ（右下・少し小さめ） */}
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px', marginRight: '-10px', marginBottom: '-10px', position: 'relative', zIndex: 10 }}>
+        <LikeButton liked={isLiked} count={likeCount} onClick={toggleLike} isSmall={true} />
       </div>
     </div>
   );

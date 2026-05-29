@@ -110,7 +110,7 @@ function QuestionList() {
                         <p style={{ color: 'var(--text)' }}>読み込み中...</p>
                     ) : (
                         filteredAndSortedQuestions.map((question) => (
-                            <div key={question.id} className="item-card">
+                            <div key={question.id} className="item-card" style={{ backgroundColor: '#fef9c3' }}>
                                 <div className="card-meta">
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                         <AvatarIcon userId={question.user_id} />

@@ -1,14 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  background: #f2f2f2;
-  font-family: sans-serif;
-}
-
+/* UserPage.css */
 .profile-container {
   min-height: 100vh;
   padding: 110px 40px 40px 40px;
@@ -20,15 +10,16 @@ body {
 
 /* ヘッダー */
 .profile-header {
-  background: white;
-  border-radius: 16px;
+  background: transparent;
+  border: 2px solid #333; /* 手書き風黒枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
   padding: 32px;
 
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: none;
 }
 
 .profile-left {
@@ -121,16 +112,36 @@ body {
 }
 
 .school-card {
-  background: white;
-  border-radius: 16px;
+  background: transparent;
+  border: 2px solid #333; /* 手書き風黒枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風の歪み */
   padding: 24px;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: none;
 }
 
 .school-card h2 {
   font-size: 20px;
   margin-bottom: 8px;
+}
+
+/* 編集ボタン */
+.edit-button {
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 2px solid #0055ff; /* 青ペン枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+  color: #333; /* 黒文字 */
+  font-weight: bold;
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.2s;
+  font-family: inherit;
+}
+
+.edit-button:hover {
+  background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
 }
 
 /* タブ */
@@ -140,17 +151,25 @@ body {
 }
 
 .tab-button {
-  padding: 12px 24px;
-  border: none;
-  border-radius: 12px;
-  background: #d9d9d9;
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 2px solid #0055ff; /* 青ペン枠 */
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px; /* 手書き風 */
+  color: #333; /* 黒文字 */
+  font-weight: bold;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.tab-button:hover {
+  background-color: rgba(0, 85, 255, 0.05); /* ホバー時に少し青み */
 }
 
 .tab-button.active {
-  background: #222;
-  color: white;
+  background-color: rgba(0, 85, 255, 0.1); /* アクティブ時は少し濃くする */
+  color: #333;
 }
 
 .tab-left{

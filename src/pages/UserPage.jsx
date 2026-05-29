@@ -206,15 +206,7 @@ function UserPage() {
       {/* 編集ボタン */}
       {isOwnProfile && (
         <section className="edit-profile-section" style={{ textAlign: 'center', margin: '20px 0' }}>
-          <Link to="/myprofileedit" className="edit-button" style={{
-            display: 'inline-block',
-            padding: '10px 20px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            textDecoration: 'none',
-            borderRadius: '5px',
-            fontWeight: 'bold'
-          }}>
+          <Link to="/myprofileedit" className="edit-button">
             プロフィールを編集する
           </Link>
         </section>
@@ -307,7 +299,11 @@ function UserPage() {
             [...userArticles]
               .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
               .map((article) => (
-              <div key={article.id} className="item-card">
+              <div 
+                key={article.id} 
+                className="item-card" 
+                style={{ backgroundColor: viewType === "products" ? '#ffedd5' : '#fef9c3' }}
+              >
                 <div className="card-meta">
                   <div>
                     <UserLink userId={user_id} userName={profile.name} prefix="@" className="author-name" />
