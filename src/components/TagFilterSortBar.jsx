@@ -31,7 +31,7 @@ function TagFilterSortBar({
         ? "すべてのタグ" 
         : `${selectedTagNames.length}個のタグを選択中`;
 
-    const tagsPerPage = 10; //1ページに表示される数の設定
+    const tagsPerPage = 30; //1ページに表示される数の設定
 
     // const sortedTags = [...availableTags].sort((a, b) => a.name.localeCompare(b.name, 'ja')); //タグを日本語順でソート
     
