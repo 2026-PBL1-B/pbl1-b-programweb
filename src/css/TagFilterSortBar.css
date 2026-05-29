@@ -114,8 +114,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    overflow-y: auto; /* 紙の中でスクロール可能に */
-    flex-grow: 0; /* 余白を埋めない */
+    overflow: hidden; /* スクローラを表示しない */
+    flex: 1; /* 親(paper)の残りの高さを全て使う */
+    align-content: flex-start; /* 行を広げない */
     padding: 10px 0;
 }
 
