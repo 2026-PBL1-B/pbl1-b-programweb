@@ -18,6 +18,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    padding-top: 50px;
     z-index: 999;
 }
 
@@ -28,8 +29,15 @@
     border-radius: 4px;
     padding: 30px 12px 12px 12px;
     box-shadow: 2px 8px 24px rgba(0,0,0,0.3);
-    width: 500px;
-    max-width: 90vw;
+
+    /* 横幅の設定 */
+    width: 75vh;
+    max-width: 75vw;
+    
+    /* ▼ 縦幅の設定 ▼ */
+    height: 65vh;
+    max-height: 65vh;
+    
     display: flex;
     flex-direction: column;
 }
@@ -69,7 +77,9 @@
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
     display: flex;
     flex-direction: column;
-    max-height: 70vh; /* 高さ制限を紙部分にかける */
+    
+    height: 500px;  /* これが無いとタグ数が少ないときに白い紙の表示が短くなる */
+    max-height: 80vh;
 }
 
 .modal-header {
@@ -104,7 +114,7 @@
     flex-wrap: wrap;
     gap: 10px;
     overflow-y: auto; /* 紙の中でスクロール可能に */
-    flex-grow: 1; /* 余白を埋める */
+    flex-grow: 0; /* 余白を埋めない */
     padding: 10px 0;
 }
 
@@ -116,6 +126,15 @@
     cursor: pointer;
     font-family: inherit;
     transition: background 0.1s;
+
+
+    /* ▼ 文字の長さに合わせて幅を変える設定 ▼ */
+    width: auto;
+    max-width: 100%; /* 長すぎるタグが枠をはみ出さないように制限 */
+    white-space: normal;
+    overflow-wrap: anywhere;
+    line-height: 1.4;
+    text-align: left; /* 文字の開始位置を左に揃える */
 }
 .tag-button:hover {
     background: #ccc;
@@ -150,8 +169,9 @@
     align-items: center;
     gap: 16px;
     width: 100%;
-    margin-top: 16px;
-    padding-top: 16px;
+    /* タグの量が少ないページでも、自動的に一番下に押し下げる ▼ */
+    margin-top: auto; 
+    padding-top: 20px; /* タグとの間に少し余白を持たせる */
     border-top: 1px dashed #ccc;
 }
 
