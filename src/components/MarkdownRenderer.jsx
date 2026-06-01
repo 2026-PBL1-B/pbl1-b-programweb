@@ -71,6 +71,13 @@ const MarkdownRenderer = ({ children, ...props }) => {
                 {children}
               </code>
             );
+          },
+          img({ node, ...props }) {
+            return (
+              <span className="photo-wrapper">
+                <img {...props} />
+              </span>
+            );
           }
         }}
       >
