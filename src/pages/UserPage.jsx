@@ -341,7 +341,17 @@ function UserPage() {
                 )}
 
                 <div className="card-footer" style={{ marginTop: '10px' }}>
-                  <p>❤️ {article.likeCount}</p>
+                  <p>
+                    <span 
+                      className="like-tooltip-container" 
+                      data-likes={article.likeCount}
+                    >
+                      {article.likeCount === 0 ? <span className="like-hearts">🤍</span> : 
+                       article.likeCount === 1 ? <span className="like-hearts">❤️</span> : 
+                       article.likeCount === 2 ? <span className="like-hearts">❤️❤️</span> : 
+                       <><span className="like-hearts">❤️❤️❤️</span><span className="like-plus">+</span></>}
+                    </span>
+                  </p>
                 </div>
               </div>
             ))
