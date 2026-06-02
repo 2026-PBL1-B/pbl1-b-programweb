@@ -153,7 +153,16 @@ function ProductList() {
 
                                 {/* いいね数表示 */}
                                 <div className="card-footer" style={{ marginTop: '10px' }}>
-                                    <p>❤️ {article.likeCount}</p>
+                                    <p>
+                                        <span 
+                                            className="like-tooltip-container" 
+                                            data-likes={article.likeCount}
+                                        >
+                                             {article.likeCount === 0 ? <span className="like-hearts">🤍</span> : 
+                                              article.likeCount <= 10 ? <span className="like-hearts">{"❤️".repeat(article.likeCount)}</span> : 
+                                              <><span className="like-hearts">{"❤️".repeat(10)}</span><span className="like-plus">+</span></>}
+                                        </span>
+                                    </p>
                                 </div>
 
                             </div>

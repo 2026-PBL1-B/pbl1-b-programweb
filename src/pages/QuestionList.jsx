@@ -151,7 +151,16 @@ function QuestionList() {
 
                                 {/* いいね数表示 */}
                                 <div className="card-footer" style={{ marginTop: '10px' }}>
-                                    <p>❤️ {question.likeCount}</p>
+                                    <p>
+                                        <span 
+                                            className="like-tooltip-container" 
+                                            data-likes={question.likeCount}
+                                        >
+                                            {question.likeCount === 0 ? <span className="like-hearts">🤍</span> : 
+                                             question.likeCount <= 10 ? <span className="like-hearts">{"❤️".repeat(question.likeCount)}</span> : 
+                                             <><span className="like-hearts">{"❤️".repeat(10)}</span><span className="like-plus">+</span></>}
+                                        </span>
+                                    </p>
                                 </div>
                                 
                             </div>
