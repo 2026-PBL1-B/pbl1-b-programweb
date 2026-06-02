@@ -10,6 +10,8 @@ import { getTags } from '../api/Tag';
 import AvatarIcon from './AvatarIcon';
 import { grades } from '../domain/GradeDepartment';
 
+import PostTagModal from './PostTagModal';
+
 function PostForm({ 
     pageTitle,
     titlePlaceholder = "タイトルを入力してください",
@@ -28,6 +30,7 @@ function PostForm({
 }) {
     const [title, setTitle] = useState(initialData?.title || "");
     const [tags, setTags] = useState(initialData?.tags || []);
+    const [isModalOpen, setIsModalOpen] = useState(false);  // モーダル関係
     const [tagInput, setTagInput] = useState("");
     const [availableTags, setAvailableTags] = useState([]); //既存のタグ一覧の状態を管理する追加
     const [githubUrl, setGithubUrl] = useState(initialData?.githubUrl || "");             // GithubURLを管理する変数
@@ -72,6 +75,12 @@ function PostForm({
 
     const removeTag = (indexToRemove) => {
         setTags(tags.filter((_, index) => index !== indexToRemove));
+    };
+
+    // モーダルで「反映」が押された時の処理
+    const handleConfirmTags = (selectedTags) => {
+        setTags(selectedTags);
+        setIsModalOpen(false);
     };
 
     // タグ入力から既存タグを絞り込む
@@ -216,6 +225,16 @@ const handleImageSelect = (e) => {
                     onChange={(e) => setTitle(e.target.value)}
                 />
 
+                <div style={{ marginTop: '15px' }}>
+                    <button
+                        type="button"
+                        className="post-tag-open-button"
+                        onClick={() => setIsModalOpen(true)}
+                    >
+                        既存のタグから選ぶ
+                    </button>
+                </div>
+
                 <div className="tags-container">
                     {tags.map((tag, index) => (
                         <span key={index} className="tag-badge">
@@ -253,15 +272,14 @@ const handleImageSelect = (e) => {
                     )}
                 </div>
 
-                {showGithubUrl && (
-                    <input
-                        className="github-url-input"
-                        type="url"  // URLチェック
-                        placeholder="GitHubのURLを入力してください（任意）"
-                        value={githubUrl}
-                        onChange={(e) => setGithubUrl(e.target.value)}
-                    />
-                )}
+                {/* --- 外部化したモーダルコンポーネントを配置 --- */}
+                <PostTagModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    availableTags={availableTags}
+                    initialSelectedTags={tags} // 現在のタグを渡す
+                    onConfirm={handleConfirmTags} // 確定時のコールバック
+                />
 
                 {/* 任意のURL追加セクション */}
                 {showAdditionalUrls && (

@@ -90,12 +90,6 @@ function ProductPost() {
 
         // --- URLの保存処理 ---
         const urlsToSave = [];
-
-        // GitHub URL
-        if (formData.githubUrl && formData.githubUrl.trim() !== '') {
-          urlsToSave.push(formData.githubUrl.trim());
-        }
-
         // 追加URL
         if (formData.additionalUrls && formData.additionalUrls.length > 0) {
           const validAdditionalUrls = formData.additionalUrls.filter(url => url && url.trim() !== '');
@@ -139,7 +133,7 @@ function ProductPost() {
             loading={loading}
             showFinish={false}
             showGradeDepartment={true}
-            showGithubUrl={true}
+            showGithubUrl={false}
             showAdditionalUrls={true}
             onDraftSubmit={handleDraftSubmit} 
             initialData={initialData}
