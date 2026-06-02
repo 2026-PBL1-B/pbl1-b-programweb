@@ -93,3 +93,35 @@
   padding: 0 0.2em;
   font-weight: bold;
 }
+
+/* 写真のテープ貼り風UI */
+.photo-wrapper {
+  position: relative;
+  display: inline-block;
+  margin: 16px 8px; /* 周囲に少し余白 */
+}
+
+/* 上部のマスキングテープ */
+.photo-wrapper::after {
+  content: '';
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-2deg);
+  width: 160px;
+  height: 38px;
+  background-color: rgba(147, 197, 253, 0.85); /* 視認性の高い半透明の青色 */
+  border: 1px solid rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 2px;
+  z-index: 2;
+  backdrop-filter: blur(3px); /* 少しだけ半透明のテープ感 */
+}
+
+.photo-wrapper img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 2px;
+  margin: 0 !important; /* 他のimgスタイルを上書き */
+}
