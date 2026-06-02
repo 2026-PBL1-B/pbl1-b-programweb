@@ -347,9 +347,8 @@ function UserPage() {
                       data-likes={article.likeCount}
                     >
                       {article.likeCount === 0 ? <span className="like-hearts">🤍</span> : 
-                       article.likeCount === 1 ? <span className="like-hearts">❤️</span> : 
-                       article.likeCount === 2 ? <span className="like-hearts">❤️❤️</span> : 
-                       <><span className="like-hearts">❤️❤️❤️</span><span className="like-plus">+</span></>}
+                       article.likeCount <= 10 ? <span className="like-hearts">{"❤️".repeat(article.likeCount)}</span> : 
+                       <><span className="like-hearts">{"❤️".repeat(10)}</span><span className="like-plus">+</span></>}
                     </span>
                   </p>
                 </div>

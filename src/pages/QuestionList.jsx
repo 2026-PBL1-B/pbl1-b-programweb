@@ -157,9 +157,8 @@ function QuestionList() {
                                             data-likes={question.likeCount}
                                         >
                                             {question.likeCount === 0 ? <span className="like-hearts">🤍</span> : 
-                                             question.likeCount === 1 ? <span className="like-hearts">❤️</span> : 
-                                             question.likeCount === 2 ? <span className="like-hearts">❤️❤️</span> : 
-                                             <><span className="like-hearts">❤️❤️❤️</span><span className="like-plus">+</span></>}
+                                             question.likeCount <= 10 ? <span className="like-hearts">{"❤️".repeat(question.likeCount)}</span> : 
+                                             <><span className="like-hearts">{"❤️".repeat(10)}</span><span className="like-plus">+</span></>}
                                         </span>
                                     </p>
                                 </div>
