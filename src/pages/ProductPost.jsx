@@ -26,7 +26,6 @@ function ProductPost() {
           const tags = await getProductTagNames(id);
           const links = await getProductLinks(id);
           
-          let githubUrl = "";
           let additionalUrls = [];
           
           if (links && links.length > 0) {
