@@ -86,14 +86,12 @@ function QuestionPost() {
 			<Guidheader />
 
 		<div>
-			<h1 style={{ padding: '0 40px', margin: 0, paddingTop: '40px' }}>
-				投稿する
-			</h1>
 			{isInitialDataLoading ? (
 				<p style={{ padding: '0 40px' }}>読み込み中...</p>
 			) : (
 				<PostForm 
 					key={id || "new"}
+					pageTitle="質問を投稿する"
 					titlePlaceholder="質問のタイトルを入力してください"
 					contentLabel="質問内容"
 					contentPlaceholder="困っていることや試したことを詳しく入力してください"
