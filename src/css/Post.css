@@ -200,10 +200,17 @@
 
 /* プレビュー内のタグ表示 */
 .tag-list {
+    /* display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 15px; */
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 15px;
+    overflow: hidden; /* スクローラを表示しない */
+    flex: 1; /* 親(paper)の残りの高さを全て使う */
+    align-content: flex-start; /* 行を広げない */
+    padding: 10px 0;
 }
 
 .tag {
