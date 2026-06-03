@@ -26,19 +26,6 @@ function ProductPost() {
           const tags = await getProductTagNames(id);
           const links = await getProductLinks(id);
           
-          let additionalUrls = [];
-          
-          if (links && links.length > 0) {
-            // Assume the first github.com link is githubUrl, others are additional
-            const githubIndex = links.findIndex(url => url.includes('github.com'));
-            if (githubIndex !== -1) {
-              githubUrl = links[githubIndex];
-              additionalUrls = links.filter((_, i) => i !== githubIndex);
-            } else {
-              additionalUrls = links;
-            }
-          }
-
           setInitialData({
             title: res.data.title || "",
             content: res.data.content || "",
@@ -47,8 +34,8 @@ function ProductPost() {
             grade: res.data.grade || "",
             department: res.data.department || "",
             tags: tags || [],
-            githubUrl,
-            additionalUrls
+            githubUrl: "",
+            additionalUrls: links || []
           });
         }
         setIsInitialDataLoading(false);
