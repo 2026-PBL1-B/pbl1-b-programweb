@@ -382,7 +382,7 @@ const handleImageSelect = (e) => {
                                     </div>
                                 </div>
 
-                                {(githubUrl || (additionalUrls && additionalUrls.length > 0 && additionalUrls.some(u => u.trim() !== ''))) && (
+                                {(githubUrl || (additionalUrls && additionalUrls.length > 0 && additionalUrls.some(u => u && u.trim() !== ''))) && (
                                     <div className="link-section" style={{ marginTop: '10px' }}>
                                         <p className="section-label" style={{ marginBottom: '8px' }}>関連リンク</p>
                                         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -392,7 +392,7 @@ const handleImageSelect = (e) => {
                                                 </a>
                                             )}
                                             {additionalUrls && additionalUrls.map((link, index) => (
-                                                link.trim() !== '' && (
+                                                link && link.trim() !== '' && (
                                                     <a key={index} href={link} target="_blank" rel="noopener noreferrer" style={{ wordBreak: 'break-all', color: 'var(--accent, #3b82f6)', textDecoration: 'underline', fontSize: '15px' }}>
                                                         🔗 {link}
                                                     </a>
